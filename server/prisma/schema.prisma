@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  userId    Int      @id @default(autoincrement())
+  email     String
+  createdAt DateTime @default(now())
+
+  collection UserCollection[]
+}
+
+model Manga {
+  mangaId       Int    @id @default(autoincrement())
+  title         String
+  author        String
+  coverImageUrl String
+  booksApiId    String @unique
+  description   String
+  publisher     String
+
+  volumes Volumes[]
+}
+
+model Volumes {
+  volumeId      Int       @id @default(autoincrement())
+  mangaId       Int
+  manga         Manga     @relation(fields: [mangaId], references: [mangaId], onDelete: Cascade)
+  volumeNumber  Int
+  isbn          String?
+  releaseDate   DateTime?
+  coverImageUrl String
+
+  userCollection UserCollection[]
+}
+
+model UserCollection {
+  userCollectionId Int @id @default(autoincrement())
+  userId           Int
+
+  volumeId Int
+  user     Users            @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  volume   Volumes          @relation(fields: [volumeId], references: [volumeId], onDelete: Cascade)
+  status   CollectionStatus
+  notes    String
+}
+
+enum CollectionStatus {
+  Owned
+  Want_To_Buy
+  For_Sale
+}
