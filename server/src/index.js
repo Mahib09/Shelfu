@@ -8,3 +8,6 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on Http://localhost:${PORT}`);
 });
+
+const mangaRoutes = require("./routes/mangaRoutes");
+app.use("/manga", mangaRoutes);
