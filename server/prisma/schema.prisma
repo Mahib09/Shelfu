@@ -21,23 +21,11 @@ model Users {
   collection UserCollection[]
 }
 
-model Manga {
-  mangaId       Int    @id @default(autoincrement())
-  title         String
-  author        String
-  coverImageUrl String
-  booksApiId    String @unique
-  description   String
-  publisher     String
-
-  volumes Volumes[]
-}
-
 model Volumes {
   volumeId      Int       @id @default(autoincrement())
-  mangaId       Int
-  manga         Manga     @relation(fields: [mangaId], references: [mangaId], onDelete: Cascade)
   volumeNumber  Int
+  seriesName    String
+  booksApiId    String
   isbn          String?
   releaseDate   DateTime?
   coverImageUrl String
@@ -54,6 +42,7 @@ model UserCollection {
   volume   Volumes          @relation(fields: [volumeId], references: [volumeId], onDelete: Cascade)
   status   CollectionStatus
   notes    String
+
 }
 
 enum CollectionStatus {
