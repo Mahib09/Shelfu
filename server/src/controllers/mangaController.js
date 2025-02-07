@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 const fetchFromApi = async (query) => {
   try {
-    const booksUrl = `https://openlibrary.org/search.json?q=${query}`;
+    const booksUrl = `https://openlibrary.org/search.json?q=${query} vol`;
 
     const response = await axios.get(booksUrl);
     const books = response.data.docs; // Extract book list
@@ -15,31 +15,65 @@ const fetchFromApi = async (query) => {
       return []; // Return empty if no results
     }
 
-    const formattedResults = books
-      .map((book) => {
+    const formattedResults = response.data.docs
+      .filter((book) => {
         const title = book.title.toLowerCase();
+        const language = book.language || [];
+
+        // Keywords to filter out unwanted books
+        const unwantedKeywords = [
+          "coloring book",
+          "art book",
+          "illustrations",
+          "sketch",
+          "light novel",
+          "guidebook",
+          "fanbook",
+          "concept art",
+          "compendium",
+          "encyclopedia",
+          "animation book",
+          "how to",
+          "japanese",
+          "chinese",
+          "french",
+        ];
+
+        // Check if title has a volume number (e.g., "Vol. 1" or "Volume 2")
         const volumeRegex = /(vol\.?\s?|volume\s?)(\d+)/i;
-        const volumeMatch = title.match(volumeRegex);
+        const hasVolumeNumber = volumeRegex.test(title);
+
+        // Strictly remove books if title contains unwanted keywords
+        const containsUnwantedKeyword = unwantedKeywords.some((keyword) =>
+          title.includes(keyword)
+        );
+
+        // Exclude books with unwanted keywords and non-English editions
+        return (
+          hasVolumeNumber &&
+          !containsUnwantedKeyword &&
+          !language.includes("jpn")
+        );
+      })
+      .map((book) => {
+        // Extract volume number
+        const title = book.title;
+        const volumeMatch = title.match(/(vol\.?\s?|volume\s?)(\d+)/i);
         const volumeNumber = volumeMatch ? parseInt(volumeMatch[2], 10) : null;
 
-        return volumeNumber
-          ? {
-              title: book.title,
-              author: book.author_name?.join(", ") || "Unknown",
-              coverImageUrl: book.cover_i
-                ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
-                : null,
-              booksApiId: book.key, // Unique ID from Open Library
-              description: book.first_sentence
-                ? book.first_sentence[0]
-                : "No description available",
-              publisher: book.publisher?.[0] || "Unknown",
-              volumeNumber: volumeNumber, // Store extracted volume number
-            }
-          : null;
+        return {
+          title: book.title,
+          author: book.author_name?.join(", ") || "Unknown",
+          coverImageUrl: book.cover_i
+            ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+            : null,
+          booksApiId: book.key,
+          description: book.first_sentence || "No description available",
+          publisher: book.publisher?.join(", ") || "Unknown",
+          volumeNumber: volumeNumber, // Store volume number
+        };
       })
-      .filter((book) => book !== null) // Remove books without volume number
-      .sort((a, b) => a.volumeNumber - b.volumeNumber); // Sort by volume number
+      .sort((a, b) => a.volumeNumber - b.volumeNumber); // Numeric sorting of volumes
 
     return formattedResults;
   } catch (error) {
