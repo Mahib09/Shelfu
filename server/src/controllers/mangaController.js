@@ -97,8 +97,6 @@ const getSearchResults = async (req, res) => {
     }
     const formattedBooksApiResults = await fetchFromApi(searchQuery);
     return res.json(formattedBooksApiResults);
-
-    return res.json([]);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
