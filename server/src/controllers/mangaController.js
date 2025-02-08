@@ -62,6 +62,7 @@ const fetchFromApi = async (query) => {
         const volumeNumber = volumeMatch ? parseInt(volumeMatch[2], 10) : null;
 
         return {
+          booksApiId: book.key,
           title: book.title,
           author: book.author_name?.join(", ") || "Unknown",
           coverImageUrl: book.cover_i
@@ -74,7 +75,7 @@ const fetchFromApi = async (query) => {
         };
       })
       .sort((a, b) => a.volumeNumber - b.volumeNumber); // Numeric sorting of volumes
-
+    console.log(formattedResults);
     return formattedResults;
   } catch (error) {
     return [];
@@ -83,23 +84,55 @@ const fetchFromApi = async (query) => {
 
 const getSearchResults = async (req, res) => {
   try {
-    const searchQuery = req.query.query;
-    const results = await prisma.manga.findMany({
-      where: {
-        title: {
-          contains: searchQuery,
-          mode: "insensitive",
-        },
-      },
-    });
-    if (results.length > 0) {
-      return res.json(results);
-    }
+    const searchQuery = req.query.q;
     const formattedBooksApiResults = await fetchFromApi(searchQuery);
     return res.json(formattedBooksApiResults);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+const checkIfVolumeExists = async (bookId) => {
+  return await prisma.volumes.findUnique({
+    where: {
+      booksApiId: bookId,
+    },
+  });
+};
 
-module.exports = { getSearchResults };
+const getMangaDetails = async (req, res) => {
+  try {
+    const { bookId } = req.params;
+
+    const volumeExists = await checkIfVolumeExists(bookId);
+
+    if (volumeExists) {
+      console.log(volumeExists);
+      res.json(volumeExists);
+    } else {
+      const booksUrl = `https://openlibrary.org/works/${bookId}.json`;
+      const response = await axios.get(booksUrl);
+      const book = response.data;
+      console.log(book);
+      const title = book.title;
+      const volumeMatch = title.match(/(vol\.?\s?|volume\s?)(\d+)/i);
+      const volumeNumber = volumeMatch ? parseInt(volumeMatch[2], 10) : null;
+      const responseDetails = {
+        title: book.title,
+        author: book.author_name?.join(", ") || "Unknown",
+        coverImageUrl: book.cover_i
+          ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+          : null,
+        booksApiId: book.key,
+        description: book.first_sentence || "No description available",
+        publisher: book.publisher?.join(", ") || "Unknown",
+        volumeNumber: volumeNumber,
+      };
+      res.json(responseDetails);
+    }
+  } catch (error) {
+    console.error("Database Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { getSearchResults, getMangaDetails };

@@ -25,7 +25,7 @@ model Volumes {
   volumeId      Int       @id @default(autoincrement())
   volumeNumber  Int
   seriesName    String
-  booksApiId    String
+  booksApiId    String  @unique
   isbn          String?
   releaseDate   DateTime?
   coverImageUrl String
