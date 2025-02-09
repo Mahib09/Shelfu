@@ -74,6 +74,28 @@ const getUserCollectionBySeries = async (req, res) => {
   }
 };
 
+const getUserCollectionByStatus = async (req, res) => {
+  try {
+    const { status, userId } = req.params;
+    const id = parseInt(userId);
+    const collectionByStatus = await prisma.userCollection.findMany({
+      where: {
+        userId: id,
+        status: status,
+      },
+      include: {
+        volume: true,
+      },
+    });
+    if (collectionByStatus.length === 0) {
+      return res.status(200).json({ message: "No collection data found." });
+    }
+    res.json(collectionByStatus);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 const updateCategoryorNotes = async (req, res) => {
   try {
     const { userCollectionId } = req.params;
@@ -120,6 +142,7 @@ module.exports = {
   addMangatoUserCollection,
   getUserCollection,
   getUserCollectionBySeries,
+  getUserCollectionByStatus,
   updateCategoryorNotes,
   deleteVolume,
 };

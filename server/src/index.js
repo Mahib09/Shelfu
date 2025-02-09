@@ -9,7 +9,7 @@ app.use(express.json());
 const mangaRoutes = require("./routes/mangaRoutes");
 const userCollectionRoutes = require("./routes/userCollectionRoutes");
 app.use("/manga", mangaRoutes);
-app.use("/userCollection", userCollectionRoutes);
+app.use("/usercollection", userCollectionRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {
