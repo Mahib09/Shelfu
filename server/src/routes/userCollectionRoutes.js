@@ -7,14 +7,19 @@ const {
   updateCategoryorNotes,
   deleteVolume,
 } = require("../controllers/userCollectionController");
+const verifyToken = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-router.post("/", addMangatoUserCollection);
-router.get("/:userId", getUserCollection);
-router.get("/byseries/:userId/:seriesName", getUserCollectionBySeries);
-router.get("/bystatus/:userId/:status", getUserCollectionByStatus);
-router.patch("/:userCollectionId", updateCategoryorNotes);
-router.delete("/:userCollectionId", deleteVolume);
+router.post("/", verifyToken, addMangatoUserCollection);
+router.get("/:userId", verifyToken, getUserCollection);
+router.get(
+  "/byseries/:userId/:seriesName",
+  verifyToken,
+  getUserCollectionBySeries
+);
+router.get("/bystatus/:userId/:status", verifyToken, getUserCollectionByStatus);
+router.patch("/:userCollectionId", verifyToken, updateCategoryorNotes);
+router.delete("/:userCollectionId", verifyToken, deleteVolume);
 
 module.exports = router;

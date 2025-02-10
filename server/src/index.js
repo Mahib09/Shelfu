@@ -1,15 +1,15 @@
 const express = require("express");
-const { PrismaClient } = require("@prisma/client");
 
 const app = express();
-const prisma = new PrismaClient();
 
 app.use(express.json());
 
 const mangaRoutes = require("./routes/mangaRoutes");
 const userCollectionRoutes = require("./routes/userCollectionRoutes");
+const authRoutes = require("./routes/authRoutes");
 app.use("/manga", mangaRoutes);
 app.use("/usercollection", userCollectionRoutes);
+app.use("/auth", authRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {
