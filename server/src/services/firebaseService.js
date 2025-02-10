@@ -1,13 +1,10 @@
 const admin = require("firebase-admin");
 require("dotenv").config(); // Load the environment variables
-
-// Parse the Firebase service key from the environment variable
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_KEY);
+const firebasekey = require("../../FIREBASE_SERVICE_KEY.json");
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  projectId: process.env.FIREBASE_PROJECT_ID,
+  credential: admin.credential.cert(firebasekey),
 });
 
 module.exports = admin;
