@@ -1,4 +1,4 @@
 node_modules
 # Keep environment variables out of version control
 .env
-./FIREBASE_SERVICE_KEY.json
+FIREBASE_SERVICE_KEY.json
