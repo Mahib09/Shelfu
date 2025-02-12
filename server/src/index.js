@@ -1,6 +1,8 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 
@@ -11,7 +13,7 @@ app.use("/manga", mangaRoutes);
 app.use("/usercollection", userCollectionRoutes);
 app.use("/auth", authRoutes);
 
-const PORT = 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on Http://localhost:${PORT}`);
 });
