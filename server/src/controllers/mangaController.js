@@ -1,9 +1,7 @@
 const { Request, Response } = require("express");
-const { PrismaClient } = require("@prisma/client");
+const prisma = require("../services/prismaService");
 const axios = require("axios");
 require("dotenv").config();
-
-const prisma = new PrismaClient();
 
 const fetchFromApi = async (query) => {
   try {

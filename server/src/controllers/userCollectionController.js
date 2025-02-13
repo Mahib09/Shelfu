@@ -1,11 +1,12 @@
 const { Request, Response } = require("express");
-const { PrismaClient } = require("@prisma/client");
-
-const prisma = new PrismaClient();
+const prisma = require("../services/prismaService");
 
 const addMangatoUserCollection = async (req, res) => {
   try {
     const { userId, volumeId, status, notes } = req.body;
+    if (userId === "" || volumeId === "" || status == "") {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
 
     const createRecord = await prisma.userCollection.create({
       data: {
@@ -15,10 +16,10 @@ const addMangatoUserCollection = async (req, res) => {
         notes: notes,
       },
     });
-    res.status(201).json(createRecord);
+    return res.status(201).json(createRecord);
   } catch (error) {
     console.error("Database Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -37,10 +38,10 @@ const getUserCollection = async (req, res) => {
     });
 
     if (userCollectionData.length === 0) {
-      return res.status(200).json({ message: "No collection data found." });
+      return res.status(404).json({ message: "No collection data found." });
     }
 
-    res.json(userCollectionData);
+    return res.status(200).json(userCollectionData);
   } catch (error) {
     console.error("Database Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -48,8 +49,12 @@ const getUserCollection = async (req, res) => {
 };
 
 const getUserCollectionBySeries = async (req, res) => {
+  const { seriesName, userId } = req.body;
+  if (!userId || !seriesName) {
+    return res.status(400).json({ message: "Missing required parameters" });
+  }
   try {
-    const { seriesName, userId } = req.params;
+    console.log(seriesName, userId);
     const id = parseInt(userId);
 
     const userCollectionData = await prisma.userCollection.findMany({
@@ -64,7 +69,7 @@ const getUserCollectionBySeries = async (req, res) => {
       },
     });
     if (userCollectionData.length === 0) {
-      return res.status(200).json({ message: "No collection data found." });
+      return res.status(404).json({ message: "No collection data found." });
     }
 
     res.json(userCollectionData);
@@ -76,7 +81,11 @@ const getUserCollectionBySeries = async (req, res) => {
 
 const getUserCollectionByStatus = async (req, res) => {
   try {
-    const { status, userId } = req.params;
+    const { status, userId } = req.body;
+
+    if (!status || !userId) {
+      return res.status(400).json({ message: "Missing required parameters" });
+    }
     const id = parseInt(userId);
     const collectionByStatus = await prisma.userCollection.findMany({
       where: {
@@ -88,11 +97,12 @@ const getUserCollectionByStatus = async (req, res) => {
       },
     });
     if (collectionByStatus.length === 0) {
-      return res.status(200).json({ message: "No collection data found." });
+      return res.status(404).json({ message: "No collection data found." });
     }
-    res.json(collectionByStatus);
+
+    res.status(200).json(collectionByStatus);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -100,25 +110,36 @@ const updateCategoryorNotes = async (req, res) => {
   try {
     const { userCollectionId } = req.params;
     const id = parseInt(userCollectionId);
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Invalid userCollectionId" });
+    }
+
     const { status, notes } = req.body;
 
-    if (!["Owned", "Want_To_Buy", "For_Sale"].includes(status)) {
-      res.status(400).json({ message: "Invalid Status" });
+    if (!status && !notes) {
+      return res.status(400).json({ message: "No Changes Provided" });
+    }
+
+    if (status && !["Owned", "Want_To_Buy", "For_Sale"].includes(status)) {
+      return res.status(400).json({ message: "Invalid Status" });
     }
 
     const updatedData = await prisma.userCollection.update({
-      where: {
-        userCollectionId: id,
-      },
+      where: { userCollectionId: id },
       data: {
-        ...(status && { status: status }),
-        ...(notes && { notes: notes }),
+        ...(status && { status }),
+        ...(notes && { notes }),
       },
     });
-    res.status(200).json(updatedData);
+
+    return res.status(200).json(updatedData);
   } catch (error) {
+    if (error.code === "P2025") {
+      return res.status(404).json({ message: "Volume does not exist" });
+    }
     console.error("Database Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -127,14 +148,22 @@ const deleteVolume = async (req, res) => {
     const { userCollectionId } = req.params;
     const id = parseInt(userCollectionId);
 
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Invalid userCollectionId" });
+    }
+
     const deleteData = await prisma.userCollection.delete({
       where: {
         userCollectionId: id,
       },
     });
-    res.status(200).json(deleteData);
+
+    return res.status(200).json(deleteData);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    if (error.code === "P2025") {
+      return res.status(404).json({ message: "Volume does not exist" });
+    }
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

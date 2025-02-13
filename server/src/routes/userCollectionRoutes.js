@@ -13,12 +13,8 @@ const router = express.Router();
 
 router.post("/", verifyToken, addMangatoUserCollection);
 router.get("/:userId", verifyToken, getUserCollection);
-router.get(
-  "/byseries/:userId/:seriesName",
-  verifyToken,
-  getUserCollectionBySeries
-);
-router.get("/bystatus/:userId/:status", verifyToken, getUserCollectionByStatus);
+router.post("/byseries", verifyToken, getUserCollectionBySeries);
+router.post("/bystatus", verifyToken, getUserCollectionByStatus);
 router.patch("/:userCollectionId", verifyToken, updateCategoryorNotes);
 router.delete("/:userCollectionId", verifyToken, deleteVolume);
 

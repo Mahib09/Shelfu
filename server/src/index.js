@@ -1,17 +1,8 @@
-const express = require("express");
 const cors = require("cors");
+const createServer = require("./utils/server");
 
-const app = express();
+const app = createServer();
 app.use(cors());
-
-app.use(express.json());
-
-const mangaRoutes = require("./routes/mangaRoutes");
-const userCollectionRoutes = require("./routes/userCollectionRoutes");
-const authRoutes = require("./routes/authRoutes");
-app.use("/manga", mangaRoutes);
-app.use("/usercollection", userCollectionRoutes);
-app.use("/auth", authRoutes);
 
 const PORT = 3001;
 app.listen(PORT, () => {
