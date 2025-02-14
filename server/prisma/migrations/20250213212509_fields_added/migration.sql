@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Volumes" ALTER COLUMN "author" DROP NOT NULL,
+ALTER COLUMN "description" DROP NOT NULL,
+ALTER COLUMN "publisher" DROP NOT NULL;

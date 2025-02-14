@@ -3,11 +3,38 @@ const prisma = require("../services/prismaService");
 
 const addMangatoUserCollection = async (req, res) => {
   try {
-    const { userId, volumeId, status, notes } = req.body;
-    if (userId === "" || volumeId === "" || status == "") {
+    const { userId, volumeId, status, notes, volumeInfo } = req.body;
+
+    // Validate required fields
+    if (userId === "" || volumeId === "" || status === "") {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    let volume = await prisma.volumes.findUnique({
+      where: { volumeId: volumeId },
+    });
+
+    if (!volume && volumeInfo) {
+      volume = await prisma.volumes.create({
+        data: {
+          volumeId: volumeInfo.volumeId,
+          volumeNumber: volumeInfo.volumeNumber,
+          seriesName: volumeInfo.seriesName,
+          author: volumeInfo.author,
+          booksApiId: volumeInfo.booksApiId,
+          description: volumeInfo.description,
+          publisher: volumeInfo.publisher,
+          isbn: volumeInfo.isbn,
+          releaseDate: volumeInfo.releaseDate,
+          coverImage: volumeInfo.coverImage,
+        },
+      });
+    }
+    if (!volume && !volumeInfo) {
+      return res
+        .status(400)
+        .json({ message: "Volume does not exist and volumeInfo is required" });
+    }
     const createRecord = await prisma.userCollection.create({
       data: {
         userId: userId,
@@ -16,9 +43,9 @@ const addMangatoUserCollection = async (req, res) => {
         notes: notes,
       },
     });
+
     return res.status(201).json(createRecord);
   } catch (error) {
-    console.error("Database Error:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -43,7 +70,6 @@ const getUserCollection = async (req, res) => {
 
     return res.status(200).json(userCollectionData);
   } catch (error) {
-    console.error("Database Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -54,7 +80,6 @@ const getUserCollectionBySeries = async (req, res) => {
     return res.status(400).json({ message: "Missing required parameters" });
   }
   try {
-    console.log(seriesName, userId);
     const id = parseInt(userId);
 
     const userCollectionData = await prisma.userCollection.findMany({
@@ -74,7 +99,6 @@ const getUserCollectionBySeries = async (req, res) => {
 
     res.json(userCollectionData);
   } catch (error) {
-    console.error("Database Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -138,7 +162,7 @@ const updateCategoryorNotes = async (req, res) => {
     if (error.code === "P2025") {
       return res.status(404).json({ message: "Volume does not exist" });
     }
-    console.error("Database Error:", error);
+
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };

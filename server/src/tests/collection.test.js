@@ -16,11 +16,20 @@ jest.mock("../services/firebaseService", () => ({
 jest.mock("../services/prismaService", () => ({
   userCollection: {
     findMany: jest.fn(() => Promise.resolve([])),
+    findUnique: jest.fn(() => Promise.resolve([])),
     create: jest.fn(),
     delete: jest.fn(),
     update: jest.fn(),
   },
+  volumes: {
+    findUnique: jest.fn(),
+    create: jest.fn(),
+  },
 }));
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("Collection API", () => {
   describe("GET /usercollection/:userId", () => {
@@ -79,18 +88,72 @@ describe("Collection API", () => {
     });
   });
   describe("POST /usercollection/", () => {
-    it("should return 201 and the createdRecord if api adds the manga successfully", async () => {
-      const data = {
+    const data = {
+      userId: "testuser123",
+      volumeId: 1,
+      status: "Owned",
+      notes: "Great series!",
+      volumeInfo: {
+        volumeId: 1,
+        volumeNumber: 1,
+        seriesName: "Naruto",
+        author: "Masashi Kishimoto",
+        booksApiId: "OL12345",
+        description: "A description of Naruto Vol. 1",
+        publisher: "Shueisha",
+        isbn: "123456789",
+        releaseDate: "2000-02-01",
+        coverImage: "https://example.com/cover.jpg",
+      },
+    };
+    it("should return 201 and the createdRecord and volume if volume does exist and api creates collection", async () => {
+      const mockdata = {
         userId: "testuser123",
         volumeId: 1,
         status: "Owned",
-        notes: "",
+        notes: "Great series!",
       };
       prisma.userCollection.create.mockResolvedValue({
         userId: "testuser123",
         volumeId: 1,
         status: "Owned",
+        notes: "Great series!",
+      });
+      prisma.volumes.findUnique.mockResolvedValue({
+        volumeId: 1,
+        volumeNumber: 1,
+        title: "Naruto Vol. 1",
+        author: "Masashi Kishimoto",
+        description: "Description of Naruto Vol. 1", // Volume exists in the table
+      });
+      const response = await supertest(app)
+        .post("/usercollection")
+        .send(mockdata)
+        .set("Authorization", "Bearer mock-valid-token")
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(201);
+      expect(response.body).toEqual(mockdata);
+    });
+    it("should return 201 and the createdRecord and volume if volume doesnot exist and api adds volume and creates collection", async () => {
+      prisma.userCollection.create.mockResolvedValue({
+        userId: "testuser123",
+        volumeId: 1,
+        status: "Owned",
         notes: "",
+      });
+      prisma.volumes.findUnique.mockResolvedValue(null);
+      prisma.volumes.create.mockResolvedValue({
+        volumeId: "vol1",
+        volumeNumber: 1,
+        seriesName: "Naruto",
+        author: "Masashi Kishimoto",
+        booksApiId: "OL12345",
+        description: "A description of Naruto Vol. 1",
+        publisher: "Shueisha",
+        isbn: "123456789",
+        releaseDate: "2000-02-01",
+        coverImage: "https://example.com/cover.jpg",
       });
       const response = await supertest(app)
         .post(`/usercollection`)
@@ -105,6 +168,27 @@ describe("Collection API", () => {
         status: "Owned",
         notes: "",
       });
+    });
+    it("should return 400 and volumeInfoRequires if volume doesnot exist and volume info not provided", async () => {
+      const mockdata = {
+        userId: "testuser123",
+        volumeId: 1,
+        status: "Owned",
+        notes: "Great series!",
+        volumeInfo: null,
+      };
+      prisma.volumes.findUnique.mockResolvedValue(null);
+
+      const response = await supertest(app)
+        .post("/usercollection")
+        .send(mockdata)
+        .set("Authorization", "Bearer mock-valid-token")
+        .set("Content-Type", "application/json");
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe(
+        "Volume does not exist and volumeInfo is required"
+      );
     });
     describe("handle missing required value", () => {
       it("should return 400 and Missing required fields if no userId provided", async () => {
@@ -401,6 +485,18 @@ const testServerError = (method, endpoint, mockFunction) => {
           notes: "Test note",
           userId: "1",
           series: "One Piece",
+          volumeInfo: {
+            volumeId: 1,
+            volumeNumber: 1,
+            seriesName: "Naruto",
+            author: "Masashi Kishimoto",
+            booksApiId: "OL12345",
+            description: "A description of Naruto Vol. 1",
+            publisher: "Shueisha",
+            isbn: "123456789",
+            releaseDate: "2000-02-01",
+            coverImage: "https://example.com/cover.jpg",
+          },
         })
         .set("Authorization", "Bearer mock-valid-token")
         .set("Content-Type", "application/json");

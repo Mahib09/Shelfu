@@ -5,41 +5,45 @@ const signUp = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Create user in Firebase
-    const userRecord = await admin.auth().createUser({
+    const existingUser = await prisma.users.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "Email is already in use" });
+    }
+
+    const userRecord = await admin.auth.createUser({
       email,
       password,
     });
 
-    // Create user in Prisma database
     const newUser = await prisma.users.create({
       data: {
         email: userRecord.email,
       },
     });
 
-    // Return success response
     res
       .status(201)
       .json({ message: "User created successfully", userId: newUser.userId });
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: "Error creating user", error: error.message });
+    res.status(500).json({ message: "Error creating user" });
   }
 };
 const login = async (req, res) => {
   const { email, password } = req.body;
 
+  if (!email) {
+    return res.status(400).json({ message: "Email and Password Required" });
+  }
   try {
-    // Authenticate user with Firebase
-    const userRecord = await admin.auth().getUserByEmail(email);
-    // Here you can check password if needed using Firebase client SDK in the frontend
+    const userRecord = await admin.auth.getUserByEmail(email);
+    if (!userRecord) {
+      return res.status(400).json({ message: "User Not Found" });
+    }
+    const token = await admin.auth.createCustomToken(userRecord.uid);
 
-    // Generate Firebase Token (JWT)
-    const token = await admin.auth().createCustomToken(userRecord.uid);
-
-    // Send the token as a response
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     res.status(400).json({ message: "Error logging in", error: error.message });
