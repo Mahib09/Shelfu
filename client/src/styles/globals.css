@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@layer utilities {
+  .authContainer {
+    @apply flex flex-col h-screen w-screen justify-center content-center items-center;
+  }
+  .formHolder {
+    @apply border rounded-md  p-4 m-2 flex flex-col md:w-[350px] w-[300px];
+  }
+  .form {
+    @apply flex flex-col gap-5 p-2 items-center w-full my-4;
+  }
+  .btnSubmit {
+    @apply border p-2 rounded-lg bg-black text-white ml-auto;
+  }
+  .btnGoback {
+    @apply border p-2 rounded-lg;
+  }
+  .inputField {
+    @apply h-10 p-2 w-full border rounded-lg;
+  }
+}

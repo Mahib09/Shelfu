@@ -15,7 +15,9 @@ datasource db {
 
 model Users {
   userId    Int      @id @default(autoincrement())
-  email     String
+  email     String   @unique
+  name      String?
+  firebaseUId String @unique
   createdAt DateTime @default(now())
 
   collection UserCollection[]
