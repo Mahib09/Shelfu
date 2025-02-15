@@ -199,6 +199,7 @@ const SignUp = () => {
               onClick={() => {
                 router.push("/");
               }}
+              type="button"
             >
               Back to Home
             </button>

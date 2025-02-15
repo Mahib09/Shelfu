@@ -148,6 +148,7 @@ const Login = () => {
               onClick={() => {
                 router.push("/");
               }}
+              type="button"
             >
               Back to Home
             </button>
