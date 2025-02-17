@@ -7,7 +7,13 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
-import { auth, provider, signInWithPopup } from "@/lib/firebase";
+import {
+  auth,
+  provider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+} from "@/lib/firebase";
+import { sendTokenToBackend } from "@/lib/api";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -29,63 +35,44 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
   const handleGoogleSignIn = async () => {
+    setErrorMessage("");
     try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      // Get the ID token from the user object
+      const userCredentials = await auth.signInWithPopup(auth, provider);
+      const user = userCredentials.user;
       const idToken = await user.getIdToken();
-
-      // Send the ID token to the backend for verification and creating a session
-      const response = await fetch("http://localhost:3001/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ idToken }), // Send the ID token to backend
+      const response = await axios.post("http://localhost:3001/auth/signup", {
+        token: idToken,
       });
-
-      const data = await response.json();
-      if (response.ok) {
-        console.log("Login successful", data);
+      if (response.data.success) {
         router.push("/dashboard");
-        // Handle successful login (e.g., save user data in state, redirect to another page)
-      } else {
-        console.log("Error:", data.message);
-        // Handle error (show message to user)
       }
     } catch (error) {
-      console.error("Error Signing in with Google:", error);
-      // Handle any sign-in errors
+      setErrorMessage("Login failed.");
     }
   };
   const onSubmit = async (data) => {
-    setErrorMessage(""); // Reset error message on each submit attempt
+    setErrorMessage("");
     const { email, password } = data;
 
     try {
-      // Use axios to send the login request
-      const response = await axios.post(
-        "http://localhost:3001/auth/login", // Update with your backend URL
-        { email, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      const userCredentials = await auth.signInWithEmailAndPassword(
+        email,
+        password
       );
-
-      console.log(response.data.message); // Successful login message from backend
-      // Store token or user data (e.g., in localStorage or cookies)
-      localStorage.setItem("authToken", response.data.token);
-
-      // Redirect or update UI after successful login
-      router.push("/dashboard"); // Example to redirect
+      const user = userCredentials.user;
+      const idToken = await user.getIdToken();
+      const response = await axios.post("http://localhost:3001/auth/login", {
+        token: idToken,
+      });
+      if (response.data.success) {
+        router.push("/dashboard");
+      }
     } catch (error) {
       console.error(error);
       setErrorMessage("Login failed. Please check your credentials.");
     }
   };
+
   return (
     <div className="authContainer">
       <Image src={Logo} height={100} width={100} alt="logo" />

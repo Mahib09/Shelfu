@@ -7,7 +7,12 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
-import { auth, provider, signInWithPopup } from "@/lib/firebase";
+import {
+  auth,
+  createUserWithEmailAndPassword,
+  provider,
+  signInWithPopup,
+} from "@/lib/firebase";
 import Cookies from "js-cookie";
 
 // Validation schema for form
@@ -40,65 +45,46 @@ const SignUp = () => {
 
   const onSubmit = async (data) => {
     setErrorMessage(""); // Reset error message on each submit attempt
-    const { email, password } = data;
+    const { email, password, name } = data;
 
     try {
-      // Use axios to send the signup request
-      const response = await axios.post(
-        "http://localhost:3001/auth/signup", // Use sign-up endpoint here
-        { email, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
+      const userCredentials = auth.createUserWithEmailAndPassword(
+        email,
+        password
       );
+      const user = userCredentials.user;
 
-      console.log(response.data.message); // Successful signup message from backend
-      // Store token or user data (e.g., in localStorage or cookies)
-      Cookies.set("authToken", response.data.token, {
-        expires: 7,
-        secure: true,
-        sameSite: "Strict",
+      await user.updateProfile({
+        displayName: name,
       });
 
-      // Redirect or update UI after successful signup
-      router.push("/dashboard"); // Redirect to home or dashboard after signup
+      const idToken = await user.getIdToken();
+
+      const response = await axios.post("http://localhost:3001/auth/signup", {
+        token: idToken,
+      });
+      if (response.data.success) {
+        router.push("/dashboard");
+      }
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
   };
 
   const handleGoogleSignIn = async () => {
+    setErrorMessage("");
     try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      // Get the ID token from the user object
+      const userCredentials = await auth.signInWithPopup(auth, provider);
+      const user = userCredentials.user;
       const idToken = await user.getIdToken();
-
-      // Send the ID token to the backend for verification and creating a session
-      const response = await fetch("http://localhost:3001/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ idToken }), // Send the ID token to backend
+      const response = await axios.post("http://localhost:3001/auth/signup", {
+        token: idToken,
       });
-
-      const data = await response.json();
-      if (response.ok) {
-        console.log("Login successful", data);
+      if (response.data.success) {
         router.push("/dashboard");
-        // Handle successful login (e.g., save user data in state, redirect to another page)
-      } else {
-        console.log("Error:", data.message);
-        // Handle error (show message to user)
       }
     } catch (error) {
-      console.error("Error Signing in with Google:", error);
-      // Handle any sign-in errors
+      setErrorMessage(error.response.data.message);
     }
   };
 

@@ -1,6 +1,8 @@
 const express = require("express");
 const routes = require("./routes");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 function createServer() {
   const app = express();
   app.use(express.json());
@@ -12,6 +14,7 @@ function createServer() {
   };
 
   app.use(cors(corsOptions));
+  app.use(bodyParser.json());
   app.options("*", cors());
   app.use((req, res, next) => {
     res.setHeader("Cross-Origin-Opener-Policy", "same-origin"); // Restrict to same origin
