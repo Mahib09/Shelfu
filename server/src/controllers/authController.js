@@ -111,5 +111,10 @@ const googleSignIn = async (req, res) => {
       .json({ message: "Error verifying ID token", error: error.message });
   }
 };
+const getProfile = async (req, res) => {
+  const userId = req.userId;
+  const user = await admin.auth().getUser(userId);
+  res.json({ userProfile: user });
+};
 
-module.exports = { signUp, login, googleSignIn };
+module.exports = { signUp, login, googleSignIn, getProfile };

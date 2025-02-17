@@ -3,19 +3,15 @@ import Image from "next/image";
 import Logo from "../../public/Logo.png";
 import { Send, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Barrio } from "next/font/google";
-const barrio = Barrio({
-  weight: "400", // Specify font weight
-  subsets: ["latin"], // Optional: define subsets
-});
+
 export default function Home() {
   const router = useRouter();
   return (
     <div className="m-3 px-8 py-2">
       <header className="flex gap-5">
         <div className="flex items-center cursor-pointer">
-          <Image src={Logo} height={40} width={40} alt="Logo" />
-          <h2 className={`text-xl font-bold ${barrio.className}`}>Shelfu</h2>
+          <Image src={Logo} height={50} width={50} alt="Logo" />
+          {/* <h2 className={`text-xl font-bold `}>Shelfu</h2> */}
         </div>
         <div className="ml-auto">
           <Sun />
@@ -32,7 +28,7 @@ export default function Home() {
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
             Like Never Before
           </h1>
-          <p className="mt-6 border-l-2 pl-6 italic">
+          <p className="mt-6 pl-6 italic">
             “Easily track your collection, add notes and build your dream
             collection”
           </p>

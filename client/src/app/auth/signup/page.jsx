@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
 import { auth, provider, signInWithPopup } from "@/lib/firebase";
+import Cookies from "js-cookie";
 
 // Validation schema for form
 const schema = Yup.object().shape({
@@ -56,7 +57,11 @@ const SignUp = () => {
 
       console.log(response.data.message); // Successful signup message from backend
       // Store token or user data (e.g., in localStorage or cookies)
-      localStorage.setItem("authToken", response.data.token);
+      Cookies.set("authToken", response.data.token, {
+        expires: 7,
+        secure: true,
+        sameSite: "Strict",
+      });
 
       // Redirect or update UI after successful signup
       router.push("/dashboard"); // Redirect to home or dashboard after signup
