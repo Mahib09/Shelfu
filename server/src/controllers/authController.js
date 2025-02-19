@@ -9,14 +9,14 @@ const signUp = async (req, res) => {
       return res.status(400).json({ error: "Token is required" });
     }
 
-    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+    const decodedToken = await admin.auth().verifyIdToken(token);
     const firebaseId = decodedToken.uid;
     const email = decodedToken.email;
     const name = decodedToken.name || "";
 
     let user = await prisma.users.findUnique({
       where: {
-        firebaseId: firebaseId,
+        firebaseUId: firebaseId,
       },
     });
 
@@ -26,7 +26,7 @@ const signUp = async (req, res) => {
 
     user = await prisma.users.create({
       data: {
-        firebaseId: firebaseId,
+        firebaseUId: firebaseId,
         email: email,
         name: name,
       },
@@ -54,24 +54,31 @@ const signUp = async (req, res) => {
     res.status(500).json({ message: "Error creating user" });
   }
 };
-const login = async () => {
-  const { token } = req.body;
+const login = async (req, res) => {
+  try {
+    const { token } = req.body;
 
-  if (!token) {
-    return res.status(400).json({ error: "Token is required" });
+    if (!token) {
+      return res.status(400).json({ error: "Token is required" });
+    }
+
+    const decodedToken = await admin.auth().verifyIdToken(token);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Token expires after 7 days
+    });
+
+    res
+      .status(200)
+      .json({ success: true, message: "User logged in successfully" });
+  } catch (error) {
+    console.error("Login error:", error);
+
+    // Firebase specific error handling (like token expiration, etc.)
+    res.status(500).json({ message: "Error logging in" });
   }
-
-  const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
-
-  res.cookie("token", token, {
-    httpOnly: true, // Can't be accessed via JavaScript (for security)
-    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-    maxAge: 7 * 24 * 60 * 60 * 1000, // Token expires after 7 days (7 days in milliseconds)
-  });
-
-  res
-    .status(200)
-    .json({ success: true, message: "User logged in successfully" });
 };
 const getProfile = async (req, res) => {
   try {

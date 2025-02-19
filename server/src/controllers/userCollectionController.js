@@ -53,11 +53,19 @@ const addMangatoUserCollection = async (req, res) => {
 const getUserCollection = async (req, res) => {
   try {
     const { userId } = req.params;
-    const Id = parseInt(userId);
+    const user = await prisma.users.findUnique({
+      where: {
+        firebaseUId: userId, // Use Firebase UID for the query
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     const userCollectionData = await prisma.userCollection.findMany({
       where: {
-        userId: Id,
+        userId: user.userId,
       },
       include: {
         volume: true,

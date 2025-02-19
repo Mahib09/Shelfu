@@ -37,10 +37,10 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     setErrorMessage("");
     try {
-      const userCredentials = await auth.signInWithPopup(auth, provider);
+      const userCredentials = await signInWithPopup(auth, provider);
       const user = userCredentials.user;
       const idToken = await user.getIdToken();
-      const response = await axios.post("http://localhost:3001/auth/signup", {
+      const response = await axios.post("http://localhost:3001/auth/login", {
         token: idToken,
       });
       if (response.data.success) {
@@ -55,7 +55,8 @@ const Login = () => {
     const { email, password } = data;
 
     try {
-      const userCredentials = await auth.signInWithEmailAndPassword(
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
         email,
         password
       );

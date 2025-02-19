@@ -12,6 +12,7 @@ import {
   createUserWithEmailAndPassword,
   provider,
   signInWithPopup,
+  updateProfile,
 } from "@/lib/firebase";
 import Cookies from "js-cookie";
 
@@ -48,13 +49,14 @@ const SignUp = () => {
     const { email, password, name } = data;
 
     try {
-      const userCredentials = auth.createUserWithEmailAndPassword(
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
         email,
         password
       );
       const user = userCredentials.user;
 
-      await user.updateProfile({
+      await updateProfile(user, {
         displayName: name,
       });
 
@@ -65,16 +67,19 @@ const SignUp = () => {
       });
       if (response.data.success) {
         router.push("/dashboard");
+      } else {
+        setErrorMessage(response.data.message || "Something went wrong!");
       }
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      console.error("Error during sign-up:", error);
+      setErrorMessage(error.message || "An error occurred during sign-up");
     }
   };
 
   const handleGoogleSignIn = async () => {
     setErrorMessage("");
     try {
-      const userCredentials = await auth.signInWithPopup(auth, provider);
+      const userCredentials = await signInWithPopup(auth, provider);
       const user = userCredentials.user;
       const idToken = await user.getIdToken();
       const response = await axios.post("http://localhost:3001/auth/signup", {
@@ -82,9 +87,14 @@ const SignUp = () => {
       });
       if (response.data.success) {
         router.push("/dashboard");
+      } else {
+        setErrorMessage(response.data.message || "Something went wrong!");
       }
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      console.error("Error during Google sign-in:", error);
+      setErrorMessage(
+        error.message || "An error occurred during Google sign-in"
+      );
     }
   };
 
