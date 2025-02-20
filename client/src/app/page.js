@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import Logo from "../../public/Logo.png";
+import Logo from "../../public/logo.png";
 import { Send, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -36,7 +36,7 @@ export default function Home() {
         <button
           className="flex bg-[#B7F4EA] p-3 rounded-lg text-[#1B8D65] gap-2 items-center justify-center"
           onClick={() => {
-            router.push("/auth/signup");
+            router.push("/auth/login");
           }}
         >
           Get Started <Send />

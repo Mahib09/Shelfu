@@ -5,6 +5,7 @@ import { auth } from "@/lib/firebase"; // Adjust path based on your file structu
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { useManga } from "@/context/mangaContext";
+import MangaCard from "@/components/app-mangaCard";
 
 export default function Dashboard() {
   const [userCollection, setUserCollection] = useState([]); // Initialize userCollection as an empty array
@@ -55,7 +56,7 @@ export default function Dashboard() {
             },
           }
         );
-
+        console.log(response);
         // Update state with the fetched data
         setUserCollection(response.data);
       } catch (error) {
@@ -101,16 +102,21 @@ export default function Dashboard() {
       </div>
 
       <h1>User Collection</h1>
-      <div>
+      <div className="flex ">
         {userCollection.length > 0 ? (
           userCollection.map((item) => (
-            <ul key={item.userCollectionId} className="flex gap-3">
-              <li>{item.volume.seriesName}</li>
-              <li>{item.volume.volumeNumber}</li>
-              <li>{item.volume.author}</li>
-              <li>{item.status}</li>
-              <li>{item.notes}</li>
-            </ul>
+            <MangaCard
+              key={item.userCollectionId}
+              author={item.volume.author}
+              vol={item.volume.volumeNumber}
+              title={item.volume.seriesName}
+              src={
+                item.volume?.coverImageUrl?.trim()
+                  ? item.volume.coverImageUrl
+                  : null
+              }
+              status={item.status}
+            />
           ))
         ) : (
           <div>No items found in your collection.</div> // More descriptive message for empty state

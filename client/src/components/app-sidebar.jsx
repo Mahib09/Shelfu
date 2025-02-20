@@ -23,6 +23,7 @@ const AppSidebar = () => {
   const SidebarData = [
     { title: "Dashboard", path: "/dashboard" },
     { title: "Collection", path: "/collection" },
+    { title: "Search", path: "/search" },
     { title: "Recommendation", path: "/recommendation" },
     { title: "Back To Home", path: "/" },
   ];
