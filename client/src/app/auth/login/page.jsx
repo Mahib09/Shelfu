@@ -3,17 +3,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
-import {
-  auth,
-  provider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-} from "@/lib/firebase";
-import { sendTokenToBackend } from "@/lib/api";
+import { useAuth } from "@/context/authContext";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -26,52 +19,18 @@ const schema = Yup.object().shape({
 
 const Login = () => {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState("");
+  const { login, errorMessage, loading, signInWithGoogle } = useAuth();
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitted },
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const handleGoogleSignIn = async () => {
-    setErrorMessage("");
-    try {
-      const userCredentials = await signInWithPopup(auth, provider);
-      const user = userCredentials.user;
-      const idToken = await user.getIdToken();
-      const response = await axios.post("http://localhost:3001/auth/login", {
-        token: idToken,
-      });
-      if (response.data.success) {
-        router.push("/dashboard");
-      }
-    } catch (error) {
-      setErrorMessage("Login failed.");
-    }
-  };
-  const onSubmit = async (data) => {
-    setErrorMessage("");
-    const { email, password } = data;
 
-    try {
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredentials.user;
-      const idToken = await user.getIdToken();
-      const response = await axios.post("http://localhost:3001/auth/login", {
-        token: idToken,
-      });
-      if (response.data.success) {
-        router.push("/dashboard");
-      }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Login failed. Please check your credentials.");
-    }
+  const handleLogin = (data) => {
+    login(data);
   };
 
   return (
@@ -83,10 +42,10 @@ const Login = () => {
           <p className="text-sm text-gray-600">Welcome back to Shelfu</p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="form">
+        <form onSubmit={handleSubmit(handleLogin)} className="form">
           <button
             type="button"
-            onClick={handleGoogleSignIn}
+            onClick={signInWithGoogle}
             className=" rounded-md flex items-center justify-center gap-2 p-2 bg-gray-100 w-full"
           >
             <svg
@@ -140,11 +99,12 @@ const Login = () => {
             >
               Back to Home
             </button>
-            <button type="submit" className="btnSubmit">
-              Sign In
+            <button type="submit" className="btnSubmit" disabled={loading}>
+              {loading ? "Signing In..." : "Sign In"}
             </button>
           </div>
         </form>
+        {errorMessage && <p>{errorMessage}</p>}
       </div>
       <p className="text-sm text-gray-500">
         No account?{" "}

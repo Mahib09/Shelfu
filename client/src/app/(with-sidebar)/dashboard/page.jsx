@@ -3,14 +3,26 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { auth } from "@/lib/firebase"; // Adjust path based on your file structure
 import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
+import { useManga } from "@/context/mangaContext";
 
 export default function Dashboard() {
   const [userCollection, setUserCollection] = useState([]); // Initialize userCollection as an empty array
-  const [loading, setLoading] = useState(true); // To handle loading state
-  const [error, setError] = useState(null); // To handle any errors
   const router = useRouter();
   const [user, setUser] = useState(null);
-
+  const {
+    searchQuery,
+    setSearchQuery,
+    loading,
+    setLoading,
+    error,
+    setError,
+    collection,
+    setCollection,
+    searchResult,
+    setSearchResult,
+    fetchManga,
+  } = useManga();
   useEffect(() => {
     // Check if the user is logged in after component mounts
     const currentUser = auth.currentUser;
@@ -57,6 +69,10 @@ export default function Dashboard() {
     fetchUserCollection();
   }, [user]); // Fetch data only when `user` is available
 
+  const handleSearch = async () => {
+    await fetchManga();
+    console.log(searchResult);
+  };
   // Show loading indicator while fetching
   if (loading) {
     return <div>Loading...</div>;
@@ -70,6 +86,20 @@ export default function Dashboard() {
   // Render the user collection
   return (
     <div>
+      <div>
+        <input
+          type="text"
+          placeholder="search manga"
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+          }}
+        />
+        <button type="button" onClick={handleSearch}>
+          <Search />
+        </button>
+      </div>
+
       <h1>User Collection</h1>
       <div>
         {userCollection.length > 0 ? (

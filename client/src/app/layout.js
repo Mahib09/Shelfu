@@ -1,4 +1,6 @@
+import { MangaProvider } from "@/context/mangaContext";
 import "../styles/globals.css";
+import { AuthProvider } from "@/context/authContext"; // Adjust the path as needed
 
 export const metadata = {
   title: "Your App Title",
@@ -8,7 +10,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>
+          <MangaProvider>{children}</MangaProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }
