@@ -113,3 +113,9 @@
     @apply bg-background text-foreground;
   }
 }
+.embla__container {
+  scroll-behavior: smooth;
+}
+.embla__slide {
+  flex: 0 0 100%; /* Default slide covers 100% of the viewport */
+}

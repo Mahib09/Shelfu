@@ -7,20 +7,26 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 import MangaCard from "./app-mangaCard";
-
+import { useSidebar } from "./ui/sidebar";
 const MangaCarousel = () => {
+  const { open } = useSidebar();
   const { collection } = useManga();
 
   return (
-    <Carousel className="carousel-container">
-      <CarouselContent className="overflow p-2">
-        <CarouselPrevious />
+    <Carousel
+      className={`flex items-center ${
+        open
+          ? ` w-full md:w-[calc(100%-5rem)]`
+          : `w-full md:w-[calc(100%-8rem)]`
+      } h-fit transform translate-x-14`}
+    >
+      <CarouselContent className="">
         {collection?.length > 0 ? (
           collection.map((item) => (
             <CarouselItem
               key={item.userCollectionId}
               className={`transition-all ${
-                open ? "basis-[1/6]" : "basis-[1/6]"
+                open ? " basis-[1/6]" : "basis-[1/6]"
               }`}
             >
               <MangaCard
@@ -37,12 +43,15 @@ const MangaCarousel = () => {
             </CarouselItem>
           ))
         ) : (
-          <div className="text-center text-gray-500">
-            No items found in your collection.
-          </div>
+          <CarouselItem>
+            <div className="text-center text-gray-500">
+              No items found in your collection.
+            </div>
+          </CarouselItem>
         )}
-        <CarouselNext />
       </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext className={`h-full`} />
     </Carousel>
   );
 };

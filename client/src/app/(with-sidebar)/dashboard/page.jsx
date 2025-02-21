@@ -90,7 +90,10 @@ export default function Dashboard() {
 
   // Render the user collection
   return (
-    <div style={{ width: pagewidth, transition: "width 0.3s ease" }}>
+    <div
+      className="w-full transition-all ease-in-out delay-300"
+      style={{ width: pagewidth ? `${pagewidth}` : "auto" }}
+    >
       <div className="w-max">
         <input
           type="text"
