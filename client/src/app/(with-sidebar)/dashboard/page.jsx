@@ -3,14 +3,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { auth } from "@/lib/firebase"; // Adjust path based on your file structure
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useManga } from "@/context/mangaContext";
 import MangaCard from "@/components/app-mangaCard";
+import MangaCarousel from "@/components/app-mangaCarousel";
+import { useUi } from "@/context/uiContext";
 
 export default function Dashboard() {
   const [userCollection, setUserCollection] = useState([]); // Initialize userCollection as an empty array
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const { pagewidth } = useUi();
   const {
     searchQuery,
     setSearchQuery,
@@ -59,6 +62,7 @@ export default function Dashboard() {
         console.log(response);
         // Update state with the fetched data
         setUserCollection(response.data);
+        setCollection(response.data);
       } catch (error) {
         console.error("Error fetching user collection:", error);
         setError("Failed to fetch data. Please try again.");
@@ -86,8 +90,8 @@ export default function Dashboard() {
 
   // Render the user collection
   return (
-    <div>
-      <div>
+    <div style={{ width: pagewidth, transition: "width 0.3s ease" }}>
+      <div className="w-max">
         <input
           type="text"
           placeholder="search manga"
@@ -101,12 +105,14 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <h1>User Collection</h1>
-      <div className="flex ">
-        {userCollection.length > 0 ? (
-          userCollection.map((item) => (
+      {/* <h1>User Collection</h1>
+      {userCollection?.length > 0 ? (
+        userCollection.map((item) => (
+          <div
+            key={item.userCollectionId}
+            className="basis-[16.9%] flex-shrink-0 max-w-[16.9%] p-[.25rem]"
+          >
             <MangaCard
-              key={item.userCollectionId}
               author={item.volume.author}
               vol={item.volume.volumeNumber}
               title={item.volume.seriesName}
@@ -117,11 +123,18 @@ export default function Dashboard() {
               }
               status={item.status}
             />
-          ))
-        ) : (
-          <div>No items found in your collection.</div> // More descriptive message for empty state
-        )}
-      </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-center text-gray-500">
+          No items found in your collection.
+        </div>
+      )}
+      <button className="flex items-center justify-center w-[var(--slider-padding)] bg-[rgba(0,0,0,.25)] z-10 my-[0.25rem] mx-0 hover:bg-[rgba(0,0,0,.5)] cursor-pointer border-none rounded-md rounded-r-none">
+        <ChevronRight color="white" size={40} />
+      </button> */}
+
+      <MangaCarousel />
     </div>
   );
 }

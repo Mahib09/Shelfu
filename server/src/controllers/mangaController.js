@@ -5,10 +5,12 @@ require("dotenv").config();
 
 const fetchFromApi = async (query, res) => {
   try {
-    const booksUrl = `https://openlibrary.org/search.json?q=${query} vol`;
+    const booksUrl = `https://openlibrary.org/search.json?q=${query}
+    // `;
 
     const response = await axios.get(booksUrl);
     const books = response.data.docs;
+
     if (!books || books.length === 0) {
       return []; // Return empty if no results
     }
@@ -35,10 +37,13 @@ const fetchFromApi = async (query, res) => {
           "japanese",
           "chinese",
           "french",
+          "novel",
+          "By",
+          "le",
         ];
 
         // Check if title has a volume number (e.g., "Vol. 1" or "Volume 2")
-        const volumeRegex = /(vol\.?\s?|volume\s?)(\d+)/i;
+        const volumeRegex = /(vol\.?\s*|\bvolume\s*)?(\d+)$/i;
         const hasVolumeNumber = volumeRegex.test(title);
 
         // Strictly remove books if title contains unwanted keywords
@@ -48,15 +53,16 @@ const fetchFromApi = async (query, res) => {
 
         // Exclude books with unwanted keywords and non-English editions
         return (
-          hasVolumeNumber &&
-          !containsUnwantedKeyword &&
-          !language.includes("jpn")
+          (hasVolumeNumber &&
+            !containsUnwantedKeyword &&
+            language.includes("eng")) ||
+          language.includes("jpn")
         );
       })
       .map((book) => {
         // Extract volume number
         const title = book.title;
-        const volumeMatch = title.match(/(vol\.?\s?|volume\s?)(\d+)/i);
+        const volumeMatch = title.match(/(vol\.?\s*|\bvolume\s*)?(\d+)$/i);
         const volumeNumber = volumeMatch ? parseInt(volumeMatch[2], 10) : null;
 
         return {

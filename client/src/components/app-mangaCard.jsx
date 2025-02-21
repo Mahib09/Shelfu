@@ -3,7 +3,7 @@ import React from "react";
 
 const MangaCard = ({ src, title, author, vol, status }) => {
   return (
-    <div className="relative group w-max rounded-md p-1">
+    <div className="relative h-auto group rounded-md p-1 w-max">
       <Image
         height={300}
         width={200}
