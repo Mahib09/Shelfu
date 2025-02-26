@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import {
   auth,
   provider,
@@ -19,7 +19,28 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/auth/profile", {
+          withCredentials: true,
+        });
+        setUser(response.data.user);
+        console.log(response);
+        setProfile(response.data.profile);
+      } catch (error) {
+        setUser(null);
+        setProfile(null);
+        router.push("/auth/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   // Helper function to make the backend API call
   const sendTokenToBackend = async (idToken, endpoint) => {
@@ -28,7 +49,8 @@ export const AuthProvider = ({ children }) => {
         `http://localhost:3001/auth/${endpoint}`,
         {
           token: idToken,
-        }
+        },
+        { withCredentials: true }
       );
 
       if (response.data.success) {
@@ -67,16 +89,16 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      setLoading(true);
-      await signOut(auth);
+      await axios.post(
+        "http://localhost:3001/auth/logout",
+        {},
+        { withCredentials: true }
+      );
       setUser(null);
       setIsLoggedIn(false);
       router.push("/auth/login");
     } catch (error) {
-      console.error("Error during sign-out:", error);
-      setError(error.message || "Sign-out failed.");
-    } finally {
-      setLoading(false);
+      console.error("Logout failed:", error);
     }
   };
 

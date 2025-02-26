@@ -17,10 +17,10 @@ const MangaCarousel = () => {
       className={`flex items-center ${
         open
           ? ` w-full md:w-[calc(100%-5rem)]`
-          : `w-full md:w-[calc(100%-8rem)]`
-      } h-fit transform translate-x-14`}
+          : `w-full md:w-[calc(100%-6.5rem)]`
+      } h-fit transform translate-x-14 group`}
     >
-      <CarouselContent className="">
+      <CarouselContent className="-ml-8">
         {collection?.length > 0 ? (
           collection.map((item) => (
             <CarouselItem
@@ -50,8 +50,8 @@ const MangaCarousel = () => {
           </CarouselItem>
         )}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext className={`h-full`} />
+      <CarouselPrevious className="" />
+      <CarouselNext className="" />
     </Carousel>
   );
 };

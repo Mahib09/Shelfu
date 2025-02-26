@@ -6,7 +6,7 @@ import { useAuth } from "@/context/authContext"; // Importing the context hook
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
-
+import { useEffect } from "react";
 // Validation schema for form
 const schema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -26,7 +26,7 @@ const schema = Yup.object().shape({
 
 const SignUp = () => {
   const router = useRouter();
-  const { signUp, errorMessage, loading, signInWithGoogle } = useAuth(); // Accessing signUp, errorMessage, loading, and other data from context
+  const { user, signUp, errorMessage, loading, signInWithGoogle } = useAuth(); // Accessing signUp, errorMessage, loading, and other data from context
   const {
     register,
     handleSubmit,
@@ -34,7 +34,11 @@ const SignUp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
   const handleSignUp = (data) => {
     signUp(data);
   };

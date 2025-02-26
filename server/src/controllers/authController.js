@@ -1,5 +1,6 @@
 const admin = require("../services/firebaseService");
 const prisma = require("../services/prismaService");
+const { serialize } = require("cookie");
 
 const signUp = async (req, res) => {
   try {
@@ -15,13 +16,13 @@ const signUp = async (req, res) => {
     const name = decodedToken.name || "";
 
     let user = await prisma.users.findUnique({
-      where: {
-        firebaseUId: firebaseId,
-      },
+      where: { firebaseUId: firebaseId },
     });
 
     if (user) {
-      return res.status(400).json({ error: "User already exists" });
+      return res
+        .status(200)
+        .json({ success: true, message: "User already registered", user });
     }
 
     user = await prisma.users.create({
@@ -32,28 +33,36 @@ const signUp = async (req, res) => {
       },
     });
 
-    res.cookie("token", token, {
-      httpOnly: true, // Can't be accessed via JavaScript (for security)
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      maxAge: 7 * 24 * 60 * 60 * 1000, // Token expires after 7 days (7 days in milliseconds)
+    const sessionToken = await admin.auth().createSessionCookie(token, {
+      expiresIn: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res
+    res.cookie("token", sessionToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
+
+    return res
       .status(200)
-      .json({ success: true, message: "User logged in successfully" });
+      .json({ success: true, message: "User signed up successfully", user });
   } catch (error) {
     console.error("Sign-up error:", error);
 
-    // Firebase-specific error handling
     if (error.code === "auth/email-already-exists") {
       return res.status(400).json({ message: "Email is already in use" });
     } else if (error.code === "auth/weak-password") {
       return res.status(400).json({ message: "Password is too weak" });
+    } else if (error.code === "P2002") {
+      return res
+        .status(400)
+        .json({ message: "User already exists in the database" });
     }
 
-    res.status(500).json({ message: "Error creating user" });
+    return res.status(500).json({ message: "Error creating user" });
   }
 };
+
 const login = async (req, res) => {
   try {
     const { token } = req.body;
@@ -62,34 +71,57 @@ const login = async (req, res) => {
       return res.status(400).json({ error: "Token is required" });
     }
 
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    const sessionToken = await admin.auth().createSessionCookie(token, {
+      expiresIn: 7 * 24 * 60 * 60 * 1000,
+    });
+    console.log(sessionToken);
 
-    res.cookie("token", token, {
+    res.cookie("token", sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // Token expires after 7 days
+      secure: false, // Set to true in production (HTTPS)
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res
-      .status(200)
-      .json({ success: true, message: "User logged in successfully" });
+    return res.status(200).json({
+      success: true,
+      message: "User Logged In successfully",
+    });
   } catch (error) {
     console.error("Login error:", error);
-
-    // Firebase specific error handling (like token expiration, etc.)
     res.status(500).json({ message: "Error logging in" });
   }
 };
 const getProfile = async (req, res) => {
   try {
-    const { firebaseId } = req.user;
-    const user = await admin.auth().getUser(firebaseId);
+    const user = req.user;
+    const profile = await prisma.users.findUnique({
+      where: { firebaseUId: user.uid },
+    });
 
-    res.status(200).json({ userProfile: user });
+    if (!profile) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ profile, user });
   } catch (error) {
     console.error("Error fetching user profile:", error);
-    res.status(500).json({ message: "Error retrieving user profile" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+const logout = (req, res) => {
+  res.setHeader(
+    "Set-Cookie",
+    serialize("authToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      path: "/",
+      maxAge: 0, // Expire immediately
+    })
+  );
 
-module.exports = { signUp, login, getProfile };
+  res.status(200).json({ message: "Logged out" });
+};
+
+module.exports = { signUp, login, getProfile, logout };

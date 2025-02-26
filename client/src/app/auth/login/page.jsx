@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
@@ -19,8 +19,12 @@ const schema = Yup.object().shape({
 
 const Login = () => {
   const router = useRouter();
-  const { login, errorMessage, loading, signInWithGoogle } = useAuth();
-
+  const { user, login, errorMessage, loading, signInWithGoogle } = useAuth();
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
   const {
     register,
     handleSubmit,
