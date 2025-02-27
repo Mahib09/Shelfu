@@ -8,6 +8,7 @@ import { auth } from "@/lib/firebase"; // Adjust path based on your file structu
 import { useRouter } from "next/navigation";
 import { useUi } from "@/context/uiContext";
 import { Filter, SortAsc, SortDesc } from "lucide-react";
+import SearchCard from "@/components/app-searchMangaCard";
 const Collection = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);

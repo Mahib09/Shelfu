@@ -3,6 +3,7 @@ import { useManga } from "@/context/mangaContext";
 import { ArrowLeft, SearchIcon } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import MangaCard from "@/components/app-mangaCard";
+import SearchCard from "@/components/app-searchMangaCard";
 
 const Search = () => {
   const {
@@ -61,7 +62,7 @@ const Search = () => {
 
       {/* Search Results */}
       {isSearching && (
-        <div className="mt-[70px] w-full flex flex-wrap gap-3 p-4">
+        <div className="mt-[70px] w-[100%] flex flex-wrap gap-5 p-4 justify-center">
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
@@ -69,10 +70,11 @@ const Search = () => {
           ) : searchResult.length > 0 ? (
             searchResult.map((item) => (
               <div key={item.booksApiId}>
-                <MangaCard
-                  author={item.author}
+                <SearchCard
+                  image={item.image}
                   title={item.title}
-                  src={item.image || null}
+                  author={item.author}
+                  description={item.description}
                 />
               </div>
             ))
