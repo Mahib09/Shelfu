@@ -1,32 +1,33 @@
 const { Request, Response } = require("express");
 const prisma = require("../services/prismaService");
 const axios = require("axios");
-require("dotenv").config();
 
 const fetchFromApi = async (query, res) => {
   try {
-    const booksUrl = `https://openlibrary.org/search.json?q=${query}
-    // `;
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: process.env.ISBNDB_API_KEY,
+    };
+    const booksUrl = `https://api2.isbndb.com/books/${query}`;
 
-    const response = await axios.get(booksUrl);
-    const books = response.data.docs;
-
+    const response = await axios.get(booksUrl, {
+      headers: headers,
+    });
+    const books = response.data.books;
     if (!books || books.length === 0) {
       return []; // Return empty if no results
     }
 
-    const formattedResults = response.data.docs
+    const formattedResults = books
       .filter((book) => {
         const title = book.title.toLowerCase();
-        const language = book.language || [];
+        const language = book.language;
 
-        // Keywords to filter out unwanted books
         const unwantedKeywords = [
           "coloring book",
           "art book",
           "illustrations",
           "sketch",
-          "light novel",
           "guidebook",
           "fanbook",
           "concept art",
@@ -34,53 +35,67 @@ const fetchFromApi = async (query, res) => {
           "encyclopedia",
           "animation book",
           "how to",
-          "japanese",
           "chinese",
           "french",
-          "novel",
-          "By",
-          "le",
+          "collection set",
         ];
 
-        // Check if title has a volume number (e.g., "Vol. 1" or "Volume 2")
-        const volumeRegex = /(vol\.?\s*|\bvolume\s*)?(\d+)$/i;
+        const volumeRegex = /(vol\.?\s*|\bvolume\s*|\bvol\s*)(\d+)/i;
         const hasVolumeNumber = volumeRegex.test(title);
 
-        // Strictly remove books if title contains unwanted keywords
         const containsUnwantedKeyword = unwantedKeywords.some((keyword) =>
           title.includes(keyword)
         );
 
-        // Exclude books with unwanted keywords and non-English editions
         return (
-          (hasVolumeNumber &&
-            !containsUnwantedKeyword &&
-            language.includes("eng")) ||
-          language.includes("jpn")
+          hasVolumeNumber && !containsUnwantedKeyword && language.includes("en")
         );
       })
       .map((book) => {
-        // Extract volume number
         const title = book.title;
-        const volumeMatch = title.match(/(vol\.?\s*|\bvolume\s*)?(\d+)$/i);
+        const volumeMatch = title.match(
+          /(vol\.?\s*|\bvolume\s*|\bvol\s*)(\d+)/i
+        );
         const volumeNumber = volumeMatch ? parseInt(volumeMatch[2], 10) : null;
 
+        const seriesTitle = title
+          .replace(/(vol\.?\s*\d+|\bvolume\s*\d+)/i, "")
+          .trim(); // Normalize series title
+
         return {
+          seriesTitle,
           title: book.title,
-          author: book.author_name?.join("") || "Unknown",
-          coverImageUrl: book.cover_i
-            ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
-            : null,
-          booksApiId: book.key,
-          description: book.first_sentence || "No description available",
-          publisher: book.publisher ? book.publisher?.join(", ") : "Unknown", // Join publishers if it's an array
-          volumeNumber: volumeNumber, // Store volume number
+          volumeNumber,
+          author: book.authors,
+          booksApiId: book.isbn,
+          description: book.synopsis || "No description available",
+          publisher: book.publisher,
+          isbn: book.isbn,
+          releaseDate: book.date_published,
+          image: book.image || "https://default-image-url.com",
         };
       })
-      .sort((a, b) => a.volumeNumber - b.volumeNumber); // Numeric sorting of volumes
+      .reduce((uniqueBooks, book) => {
+        const key = `${book.seriesTitle.toLowerCase()}-vol-${
+          book.volumeNumber
+        }`;
 
-    return formattedResults; // Return the formatted results to the response
+        if (!uniqueBooks.has(key)) {
+          uniqueBooks.set(key, book);
+        }
+
+        return uniqueBooks;
+      }, new Map());
+
+    const uniqueFormattedResults = Array.from(formattedResults.values()).sort(
+      (a, b) =>
+        a.seriesTitle.localeCompare(b.seriesTitle) ||
+        a.volumeNumber - b.volumeNumber
+    );
+
+    return uniqueFormattedResults;
   } catch (error) {
+    console.log(error);
     return []; // Return error status in case of failure
   }
 };
@@ -97,53 +112,41 @@ const getSearchResults = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-const checkIfVolumeExists = async (bookId) => {
+const checkIfVolumeExists = async (isbn) => {
   return await prisma.volumes.findUnique({
     where: {
-      booksApiId: bookId,
+      isbn: isbn,
     },
   });
 };
 
 const getMangaDetails = async (req, res) => {
   try {
-    const { bookId } = req.params;
+    const { isbn } = req.params;
 
-    const volumeExists = await checkIfVolumeExists(bookId);
+    const volumeExists = await checkIfVolumeExists(isbn);
 
     if (volumeExists) {
       res.status(200).json(volumeExists);
     } else {
-      const booksUrl = `https://openlibrary.org/works/${bookId}.json`;
+      const booksUrl = `https://api2.isbndb.com/books/${isbn}`;
       const response = await axios.get(booksUrl);
-      const book = response.data;
+      const book = response.data.books[0];
 
       const title = book.title || "Unknown";
-      let authorName = "Unknown";
-      const authorKey = book.authors?.[0]?.author?.key;
-      if (authorKey) {
-        try {
-          const authorResponse = await axios.get(
-            `https://openlibrary.org${authorKey}.json`
-          );
-          authorName = authorResponse.data.name || "Unknown";
-        } catch (error) {
-          console.error("Error fetching author details:", error.message);
-        }
-      }
-      // Extract volume number (e.g., "Naruto, Vol. 1" → 1)
-      const volumeMatch = title.match(/(vol\.?\s?|volume\s?)(\d+)/i);
+      let author = book.author;
+      const volumeMatch = title.match(/(vol\.?\s*|\bvolume\s*|\bvol\s*)(\d+)/i);
       const volumeNumber = volumeMatch ? parseInt(volumeMatch[2], 10) : null;
       const responseDetails = {
         title: title,
-        author: authorName, // Open Library authors are objects
-        coverImageUrl: book.covers
-          ? `https://covers.openlibrary.org/b/id/${book.covers[0]}-M.jpg`
-          : null,
-        booksApiId: book.key,
-        description: book.description?.value || "No description available", // Description is often an object
-        publisher: book.publishers?.[0] || "Unknown", // Open Library uses "publishers"
         volumeNumber: volumeNumber,
+        author: author,
+        image: book.image,
+        booksApiId: book.isbn,
+        description: book.synopsis || "No description available", // Description is often an object
+        publisher: book.publisher || "Unknown",
+        isbn: book.isbn,
+        releaseDate: book.date_published,
       };
       res.status(200).json(responseDetails);
     }

@@ -5,11 +5,11 @@ const MangaCard = ({ src, title, author, vol, status }) => {
   return (
     <div className="relative h-auto group rounded-md p-1 w-max">
       <Image
-        height={300}
-        width={200}
+        height={270}
+        width={180}
         src={src}
         alt="coverart"
-        className="rounded-md h-[300px] object-cover"
+        className="rounded-md h-[270px] object-cover"
       />
       <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <p className="text-lg font-bold">{title}</p>

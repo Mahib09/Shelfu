@@ -1,6 +1,7 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "./authContext";
 
 const MangaContext = createContext();
 
@@ -10,8 +11,30 @@ export const MangaProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const { user } = useAuth();
 
-  const fetchManga = async () => {
+  useEffect(() => {
+    setLoading(true);
+    const fetchUserCollection = async () => {
+      try {
+        const userId = user.uid;
+        const response = await axios.get(
+          `http://localhost:3001/usercollection/${userId}`,
+          {
+            withCredentials: true,
+          }
+        );
+        setCollection(response.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserCollection();
+  }, [user]);
+
+  const searchManga = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -38,7 +61,7 @@ export const MangaProvider = ({ children }) => {
         setError,
         setSearchQuery,
         setSearchResult,
-        fetchManga,
+        searchManga,
       }}
     >
       {children}

@@ -3,30 +3,29 @@ const prisma = require("../services/prismaService");
 
 const addMangatoUserCollection = async (req, res) => {
   try {
-    const { userId, volumeId, status, notes, volumeInfo } = req.body;
+    const { userId, isbn, status, notes, volumeInfo } = req.body;
 
     // Validate required fields
-    if (userId === "" || volumeId === "" || status === "") {
+    if (userId === "" || isbn === "" || status === "") {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     let volume = await prisma.volumes.findUnique({
-      where: { volumeId: volumeId },
+      where: { isbn: isbn },
     });
 
     if (!volume && volumeInfo) {
       volume = await prisma.volumes.create({
         data: {
-          volumeId: volumeInfo.volumeId,
           volumeNumber: volumeInfo.volumeNumber,
-          seriesName: volumeInfo.seriesName,
+          seriesName: volumeInfo.title,
           author: volumeInfo.author,
-          booksApiId: volumeInfo.booksApiId,
-          description: volumeInfo.description,
+          booksApiId: volumeInfo.isbn13,
+          description: volumeInfo.synopsis,
           publisher: volumeInfo.publisher,
           isbn: volumeInfo.isbn,
-          releaseDate: volumeInfo.releaseDate,
-          coverImage: volumeInfo.coverImage,
+          releaseDate: volumeInfo.date_published,
+          coverImage: volumeInfo.image,
         },
       });
     }
@@ -38,7 +37,7 @@ const addMangatoUserCollection = async (req, res) => {
     const createRecord = await prisma.userCollection.create({
       data: {
         userId: userId,
-        volumeId: volumeId,
+        volumeId: volume.volumeId,
         status: status,
         notes: notes,
       },
