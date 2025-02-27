@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
-const SearchCard = ({ image, title, author, description }) => {
+const SearchCard = ({ image, title, author, description, handleAdd }) => {
   return (
     <div className="border relative h-auto w-max rounded-md group">
       <div className="p-2 flex flex-col w-[191px]">
@@ -25,6 +25,7 @@ const SearchCard = ({ image, title, author, description }) => {
 
         <div className="relative mt-auto group/button">
           <button
+            onClick={handleAdd}
             className="mt-2 bg-white text-black rounded-full p-2 hover:bg-gray-200 transition"
             aria-label="Add to collection"
           >

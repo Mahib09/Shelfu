@@ -4,6 +4,9 @@ import { ArrowLeft, SearchIcon } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import MangaCard from "@/components/app-mangaCard";
 import SearchCard from "@/components/app-searchMangaCard";
+import axios from "axios";
+import { useAuth } from "@/context/authContext";
+import AddMangaModel from "@/components/app-addMangaModel";
 
 const Search = () => {
   const {
@@ -14,8 +17,12 @@ const Search = () => {
     error,
     searchQuery,
   } = useManga();
+  const { profile } = useAuth();
 
   const [isSearching, setIsSearching] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -27,6 +34,23 @@ const Search = () => {
     if (searchResult.length === 0) setIsSearching(false);
   }, [searchResult]);
   console.log(searchResult);
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden"; // Disable scrolling
+    } else {
+      document.body.style.overflow = "auto"; // Enable scrolling
+    }
+
+    return () => {
+      document.body.style.overflow = "auto"; // Ensure scroll is enabled when component unmounts
+    };
+  }, [isModalOpen]);
+
+  const handleAddManga = () => {
+    if (!isModalOpen) {
+      openModal();
+    }
+  };
   return (
     <div className="min-h-[calc(100% - 2rem)] px-20">
       <div
@@ -75,6 +99,7 @@ const Search = () => {
                   title={item.title}
                   author={item.author}
                   description={item.description}
+                  handleAdd={handleAddManga}
                 />
               </div>
             ))
@@ -83,6 +108,7 @@ const Search = () => {
           )}
         </div>
       )}
+      {isModalOpen && <AddMangaModel onClose={closeModal} />}
     </div>
   );
 };
