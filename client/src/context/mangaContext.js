@@ -60,7 +60,6 @@ export const MangaProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      console.log("form context", bodyInfo);
       const response = await addMangatoUserCollectionApi({ bodyInfo });
       return response;
     } catch (error) {

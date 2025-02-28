@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { useManga } from "@/context/mangaContext";
-import { Alert, AlertTitle } from "./ui/alert";
 import { toast } from "sonner";
 
 const AddMangaModal = ({ volumeInfo, userId, onClose }) => {

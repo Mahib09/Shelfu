@@ -59,12 +59,12 @@ const fetchFromApi = async (query, res) => {
         const volumeNumber = volumeMatch ? parseInt(volumeMatch[2], 10) : null;
 
         const seriesTitle = title
-          .replace(/(vol\.?\s*\d+|\bvolume\s*\d+)/i, "")
-          .trim(); // Normalize series title
+          .replace(/(vol\.?\s*|\bvolume\s*|\bvol\s*).*/i, "")
+          .trim();
 
         return {
           seriesTitle,
-          title: book.title,
+          title: seriesTitle,
           volumeNumber,
           author: book.authors,
           booksApiId: book.isbn,

@@ -115,6 +115,7 @@ const Search = () => {
                   title={item.title}
                   author={item.author}
                   description={item.description}
+                  volumeNumber={item.volumeNumber}
                   handleAdd={() => handleAddManga(item)}
                 />
               </div>
