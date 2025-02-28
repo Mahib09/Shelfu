@@ -2,6 +2,7 @@ import { MangaProvider } from "@/context/mangaContext";
 import "../styles/globals.css";
 import { AuthProvider } from "@/context/authContext"; // Adjust the path as needed
 import { UiProvider } from "@/context/uiContext";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: "Your App Title",
@@ -13,7 +14,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <AuthProvider>
-          <MangaProvider>{children}</MangaProvider>
+          <MangaProvider>
+            {children}
+            <Toaster />
+          </MangaProvider>
         </AuthProvider>
       </body>
     </html>

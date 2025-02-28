@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { useManga } from "@/context/mangaContext";
+import { Alert, AlertTitle } from "./ui/alert";
+import { toast } from "sonner";
 
 const AddMangaModal = ({ volumeInfo, userId, onClose }) => {
   const [note, setNote] = useState("");
@@ -31,11 +33,9 @@ const AddMangaModal = ({ volumeInfo, userId, onClose }) => {
     const response = await addMangaToCollection(bodyInfo);
     // Check if the response is successful
     if (response) {
-      closeModal();
-      alert("Manga Added to Your Collection");
+      toast("Manga successfully added to your collection");
     } else {
-      closeModal();
-      alert("Failed to Add Manga");
+      toast("Error adding Manga to your collection");
     }
     closeModal();
   };

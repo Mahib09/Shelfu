@@ -119,3 +119,12 @@
 .embla__slide {
   flex: 0 0 100%; /* Default slide covers 100% of the viewport */
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { useUi } from "@/context/uiContext";
 import { Filter, SortAsc, SortDesc } from "lucide-react";
 import SearchCard from "@/components/app-searchMangaCard";
+
+import { TabsContent, TabsList, Tabs, TabsTrigger } from "@/components/ui/tabs";
 const Collection = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
@@ -26,7 +28,7 @@ const Collection = () => {
     setSearchResult,
     fetchManga,
   } = useManga();
-
+  console.log(collection);
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -49,28 +51,58 @@ const Collection = () => {
         </div>
         <input placeholder="search..." alt="search" className="border w-80" />
       </div>
-      <div className="flex flex-wrap gap-8 p-4 m-4 items-center">
-        {collection?.length > 0 ? (
-          collection.map((item) => (
-            <div key={item.userCollectionId}>
-              <MangaCard
-                author={item.volume.author}
-                vol={item.volume.volumeNumber}
-                title={item.volume.seriesName}
-                src={
-                  item.volume?.coverImageUrl?.trim()
-                    ? item.volume.coverImageUrl
-                    : null
-                }
-                status={item.status}
-              />
-            </div>
-          ))
-        ) : (
-          <div className="text-center text-gray-500">
-            No items found in your collection.
-          </div>
-        )}
+
+      {/* content */}
+      <div>
+        <Tabs defaultValue="owned" className="w-full p-2">
+          <TabsList className="grid w-[40%] grid-cols-3">
+            <TabsTrigger value="owned">Owned</TabsTrigger>
+            <TabsTrigger value="wantobuy">Want To Buy</TabsTrigger>
+            <TabsTrigger value="forsale">For Sale </TabsTrigger>
+          </TabsList>
+          <TabsContent
+            value="owned"
+            className="flex flex-wrap gap-2 justify-center"
+          >
+            {collection
+              .filter((item) => item.status === "Owned")
+              .map((item) => (
+                <MangaCard
+                  key={item.userCollectionId}
+                  src={item.volume.coverImageUrl}
+                  title={item.volume.seriesName}
+                />
+              ))}
+          </TabsContent>
+          <TabsContent
+            value="wantobuy"
+            className="flex flex-wrap gap-2 justify-center"
+          >
+            {collection
+              .filter((item) => item.status === "Want_To_Buy")
+              .map((item) => (
+                <MangaCard
+                  key={item.userCollectionId}
+                  src={item.volume.coverImageUrl}
+                  title={item.volume.seriesName}
+                />
+              ))}
+          </TabsContent>
+          <TabsContent
+            value="forsale"
+            className="flex flex-wrap gap-2 justify-center"
+          >
+            {collection
+              .filter((item) => item.status === "For_Sale")
+              .map((item) => (
+                <MangaCard
+                  key={item.userCollectionId}
+                  src={item.volume.coverImageUrl}
+                  title={item.volume.seriesName}
+                />
+              ))}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
