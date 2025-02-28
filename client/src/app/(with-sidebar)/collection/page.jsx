@@ -7,31 +7,29 @@ import { useEffect, useState } from "react";
 import { auth } from "@/lib/firebase"; // Adjust path based on your file structure
 import { useRouter } from "next/navigation";
 import { useUi } from "@/context/uiContext";
-import { Filter, Grid, List, SortAsc, SortDesc } from "lucide-react";
+import { ArrowLeft, Filter, Grid, List, SortAsc, SortDesc } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 
 import { TabsContent, TabsList, Tabs, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import MangaListCard from "@/components/app-mangaListCard";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 const Collection = () => {
-  const router = useRouter();
   const [layout, setLayout] = useState("Grid");
   const [sort, setSort] = useState("Asc");
-  const { pagewidth } = useUi();
-  const {
-    searchQuery,
-    setSearchQuery,
-    loading,
-    setLoading,
-    error,
-    setError,
-    collection,
-    setCollection,
-    searchResult,
-    setSearchResult,
-    fetchManga,
-  } = useManga();
+  const [filterQuery, setFilterQuery] = useState("");
+  const [filterActive, setFilterActive] = useState();
+  const [searchFilter, setSearchFilter] = useState("");
+  const { loading, error, collection } = useManga();
+
+  useEffect(() => {
+    setFilterActive(filterQuery !== "");
+  }, [filterQuery]);
 
   const handleGrid = () => {
     setLayout("Grid");
@@ -59,7 +57,43 @@ const Collection = () => {
         <Toggle className="ml-auto" onClick={handleSortToggle}>
           <SortDesc />
         </Toggle>
-        <Input type="text" placeholder="Search" className="w-[30%]" />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`${
+                filterActive
+                  ? "text-blue-500 hover:text-blue-500"
+                  : "text-black"
+              }`}
+            >
+              <Filter />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-40">
+            <div>
+              <Input
+                type="text"
+                placeholder="Filter By Author"
+                className="p-2"
+                value={filterQuery}
+                onChange={(e) => {
+                  setFilterQuery(e.target.value);
+                }}
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Input
+          type="text"
+          placeholder="Search"
+          className="w-[30%]"
+          value={searchFilter}
+          onChange={(e) => {
+            setSearchFilter(e.target.value);
+          }}
+        />
       </div>
 
       {/* content */}
@@ -86,91 +120,111 @@ const Collection = () => {
             className="flex flex-wrap md:flex-row gap-2 items-center justify-around sm:justify-center"
           >
             {collection
-              .filter((item) => item.status === "Owned")
+              .filter(
+                (item) =>
+                  item.status === "Owned" &&
+                  item.volume.author
+                    .toLowerCase()
+                    .startsWith(filterQuery.toLowerCase()) &&
+                  item.volume.seriesName
+                    .toLowerCase()
+                    .startsWith(searchFilter.toLowerCase())
+              )
               .sort((a, b) =>
                 sort === "Asc"
                   ? a.volume.seriesName.localeCompare(b.volume.seriesName)
                   : b.volume.seriesName.localeCompare(a.volume.seriesName)
               )
-              .map((item) =>
-                layout === "Grid" ? (
-                  <MangaCard
+              .map((item) => {
+                const CardComponent =
+                  layout === "Grid" ? MangaCard : MangaListCard;
+
+                return (
+                  <CardComponent
                     key={item.userCollectionId}
                     src={item.volume.coverImageUrl}
                     title={item.volume.seriesName}
                     author={item.volume.author}
+                    {...(layout !== "Grid" && {
+                      description: item.volume.description,
+                    })} // Only pass description for list layout
                   />
-                ) : (
-                  <MangaListCard
-                    key={item.userCollectionId}
-                    src={item.volume.coverImageUrl}
-                    title={item.volume.seriesName}
-                    author={item.volume.author}
-                    description={item.volume.description}
-                  />
-                )
-              )}
+                );
+              })}
           </TabsContent>
           <TabsContent
             value="wantobuy"
             className="flex flex-wrap md:flex-row gap-2 items-center justify-around sm:justify-center"
           >
             {collection
-              .filter((item) => item.status === "Want_To_Buy")
+              .filter(
+                (item) =>
+                  item.status === "Want_To_Buy" &&
+                  item.volume.author
+                    .toLowerCase()
+                    .startsWith(filterQuery.toLowerCase()) &&
+                  item.volume.seriesName
+                    .toLowerCase()
+                    .startsWith(searchFilter.toLowerCase())
+              )
               .sort((a, b) =>
                 sort === "Asc"
                   ? a.volume.seriesName.localeCompare(b.volume.seriesName)
                   : b.volume.seriesName.localeCompare(a.volume.seriesName)
               )
-              .map((item) =>
-                layout === "Grid" ? (
-                  <MangaCard
+              .map((item) => {
+                const CardComponent =
+                  layout === "Grid" ? MangaCard : MangaListCard;
+
+                return (
+                  <CardComponent
                     key={item.userCollectionId}
                     src={item.volume.coverImageUrl}
                     title={item.volume.seriesName}
                     author={item.volume.author}
+                    {...(layout !== "Grid" && {
+                      description: item.volume.description,
+                    })} // Only pass description for list layout
                   />
-                ) : (
-                  <MangaListCard
-                    key={item.userCollectionId}
-                    src={item.volume.coverImageUrl}
-                    title={item.volume.seriesName}
-                    author={item.volume.author}
-                    description={item.volume.description}
-                    note={item.notes}
-                  />
-                )
-              )}
+                );
+              })}
           </TabsContent>
           <TabsContent
             value="forsale"
             className="flex flex-wrap md:flex-row gap-2 items-center justify-around sm:justify-center"
           >
             {collection
-              .filter((item) => item.status === "For_Sale")
+              .filter(
+                (item) =>
+                  item.status === "For_Sale" &&
+                  item.volume.author
+                    .toLowerCase()
+                    .startsWith(filterQuery.toLowerCase()) &&
+                  item.volume.seriesName
+                    .toLowerCase()
+                    .startsWith(searchFilter.toLowerCase())
+              )
               .sort((a, b) =>
                 sort === "Asc"
                   ? a.volume.seriesName.localeCompare(b.volume.seriesName)
                   : b.volume.seriesName.localeCompare(a.volume.seriesName)
               )
-              .map((item) =>
-                layout === "Grid" ? (
-                  <MangaCard
+              .map((item) => {
+                const CardComponent =
+                  layout === "Grid" ? MangaCard : MangaListCard;
+
+                return (
+                  <CardComponent
                     key={item.userCollectionId}
                     src={item.volume.coverImageUrl}
                     title={item.volume.seriesName}
                     author={item.volume.author}
+                    {...(layout !== "Grid" && {
+                      description: item.volume.description,
+                    })} // Only pass description for list layout
                   />
-                ) : (
-                  <MangaListCard
-                    key={item.userCollectionId}
-                    src={item.volume.coverImageUrl}
-                    title={item.volume.seriesName}
-                    author={item.volume.author}
-                    description={item.volume.description}
-                  />
-                )
-              )}
+                );
+              })}
           </TabsContent>
         </Tabs>
       </div>
