@@ -24,8 +24,12 @@ const Search = () => {
 
   const [isSearching, setIsSearching] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedManga, setSelectedManga] = useState(null);
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedManga(null);
+  };
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -56,11 +60,13 @@ const Search = () => {
     };
   }, [isModalOpen]);
 
-  const handleAddManga = () => {
+  const handleAddManga = (item) => {
     if (!isModalOpen) {
       openModal();
     }
+    setSelectedManga(item);
   };
+
   return (
     <div className="min-h-[calc(100% - 2rem)] px-20">
       <div
@@ -109,7 +115,7 @@ const Search = () => {
                   title={item.title}
                   author={item.author}
                   description={item.description}
-                  handleAdd={handleAddManga}
+                  handleAdd={() => handleAddManga(item)}
                 />
               </div>
             ))
@@ -118,7 +124,13 @@ const Search = () => {
           )}
         </div>
       )}
-      {isModalOpen && <AddMangaModel onClose={closeModal} />}
+      {isModalOpen && (
+        <AddMangaModel
+          onClose={closeModal}
+          userId={profile.userId}
+          volumeInfo={selectedManga}
+        />
+      )}
     </div>
   );
 };

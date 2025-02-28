@@ -10,7 +10,7 @@ const addMangatoUserCollection = async (req, res) => {
     }
 
     let volume = await prisma.volumes.findUnique({
-      where: { isbn: isbn },
+      where: { booksApiId: volumeInfo.isbn },
     });
 
     if (!volume && volumeInfo) {
@@ -18,17 +18,18 @@ const addMangatoUserCollection = async (req, res) => {
         data: {
           volumeNumber: volumeInfo.volumeNumber,
           seriesName: volumeInfo.title,
-          author: volumeInfo.author,
-          booksApiId: volumeInfo.isbn13,
-          description: volumeInfo.synopsis,
+          author: volumeInfo.author[0],
+          booksApiId: volumeInfo.isbn,
+          description: volumeInfo.description,
           publisher: volumeInfo.publisher,
           isbn: volumeInfo.isbn,
-          releaseDate: volumeInfo.date_published,
-          coverImage: volumeInfo.image,
+          releaseDate: volumeInfo.releaseDate,
+          coverImageUrl: volumeInfo.image,
         },
       });
     }
     if (!volume && !volumeInfo) {
+      console.log("400");
       return res
         .status(400)
         .json({ message: "Volume does not exist and volumeInfo is required" });
@@ -42,8 +43,9 @@ const addMangatoUserCollection = async (req, res) => {
       },
     });
 
-    return res.status(201).json(createRecord);
+    return res.status(201).json({ success: true, createRecord });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };

@@ -42,9 +42,12 @@ export const getUserCollectionApi = async (userId) => {
 };
 
 export const addMangatoUserCollectionApi = async ({ bodyInfo }) => {
-  return await axios.post(`http://localhost:3001/usercollection`, {
-    bodyInfo,
+  console.log("form api.js", bodyInfo);
+  return await axios.post(`http://localhost:3001/usercollection`, bodyInfo, {
     withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 

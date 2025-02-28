@@ -32,7 +32,7 @@ model Volumes {
   description   String?
   publisher     String?
   isbn          String?
-  releaseDate   DateTime?
+  releaseDate   String?
   coverImageUrl String
 
   userCollection UserCollection[]

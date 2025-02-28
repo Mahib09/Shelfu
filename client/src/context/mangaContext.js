@@ -1,7 +1,11 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./authContext";
-import { getSearchResultsApi, getUserCollectionApi } from "@/lib/api";
+import {
+  addMangatoUserCollectionApi,
+  getSearchResultsApi,
+  getUserCollectionApi,
+} from "@/lib/api";
 
 const MangaContext = createContext();
 
@@ -15,11 +19,15 @@ export const MangaProvider = ({ children }) => {
 
   useEffect(() => {
     setLoading(true);
-
+    // Define the fetch function inside the useEffect
     const fetchUserCollection = async () => {
       try {
-        const userId = user.uid;
-        const response = getUserCollectionApi(userId);
+        const userId = user?.uid; // Ensure user is defined before accessing userId
+        if (!userId) {
+          throw new Error("User ID is missing");
+        }
+
+        const response = await getUserCollectionApi(userId);
         setCollection(response.data);
       } catch (error) {
         console.log(error);
@@ -27,10 +35,13 @@ export const MangaProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    if (isLoggedIn && user) {
+    // Fetch user collection only if the user is logged in
+    if (user) {
       fetchUserCollection();
+    } else {
+      setLoading(false);
     }
-  }, [user, isLoggedIn]);
+  }, [user]);
 
   const searchManga = async () => {
     setLoading(true);
@@ -45,6 +56,19 @@ export const MangaProvider = ({ children }) => {
     }
   };
 
+  const addMangaToCollection = async (bodyInfo) => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("form context", bodyInfo);
+      const response = await addMangatoUserCollectionApi({ bodyInfo });
+      return response;
+    } catch (error) {
+      setError(`Failed to add Manga`);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <MangaContext.Provider
       value={{
@@ -59,6 +83,7 @@ export const MangaProvider = ({ children }) => {
         setSearchQuery,
         setSearchResult,
         searchManga,
+        addMangaToCollection,
       }}
     >
       {children}

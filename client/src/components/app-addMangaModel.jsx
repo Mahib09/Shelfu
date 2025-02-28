@@ -1,48 +1,43 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
+import { useManga } from "@/context/mangaContext";
 
-const AddMangaModal = ({ volumeData, userId, onClose }) => {
+const AddMangaModal = ({ volumeInfo, userId, onClose }) => {
   const [note, setNote] = useState("");
-  const [status, setStatus] = useState("Reading"); // Default status
+  const [status, setStatus] = useState("Owned"); // Default status
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // Submit form and call API
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const mangaDetails = {
-      userId: userId,
-      isbn: volumeData.isbn,
-      status: status,
-      notes: note,
-      volumeInfo: volumeData,
-    };
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await addToCollectionAPI(mangaDetails);
-      if (response.success) {
-        alert("Manga added to collection!");
-        onClose(); // Close the modal on success
-      } else {
-        setError("Failed to add manga to collection.");
-      }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { addMangaToCollection } = useManga();
 
   // Close modal function
   const closeModal = () => {
     setNote("");
     setStatus("Owned"); // Reset the status to default
     onClose(); // Close the modal
+  };
+
+  const handleModalSubmit = async (e) => {
+    e.preventDefault();
+    const bodyInfo = {
+      userId: userId,
+      isbn: volumeInfo.isbn,
+      status: status,
+      notes: note,
+      volumeInfo,
+    };
+    console.log("frommodal", bodyInfo);
+
+    const response = await addMangaToCollection(bodyInfo);
+    // Check if the response is successful
+    if (response) {
+      closeModal();
+      alert("Manga Added to Your Collection");
+    } else {
+      closeModal();
+      alert("Failed to Add Manga");
+    }
+    closeModal();
   };
 
   return (
@@ -53,7 +48,7 @@ const AddMangaModal = ({ volumeData, userId, onClose }) => {
           {error && <p className="text-red-500">{error}</p>}{" "}
           {/* Display error */}
           <form
-            onSubmit={handleSubmit}
+            onSubmit={handleModalSubmit}
             className="flex flex-col gap-3 p-2 justify-center "
           >
             <div className="flex flex-col">
@@ -66,7 +61,7 @@ const AddMangaModal = ({ volumeData, userId, onClose }) => {
                 className="border p-1"
               >
                 <option value="Owned">Owned</option>
-                <option value="Want_To_Buy">Want_To_Buy</option>
+                <option value="Want_To_Buy">Want To Buy</option>
                 <option value="For_Sale">For_Sale</option>
               </select>
             </div>
