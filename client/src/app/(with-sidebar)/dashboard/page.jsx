@@ -10,6 +10,7 @@ import MangaCarousel from "@/components/app-mangaCarousel";
 import { useUi } from "@/context/uiContext";
 import { useAuth } from "@/context/authContext";
 import ProtectedRoute from "@/hoc/ProtectedRoute";
+import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
   const [userCollection, setUserCollection] = useState([]); // Initialize userCollection as an empty array
@@ -28,28 +29,18 @@ export default function Dashboard() {
     setSearchResult,
     fetchManga,
   } = useManga();
-  const { user } = useAuth();
-  useEffect(() => {
-    const fetchUserCollection = async () => {
-      try {
-        const userId = user.uid;
-        const response = await axios.get(
-          `http://localhost:3001/usercollection/${userId}`,
-          {
-            withCredentials: true,
-          }
-        );
-        setCollection(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUserCollection();
-  }, [user]);
+  const { user, logout } = useAuth();
+  const handleSignout = async (e) => {
+    e.preventDefault();
+    console.log("clicked");
+    await logout();
+  };
   return (
     <ProtectedRoute>
       <div>{user ? <MangaCarousel /> : <>No user</>}</div>
+      <Button variant="destructive" onClick={handleSignout}>
+        Signout
+      </Button>
     </ProtectedRoute>
   );
 }

@@ -10,7 +10,7 @@ import {
   updateProfile,
 } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { getProfileApi, logoutApi, sendTokenToBackendApi } from "@/lib/api";
 
 const AuthContext = createContext();
 
@@ -25,9 +25,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/auth/profile", {
-          withCredentials: true,
-        });
+        const response = await getProfileApi();
         setUser(response.data.user);
 
         setProfile(response.data.profile);
@@ -42,17 +40,9 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [router]);
 
-  // Helper function to make the backend API call
   const sendTokenToBackend = async (idToken, endpoint) => {
     try {
-      const response = await axios.post(
-        `http://localhost:3001/auth/${endpoint}`,
-        {
-          token: idToken,
-        },
-        { withCredentials: true }
-      );
-
+      const response = await sendTokenToBackendApi(idToken, endpoint);
       if (response.data.success) {
         setIsLoggedIn(true);
         router.push("/dashboard");
@@ -89,16 +79,19 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(
-        "http://localhost:3001/auth/logout",
-        {},
-        { withCredentials: true }
-      );
+      setLoading(true);
+      console.log("trying");
+      await auth.signOut();
+      await logoutApi();
       setUser(null);
+      setProfile(null);
       setIsLoggedIn(false);
       router.push("/auth/login");
+      console.log("done");
     } catch (error) {
       console.error("Logout failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -155,6 +148,8 @@ export const AuthProvider = ({ children }) => {
         error,
         signUp,
         signInWithGoogle,
+        profile,
+        setProfile,
       }}
     >
       {children}

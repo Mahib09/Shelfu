@@ -7,12 +7,15 @@ import SearchCard from "@/components/app-searchMangaCard";
 import axios from "axios";
 import { useAuth } from "@/context/authContext";
 import AddMangaModel from "@/components/app-addMangaModel";
+import { useRouter } from "next/navigation";
 
 const Search = () => {
+  const router = useRouter();
   const {
     loading,
     searchManga,
     searchResult,
+    setSearchResult,
     setSearchQuery,
     error,
     searchQuery,
@@ -30,10 +33,17 @@ const Search = () => {
     setIsSearching(true);
     await searchManga();
   };
-  useEffect(() => {
-    if (searchResult.length === 0) setIsSearching(false);
-  }, [searchResult]);
-  console.log(searchResult);
+
+  const handlePrevious = () => {
+    if (isSearching) {
+      setIsSearching(false);
+      setSearchQuery("");
+      setSearchResult(null);
+    } else {
+      router.push("/dashboard");
+    }
+  };
+
   useEffect(() => {
     if (isModalOpen) {
       document.body.style.overflow = "hidden"; // Disable scrolling
@@ -59,7 +69,7 @@ const Search = () => {
         }`}
       >
         <div className="flex w-full max-w-md mb-4">
-          <button>
+          <button onClick={handlePrevious}>
             <ArrowLeft />
           </button>
           <h2 className="ml-2 text-lg font-semibold">Search Volumes</h2>

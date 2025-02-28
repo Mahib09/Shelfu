@@ -1,4 +1,3 @@
-const { Request, Response } = require("express");
 const prisma = require("../services/prismaService");
 
 const addMangatoUserCollection = async (req, res) => {
@@ -72,7 +71,9 @@ const getUserCollection = async (req, res) => {
     });
 
     if (userCollectionData.length === 0) {
-      return res.status(404).json({ message: "No collection data found." });
+      return res
+        .status(200)
+        .json({ message: "No collection data found.", data: [] });
     }
 
     return res.status(200).json(userCollectionData);

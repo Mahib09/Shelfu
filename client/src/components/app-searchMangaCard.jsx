@@ -4,17 +4,17 @@ import React from "react";
 
 const SearchCard = ({ image, title, author, description, handleAdd }) => {
   return (
-    <div className="border relative h-auto w-max rounded-md group">
-      <div className="p-2 flex flex-col w-[191px]">
+    <div className="border relative h-auto w-max rounded-none group">
+      <div className=" flex flex-col w-[191px]">
         <Image
           src={image}
           alt="cover"
-          width={175}
+          width={200}
           height={200}
-          className="border rounded-md"
+          className="border "
         />
-        <p className="font-medium text-gray-800 ">{title}</p>
-        <p className="font-medium text-gray-500">{author}</p>
+        <p className="font-medium text-gray-800 pl-2">{title}</p>
+        <p className="font-medium text-gray-500 pl-2">{author}</p>
       </div>
       <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col  p-2 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <p className="font-medium">{title}</p>

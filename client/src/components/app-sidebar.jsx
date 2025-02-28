@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Sidebar,
@@ -18,8 +19,10 @@ import {
 import Image from "next/image";
 import Logo from "../../public/Logo.png";
 import { User2, ChevronUp } from "lucide-react";
+import { useAuth } from "@/context/authContext";
 
 const AppSidebar = () => {
+  const { logout, loading } = useAuth();
   const SidebarData = [
     { title: "Dashboard", path: "/dashboard" },
     { title: "Collection", path: "/collection" },
@@ -27,6 +30,11 @@ const AppSidebar = () => {
     { title: "Recommendation", path: "/recommendation" },
     { title: "Back To Home", path: "/" },
   ];
+
+  const handleSignOut = (e) => {
+    e.preventDefault();
+    logout();
+  };
   return (
     <Sidebar>
       <SidebarHeader>
@@ -69,8 +77,10 @@ const AppSidebar = () => {
                 <DropdownMenuItem>
                   <span>Account</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Sign out</span>
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <button disabled={loading}>
+                    {loading ? "Logging Out..." : "Sign Out"}
+                  </button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

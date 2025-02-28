@@ -39,7 +39,7 @@ const signUp = async (req, res) => {
 
     res.cookie("token", sessionToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: "Strict",
     });
 
@@ -74,7 +74,6 @@ const login = async (req, res) => {
     const sessionToken = await admin.auth().createSessionCookie(token, {
       expiresIn: 7 * 24 * 60 * 60 * 1000,
     });
-    console.log(sessionToken);
 
     res.cookie("token", sessionToken, {
       httpOnly: true,
@@ -110,16 +109,13 @@ const getProfile = async (req, res) => {
   }
 };
 const logout = (req, res) => {
-  res.setHeader(
-    "Set-Cookie",
-    serialize("authToken", "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-      path: "/",
-      maxAge: 0, // Expire immediately
-    })
-  );
+  res.cookie("token", "", {
+    httpOnly: true,
+    secure: false, // Change to `true` in production for HTTPS
+    sameSite: "Strict",
+    path: "/",
+    maxAge: 0, // Expire immediately
+  });
 
   res.status(200).json({ message: "Logged out" });
 };

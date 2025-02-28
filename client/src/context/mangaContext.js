@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { useAuth } from "./authContext";
+import { getSearchResultsApi, getUserCollectionApi } from "@/lib/api";
 
 const MangaContext = createContext();
 
@@ -11,19 +11,15 @@ export const MangaProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
 
   useEffect(() => {
     setLoading(true);
+
     const fetchUserCollection = async () => {
       try {
         const userId = user.uid;
-        const response = await axios.get(
-          `http://localhost:3001/usercollection/${userId}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = getUserCollectionApi(userId);
         setCollection(response.data);
       } catch (error) {
         console.log(error);
@@ -31,16 +27,16 @@ export const MangaProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    fetchUserCollection();
-  }, [user]);
+    if (isLoggedIn && user) {
+      fetchUserCollection();
+    }
+  }, [user, isLoggedIn]);
 
   const searchManga = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        `http://localhost:3001/manga/search?q=${searchQuery}`
-      );
+      const response = await getSearchResultsApi(searchQuery);
       setSearchResult(response.data);
     } catch (error) {
       setError(`Failed to fetch manga data`);
@@ -48,6 +44,7 @@ export const MangaProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
   return (
     <MangaContext.Provider
       value={{
