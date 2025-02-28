@@ -17,6 +17,7 @@ import MangaListCard from "@/components/app-mangaListCard";
 const Collection = () => {
   const router = useRouter();
   const [layout, setLayout] = useState("Grid");
+  const [sort, setSort] = useState("Asc");
   const { pagewidth } = useUi();
   const {
     searchQuery,
@@ -38,6 +39,9 @@ const Collection = () => {
   const handleList = () => {
     setLayout("List");
   };
+  const handleSortToggle = () => {
+    sort === "Asc" ? setSort("Desc") : setSort("Asc");
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -52,7 +56,7 @@ const Collection = () => {
         <h2 className="font-medium text-xl md:text-3xl text-gray-600">
           Your Collection
         </h2>
-        <Toggle className="ml-auto">
+        <Toggle className="ml-auto" onClick={handleSortToggle}>
           <SortDesc />
         </Toggle>
         <Input type="text" placeholder="Search" className="w-[30%]" />
@@ -84,7 +88,9 @@ const Collection = () => {
             {collection
               .filter((item) => item.status === "Owned")
               .sort((a, b) =>
-                a.volume.seriesName.localeCompare(b.volume.seriesName)
+                sort === "Asc"
+                  ? a.volume.seriesName.localeCompare(b.volume.seriesName)
+                  : b.volume.seriesName.localeCompare(a.volume.seriesName)
               )
               .map((item) =>
                 layout === "Grid" ? (
@@ -112,7 +118,9 @@ const Collection = () => {
             {collection
               .filter((item) => item.status === "Want_To_Buy")
               .sort((a, b) =>
-                a.volume.seriesName.localeCompare(b.volume.seriesName)
+                sort === "Asc"
+                  ? a.volume.seriesName.localeCompare(b.volume.seriesName)
+                  : b.volume.seriesName.localeCompare(a.volume.seriesName)
               )
               .map((item) =>
                 layout === "Grid" ? (
@@ -129,6 +137,7 @@ const Collection = () => {
                     title={item.volume.seriesName}
                     author={item.volume.author}
                     description={item.volume.description}
+                    note={item.notes}
                   />
                 )
               )}
@@ -139,6 +148,11 @@ const Collection = () => {
           >
             {collection
               .filter((item) => item.status === "For_Sale")
+              .sort((a, b) =>
+                sort === "Asc"
+                  ? a.volume.seriesName.localeCompare(b.volume.seriesName)
+                  : b.volume.seriesName.localeCompare(a.volume.seriesName)
+              )
               .map((item) =>
                 layout === "Grid" ? (
                   <MangaCard

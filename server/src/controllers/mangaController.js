@@ -37,6 +37,8 @@ const fetchFromApi = async (query, res) => {
           "how to",
           "chinese",
           "french",
+          "collection",
+          "box set",
           "collection set",
         ];
 
@@ -144,7 +146,7 @@ const getMangaDetails = async (req, res) => {
         author: author,
         image: book.image,
         booksApiId: book.isbn,
-        description: book.synopsis || "No description available", // Description is often an object
+        description: book.synopsis || "No description available",
         publisher: book.publisher || "Unknown",
         isbn: book.isbn,
         releaseDate: book.date_published,

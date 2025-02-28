@@ -12,7 +12,7 @@ const MangaCard = ({ src, title, author }) => {
         className="rounded-md h-auto w-auto object-cover"
         priority
       />
-      <p className="text-wrap">{title}</p>
+      <p className="line-clamp-1">{title}</p>
       <p>{author}</p>
     </div>
   );
