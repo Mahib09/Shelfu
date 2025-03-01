@@ -18,9 +18,9 @@ const SearchCard = ({
           alt="cover"
           width={200}
           height={200}
-          className="border "
+          className="border object-cover h-[272px]"
         />
-        <p className="font-medium text-gray-800 pl-2">
+        <p className="font-medium text-gray-800 pl-2 line-clamp-1">
           {title} Volume {volumeNumber}
         </p>
         <p className="font-medium text-gray-500 pl-2">{author}</p>

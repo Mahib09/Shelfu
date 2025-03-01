@@ -13,6 +13,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import Image from "next/image";
+import SheetComponent from "@/components/app-sideSheet";
 const Collection = () => {
   const [layout, setLayout] = useState("Grid");
   const [sort, setSort] = useState("Asc");
@@ -20,6 +32,8 @@ const Collection = () => {
   const [filterActive, setFilterActive] = useState();
   const [searchFilter, setSearchFilter] = useState("");
   const { loading, error, collection } = useManga();
+  const [note, setNote] = useState("");
+  const [status, setStatus] = useState("Owned"); // Default status
   useEffect(() => {
     setFilterActive(filterQuery !== "");
   }, [filterQuery]);
@@ -110,7 +124,11 @@ const Collection = () => {
 
           <TabsContent
             value="owned"
-            className="flex flex-wrap md:flex-row gap-2 items-center justify-around sm:justify-center"
+            className={`flex flex-wrap gap-2 items-center justify-around sm:justify-center ${
+              layout === "List"
+                ? "flex-col justify-start items-start w-full"
+                : "flex-row"
+            }`}
           >
             {Array.isArray(collection) ? (
               collection
@@ -134,16 +152,17 @@ const Collection = () => {
                     layout === "Grid" ? MangaCard : MangaListCard;
 
                   return (
-                    <CardComponent
-                      key={item.userCollectionId}
-                      src={item.volume.coverImageUrl}
-                      title={item.volume.seriesName}
-                      author={item.volume.author}
-                      volumeNumber={item.volume.volumeNumber}
-                      {...(layout !== "Grid" && {
-                        description: item.volume.description,
-                      })} // Only pass description for list layout
-                    />
+                    <SheetComponent key={item.userCollectionId} item={item}>
+                      <CardComponent
+                        src={item.volume.coverImageUrl}
+                        title={item.volume.seriesName}
+                        author={item.volume.author}
+                        volumeNumber={item.volume.volumeNumber}
+                        {...(layout !== "Grid" && {
+                          description: item.volume.description,
+                        })}
+                      />
+                    </SheetComponent>
                   );
                 })
             ) : (
@@ -176,16 +195,17 @@ const Collection = () => {
                     layout === "Grid" ? MangaCard : MangaListCard;
 
                   return (
-                    <CardComponent
-                      key={item.userCollectionId}
-                      src={item.volume.coverImageUrl}
-                      title={item.volume.seriesName}
-                      author={item.volume.author}
-                      volumeNumber={item.volume.volumeNumber}
-                      {...(layout !== "Grid" && {
-                        description: item.volume.description,
-                      })} // Only pass description for list layout
-                    />
+                    <SheetComponent key={item.userCollectionId} item={item}>
+                      <CardComponent
+                        src={item.volume.coverImageUrl}
+                        title={item.volume.seriesName}
+                        author={item.volume.author}
+                        volumeNumber={item.volume.volumeNumber}
+                        {...(layout !== "Grid" && {
+                          description: item.volume.description,
+                        })}
+                      />
+                    </SheetComponent>
                   );
                 })
             ) : (
@@ -218,16 +238,17 @@ const Collection = () => {
                     layout === "Grid" ? MangaCard : MangaListCard;
 
                   return (
-                    <CardComponent
-                      key={item.userCollectionId}
-                      src={item.volume.coverImageUrl}
-                      title={item.volume.seriesName}
-                      author={item.volume.author}
-                      volumeNumber={item.volume.volumeNumber}
-                      {...(layout !== "Grid" && {
-                        description: item.volume.description,
-                      })} // Only pass description for list layout
-                    />
+                    <SheetComponent key={item.userCollectionId} item={item}>
+                      <CardComponent
+                        src={item.volume.coverImageUrl}
+                        title={item.volume.seriesName}
+                        author={item.volume.author}
+                        volumeNumber={item.volume.volumeNumber}
+                        {...(layout !== "Grid" && {
+                          description: item.volume.description,
+                        })}
+                      />
+                    </SheetComponent>
                   );
                 })
             ) : (
