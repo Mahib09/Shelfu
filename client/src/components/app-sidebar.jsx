@@ -5,6 +5,8 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -18,17 +20,27 @@ import {
 } from "./ui/dropdown-menu";
 import Image from "next/image";
 import Logo from "../../public/Logo.png";
-import { User2, ChevronUp } from "lucide-react";
+import { usePathname } from "next/navigation";
+import {
+  User2,
+  ChevronUp,
+  LayoutDashboard,
+  LibraryBig,
+  Search,
+  HandHeart,
+  Home,
+} from "lucide-react";
 import { useAuth } from "@/context/authContext";
 
 const AppSidebar = () => {
   const { logout, loading } = useAuth();
+  const pathname = usePathname();
   const SidebarData = [
-    { title: "Dashboard", path: "/dashboard" },
-    { title: "Collection", path: "/collection" },
-    { title: "Search", path: "/search" },
-    { title: "Recommendation", path: "/recommendation" },
-    { title: "Back To Home", path: "/" },
+    { title: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+    { title: "Collection", path: "/collection", icon: LibraryBig },
+    { title: "Search", path: "/search", icon: Search },
+    { title: "Recommendation", path: "/recommendation", icon: HandHeart },
+    { title: "Back To Home", path: "/", icon: Home },
   ];
 
   const handleSignOut = (e) => {
@@ -45,19 +57,27 @@ const AppSidebar = () => {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu>
-            {SidebarData.map((data) => (
-              <SidebarMenuItem key={data.title} className="py-1">
-                <SidebarMenuButton asChild>
-                  <a href={data.path}>
-                    <span className="text-md font-medium text-gray-600">
-                      {data.title}
-                    </span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {SidebarData.map((data) => (
+                <SidebarMenuItem key={data.title} className="py-1">
+                  <SidebarMenuButton asChild>
+                    <a
+                      href={data.path}
+                      className={
+                        (" transition-all",
+                        pathname === data.path ? "bg-sidebar-accent" : "")
+                      }
+                    >
+                      <data.icon />
+                      <span>{data.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
