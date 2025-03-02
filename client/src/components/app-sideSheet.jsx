@@ -13,16 +13,40 @@ import {
 import { Button } from "./ui/button"; // Import your button component if needed
 import Image from "next/image";
 import AlertDai from "./app-alertDialog";
+import { useManga } from "@/context/mangaContext";
+import { toast } from "sonner";
 
 const SheetComponent = ({ item, children }) => {
   // Internal state for status and note
   const [status, setStatus] = useState(item.status || "Owned");
   const [note, setNote] = useState(item.notes || "");
+  const [isOpen, setIsOpen] = useState(false);
+  const { updateMangaStatusOrNote } = useManga();
 
+  const handleSubmit = async () => {
+    const bodyInfo = {
+      status: status,
+      notes: note,
+    };
+    const response = await updateMangaStatusOrNote(
+      bodyInfo,
+      item.userCollectionId
+    );
+    if (response) {
+      toast("Updated Sucessfully");
+      setStatus(item.status);
+      setNote("");
+      setIsOpen(false);
+    } else {
+      toast("Error Updating");
+    }
+  };
   return (
-    <Sheet key={item.userCollectionId}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen} key={item.userCollectionId}>
       <SheetTrigger asChild>
-        <div className="cursor-pointer">{children}</div>
+        <div className="cursor-pointer" onClick={() => setIsOpen(true)}>
+          {children}
+        </div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -54,7 +78,10 @@ const SheetComponent = ({ item, children }) => {
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex flex-col gap-3 mt-5 justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-3 mt-5 justify-center"
+        >
           <div className="flex gap-5 items-center justify-center">
             <label htmlFor="status">Status</label>
             <select
@@ -69,6 +96,7 @@ const SheetComponent = ({ item, children }) => {
               <option value="For_Sale">For Sale</option>
             </select>
           </div>
+
           <div className="flex gap-5 items-center justify-center mb-5">
             <label htmlFor="notes">Notes</label>
             <textarea
@@ -78,19 +106,16 @@ const SheetComponent = ({ item, children }) => {
               className="border p-1 w-full"
             ></textarea>
           </div>
-        </div>
+
+          <div className="flex flex-col">
+            <Button type="submit">Save changes</Button>
+          </div>
+        </form>
 
         <SheetFooter>
-          <SheetClose asChild>
-            <div className="flex flex-col">
-              <Button type="submit">Save changes</Button>
-              <AlertDai>
-                <Button variant="destructive" className="m-3">
-                  Delete Volume
-                </Button>
-              </AlertDai>
-            </div>
-          </SheetClose>
+          <AlertDai>
+            <button>Delete</button>
+          </AlertDai>
         </SheetFooter>
       </SheetContent>
     </Sheet>

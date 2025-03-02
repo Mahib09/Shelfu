@@ -3,7 +3,7 @@ import React from "react";
 
 const MangaListCard = ({ title, author, description, src, volumeNumber }) => {
   return (
-    <div className="border p-2 mx-4 md:mx-10 lg:mx-16 flex gap-4 rounded-sm hover:scale-105 transition-all ease-in-out delay-10">
+    <div className="border p-2 mx-4 md:mx-10 lg:mx-16 flex gap-4 rounded-sm hover:scale-105 transition-all shadow-md ease-in-out delay-10">
       <Image
         height={80}
         width={80}

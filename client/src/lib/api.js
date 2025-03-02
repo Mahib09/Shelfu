@@ -65,15 +65,15 @@ export const getUserCollectionByStatusApi = async ({ bodyInfo }) => {
   });
 };
 
-export const updateCategoryorNotesApi = async ({
-  bodyInfo,
-  userCollectionId,
-}) => {
+export const updateCategoryorNotesApi = async (bodyInfo, userCollectionId) => {
   return await axios.patch(
     `http://localhost:3001/usercollection/${userCollectionId}`,
+    bodyInfo,
     {
-      bodyInfo,
       withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
   );
 };

@@ -11,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "./ui/sidebar";
 import {
   DropdownMenu,
@@ -19,7 +20,7 @@ import {
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
 import Image from "next/image";
-import Logo from "../../public/Logo.png";
+import logo from "../../public/shelfuLogo.png";
 import { usePathname } from "next/navigation";
 import {
   User2,
@@ -29,6 +30,8 @@ import {
   Search,
   HandHeart,
   Home,
+  LogOut,
+  SquareUser,
 } from "lucide-react";
 import { useAuth } from "@/context/authContext";
 
@@ -51,8 +54,11 @@ const AppSidebar = () => {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center cursor-pointer">
-          <Image src={Logo} height={40} width={40} alt="Logo" />
-          <h2 className={`text-xl font-bold`}>Shelfu</h2>
+          <a href="/" className="flex items-center">
+            <Image src={logo} height={40} width={40} alt="Logo" />
+            <h2 className={`text-xl font-bold`}>Shelfu</h2>
+          </a>
+          <SidebarTrigger className="ml-auto" />
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -80,6 +86,7 @@ const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <hr></hr>
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -95,11 +102,14 @@ const AppSidebar = () => {
                 className="w-[--radix-popper-anchor-width]"
               >
                 <DropdownMenuItem>
-                  <span>Account</span>
+                  <button className="flex gap-2">
+                    <SquareUser size={20} /> <span>Account</span>
+                  </button>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSignOut}>
-                  <button disabled={loading}>
-                    {loading ? "Logging Out..." : "Sign Out"}
+                  <button disabled={loading} className="flex gap-2">
+                    <LogOut size={20} />{" "}
+                    <span>{loading ? "Logging Out..." : "Sign Out"}</span>
                   </button>
                 </DropdownMenuItem>
               </DropdownMenuContent>

@@ -27,7 +27,6 @@ const AddMangaModal = ({ volumeInfo, userId, onClose }) => {
       notes: note,
       volumeInfo,
     };
-    console.log("frommodal", bodyInfo);
 
     const response = await addMangaToCollection(bodyInfo);
     // Check if the response is successful

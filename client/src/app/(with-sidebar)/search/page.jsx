@@ -75,7 +75,7 @@ const Search = () => {
         }`}
       >
         <div className="flex w-full max-w-md mb-4">
-          <button onClick={handlePrevious}>
+          <button onClick={handlePrevious} className="hover:text-gray-700">
             <ArrowLeft />
           </button>
           <h2 className="ml-2 text-lg font-semibold">Search Volumes</h2>

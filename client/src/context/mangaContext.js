@@ -5,6 +5,7 @@ import {
   addMangatoUserCollectionApi,
   getSearchResultsApi,
   getUserCollectionApi,
+  updateCategoryorNotesApi,
 } from "@/lib/api";
 
 const MangaContext = createContext();
@@ -17,24 +18,23 @@ export const MangaProvider = ({ children }) => {
   const [searchResult, setSearchResult] = useState([]);
   const { user, isLoggedIn } = useAuth();
 
-  useEffect(() => {
+  const fetchUserCollection = async () => {
     setLoading(true);
-    // Define the fetch function inside the useEffect
-    const fetchUserCollection = async () => {
-      try {
-        const userId = user?.uid; // Ensure user is defined before accessing userId
-        if (!userId) {
-          throw new Error("User ID is missing");
-        }
-
-        const response = await getUserCollectionApi(userId);
-        setCollection(response.data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
+    try {
+      const userId = user?.uid; // Ensure user is defined before accessing userId
+      if (!userId) {
+        throw new Error("User ID is missing");
       }
-    };
+
+      const response = await getUserCollectionApi(userId);
+      setCollection(response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     // Fetch user collection only if the user is logged in
     if (user) {
       fetchUserCollection();
@@ -68,6 +68,20 @@ export const MangaProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  const updateMangaStatusOrNote = async (bodyInfo, userCollectionId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await updateCategoryorNotesApi(bodyInfo, userCollectionId);
+      await fetchUserCollection();
+      return true;
+    } catch (error) {
+      setError("Failed to Update", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <MangaContext.Provider
       value={{
@@ -83,6 +97,8 @@ export const MangaProvider = ({ children }) => {
         setSearchResult,
         searchManga,
         addMangaToCollection,
+        updateMangaStatusOrNote,
+        fetchUserCollection,
       }}
     >
       {children}
