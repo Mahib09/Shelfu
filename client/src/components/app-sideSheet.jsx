@@ -123,12 +123,11 @@ const SheetComponent = ({ item, children }) => {
         </form>
 
         <SheetFooter>
-          <AlertDai onCloseSheet={() => setIsOpen(false)}>
-            <Button
-              variant="destructive"
-              className="w-full mt-2"
-              onClick={handleDelete}
-            >
+          <AlertDai
+            onCloseSheet={() => setIsOpen(false)}
+            handleDelete={handleDelete}
+          >
+            <Button variant="destructive" className="w-full mt-2">
               Delete Volume
             </Button>
           </AlertDai>

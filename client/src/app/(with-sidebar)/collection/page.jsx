@@ -36,14 +36,55 @@ const Collection = () => {
   const handleSortToggle = () => {
     sort === "Asc" ? setSort("Desc") : setSort("Asc");
   };
+  const TabContentComponent = ({ value, className }) => {
+    return (
+      <TabsContent
+        value={value}
+        className={`flex flex-wrap gap-2 items-center ${
+          layout === "Grid" ? "justify-around sm:justify-center" : ""
+        } ${className || ""}`}
+      >
+        {Array.isArray(collection) ? (
+          collection
+            .filter(
+              (item) =>
+                item.status === value &&
+                item.volume.author
+                  .toLowerCase()
+                  .startsWith(filterQuery.toLowerCase()) &&
+                item.volume.seriesName
+                  .toLowerCase()
+                  .startsWith(searchFilter.toLowerCase())
+            )
+            .sort((a, b) =>
+              sort === "Asc"
+                ? a.volume.seriesName.localeCompare(b.volume.seriesName)
+                : b.volume.seriesName.localeCompare(a.volume.seriesName)
+            )
+            .map((item) => {
+              const CardComponent =
+                layout === "Grid" ? MangaCard : MangaListCard;
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+              return (
+                <SheetComponent key={item.userCollectionId} item={item}>
+                  <CardComponent
+                    src={item.volume.coverImageUrl}
+                    title={item.volume.seriesName}
+                    author={item.volume.author}
+                    volumeNumber={item.volume.volumeNumber}
+                    {...(layout !== "Grid" && {
+                      description: item.volume.description,
+                    })}
+                  />
+                </SheetComponent>
+              );
+            })
+        ) : (
+          <p>No Volumes Found</p>
+        )}
+      </TabsContent>
+    );
+  };
   return (
     <div className="flex flex-col justify-center">
       <div className="flex p-2 m-2 gap-1 items-center">
@@ -93,159 +134,34 @@ const Collection = () => {
       </div>
 
       {/* content */}
-      <div>
-        <Tabs defaultValue="owned" className="w-full p-2">
-          <div className="flex">
-            <TabsList className="flex w-max gap-3 justify-start items-center p-2">
-              <TabsTrigger value="owned">Owned</TabsTrigger>
-              <TabsTrigger value="wantobuy">Want To Buy</TabsTrigger>
-              <TabsTrigger value="forsale">For Sale </TabsTrigger>
-            </TabsList>
-            <div className="ml-auto flex gap-1">
-              <Button variant="outline" size="icon" onClick={handleGrid}>
-                <Grid />
-              </Button>
-              <Button variant="outline" size="icon" onClick={handleList}>
-                <List />
-              </Button>
+      {loading ? (
+        <div className="p-2">Loading...</div>
+      ) : error ? (
+        <div className="p-2">{error}</div>
+      ) : (
+        <div>
+          <Tabs defaultValue="Owned" className="w-full p-2">
+            <div className="flex">
+              <TabsList className="flex w-max gap-3 justify-start items-center p-2">
+                <TabsTrigger value="Owned">Owned</TabsTrigger>
+                <TabsTrigger value="Want_To_Buy">Want To Buy</TabsTrigger>
+                <TabsTrigger value="For_Sale">For Sale </TabsTrigger>
+              </TabsList>
+              <div className="ml-auto flex gap-1">
+                <Button variant="outline" size="icon" onClick={handleGrid}>
+                  <Grid />
+                </Button>
+                <Button variant="outline" size="icon" onClick={handleList}>
+                  <List />
+                </Button>
+              </div>
             </div>
-          </div>
-
-          <TabsContent
-            value="owned"
-            className={`flex flex-wrap gap-2 items-center justify-around sm:justify-center w-${pageWidth} ${
-              layout === "List"
-                ? "flex-col justify-start items-start w-full"
-                : "flex-row"
-            }`}
-          >
-            {Array.isArray(collection) ? (
-              collection
-                .filter(
-                  (item) =>
-                    item.status === "Owned" &&
-                    item.volume.author
-                      .toLowerCase()
-                      .startsWith(filterQuery.toLowerCase()) &&
-                    item.volume.seriesName
-                      .toLowerCase()
-                      .startsWith(searchFilter.toLowerCase())
-                )
-                .sort((a, b) =>
-                  sort === "Asc"
-                    ? a.volume.seriesName.localeCompare(b.volume.seriesName)
-                    : b.volume.seriesName.localeCompare(a.volume.seriesName)
-                )
-                .map((item) => {
-                  const CardComponent =
-                    layout === "Grid" ? MangaCard : MangaListCard;
-
-                  return (
-                    <SheetComponent key={item.userCollectionId} item={item}>
-                      <CardComponent
-                        src={item.volume.coverImageUrl}
-                        title={item.volume.seriesName}
-                        author={item.volume.author}
-                        volumeNumber={item.volume.volumeNumber}
-                        {...(layout !== "Grid" && {
-                          description: item.volume.description,
-                        })}
-                      />
-                    </SheetComponent>
-                  );
-                })
-            ) : (
-              <p>No Volumes Found</p>
-            )}
-          </TabsContent>
-          <TabsContent
-            value="wantobuy"
-            className="flex flex-wrap md:flex-row gap-2 items-center justify-around sm:justify-center mt-0"
-          >
-            {Array.isArray(collection) ? (
-              collection
-                .filter(
-                  (item) =>
-                    item.status === "Want_To_Buy" &&
-                    item.volume.author
-                      .toLowerCase()
-                      .startsWith(filterQuery.toLowerCase()) &&
-                    item.volume.seriesName
-                      .toLowerCase()
-                      .startsWith(searchFilter.toLowerCase())
-                )
-                .sort((a, b) =>
-                  sort === "Asc"
-                    ? a.volume.seriesName.localeCompare(b.volume.seriesName)
-                    : b.volume.seriesName.localeCompare(a.volume.seriesName)
-                )
-                .map((item) => {
-                  const CardComponent =
-                    layout === "Grid" ? MangaCard : MangaListCard;
-
-                  return (
-                    <SheetComponent key={item.userCollectionId} item={item}>
-                      <CardComponent
-                        src={item.volume.coverImageUrl}
-                        title={item.volume.seriesName}
-                        author={item.volume.author}
-                        volumeNumber={item.volume.volumeNumber}
-                        {...(layout !== "Grid" && {
-                          description: item.volume.description,
-                        })}
-                      />
-                    </SheetComponent>
-                  );
-                })
-            ) : (
-              <p>No Volumes Found</p>
-            )}
-          </TabsContent>
-          <TabsContent
-            value="forsale"
-            className="flex flex-wrap md:flex-row gap-2 items-center justify-around sm:justify-center mt-0"
-          >
-            {Array.isArray(collection) ? (
-              collection
-                .filter(
-                  (item) =>
-                    item.status === "For_Sale" &&
-                    item.volume.author
-                      .toLowerCase()
-                      .startsWith(filterQuery.toLowerCase()) &&
-                    item.volume.seriesName
-                      .toLowerCase()
-                      .startsWith(searchFilter.toLowerCase())
-                )
-                .sort((a, b) =>
-                  sort === "Asc"
-                    ? a.volume.seriesName.localeCompare(b.volume.seriesName)
-                    : b.volume.seriesName.localeCompare(a.volume.seriesName)
-                )
-                .map((item) => {
-                  const CardComponent =
-                    layout === "Grid" ? MangaCard : MangaListCard;
-
-                  return (
-                    <SheetComponent key={item.userCollectionId} item={item}>
-                      <CardComponent
-                        src={item.volume.coverImageUrl}
-                        title={item.volume.seriesName}
-                        author={item.volume.author}
-                        volumeNumber={item.volume.volumeNumber}
-                        {...(layout !== "Grid" && {
-                          description: item.volume.description,
-                        })}
-                      />
-                    </SheetComponent>
-                  );
-                })
-            ) : (
-              <p>No Volumes Found</p>
-            )}
-          </TabsContent>
-        </Tabs>
-      </div>
+            <TabContentComponent value="Owned" className="" />
+            <TabContentComponent value="Want_To_Buy" className="mt-0" />
+            <TabContentComponent value="For_Sale" className="mt-0" />
+          </Tabs>
+        </div>
+      )}
     </div>
   );
 };

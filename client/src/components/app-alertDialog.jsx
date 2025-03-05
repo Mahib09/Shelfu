@@ -10,7 +10,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
-const AlertDai = ({ children, onCloseSheet }) => {
+const AlertDai = ({ children, onCloseSheet, handleDelete }) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -26,6 +26,7 @@ const AlertDai = ({ children, onCloseSheet }) => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
+              handleDelete();
               onCloseSheet();
             }}
           >
