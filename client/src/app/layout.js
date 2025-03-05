@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import { AuthProvider } from "@/context/authContext"; // Adjust the path as needed
 import { UiProvider } from "@/context/uiContext";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata = {
   title: "Your App Title",
@@ -11,11 +12,19 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <AuthProvider>
           <MangaProvider>
-            {children}
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+
             <Toaster />
           </MangaProvider>
         </AuthProvider>

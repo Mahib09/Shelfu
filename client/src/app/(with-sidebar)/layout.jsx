@@ -1,7 +1,7 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/app-sidebar";
-import { Sun, User, UserCircle } from "lucide-react";
 import { UiProvider } from "@/context/uiContext";
+import HeadBar from "@/components/header";
 
 export default function SidebarLayout({ children }) {
   return (
@@ -10,7 +10,7 @@ export default function SidebarLayout({ children }) {
         <div className="flex w-full">
           <AppSidebar />
           <main className="flex-1 ">
-            <SidebarTrigger />
+            <HeadBar />
             {children}
           </main>
         </div>

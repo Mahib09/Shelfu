@@ -68,7 +68,7 @@ const SheetComponent = ({ item, children }) => {
                   alt="cover image"
                   width={100}
                   height={100}
-                  className="rounded-md"
+                  className="rounded-md h-auto w-auto"
                 />
               </div>
               <div className="flex flex-col">

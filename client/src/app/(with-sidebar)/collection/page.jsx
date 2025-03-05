@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import SheetComponent from "@/components/app-sideSheet";
 import { useUi } from "@/context/uiContext";
+import ToolTip from "@/components/app-tooltip";
 const Collection = () => {
   const [layout, setLayout] = useState("Grid");
   const [sort, setSort] = useState("Asc");
@@ -88,40 +89,49 @@ const Collection = () => {
   return (
     <div className="flex flex-col justify-center">
       <div className="flex p-2 m-2 gap-1 items-center">
-        <h2 className="font-medium text-xl md:text-3xl text-gray-600">
+        <h2 className="font-medium text-xl md:text-3xl text-primary">
           Your Collection
         </h2>
-        <Toggle className="ml-auto" onClick={handleSortToggle}>
-          <SortDesc />
-        </Toggle>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`${
-                filterActive
-                  ? "text-blue-500 hover:text-blue-500"
-                  : "text-black"
-              }`}
-            >
-              <Filter />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-40">
-            <div>
-              <Input
-                type="text"
-                placeholder="Filter By Author"
-                className="p-2"
-                value={filterQuery}
-                onChange={(e) => {
-                  setFilterQuery(e.target.value);
-                }}
-              />
-            </div>
-          </PopoverContent>
-        </Popover>
+        <ToolTip message={`${sort} Sort`} className="ml-auto">
+          <div>
+            <Toggle onClick={handleSortToggle}>
+              <SortDesc />
+            </Toggle>
+          </div>
+        </ToolTip>
+        <ToolTip message={`Filter`}>
+          <div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`${
+                    filterActive
+                      ? "text-blue-500 hover:text-blue-500"
+                      : "text-primary"
+                  }`}
+                >
+                  <Filter />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-40">
+                <div>
+                  <Input
+                    type="text"
+                    placeholder="Filter By Author"
+                    className="p-2"
+                    value={filterQuery}
+                    onChange={(e) => {
+                      setFilterQuery(e.target.value);
+                    }}
+                  />
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </ToolTip>
+
         <Input
           type="text"
           placeholder="Search"
@@ -148,12 +158,30 @@ const Collection = () => {
                 <TabsTrigger value="For_Sale">For Sale </TabsTrigger>
               </TabsList>
               <div className="ml-auto flex gap-1">
-                <Button variant="outline" size="icon" onClick={handleGrid}>
-                  <Grid />
-                </Button>
-                <Button variant="outline" size="icon" onClick={handleList}>
-                  <List />
-                </Button>
+                <ToolTip message={`Grid View`}>
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleGrid}
+                      className={`${layout === "Grid" ? "text-blue-500" : ""}`}
+                    >
+                      <Grid />
+                    </Button>
+                  </div>
+                </ToolTip>
+                <ToolTip message={`List View`}>
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleList}
+                      className={`${layout === "List" ? "text-blue-500" : ""}`}
+                    >
+                      <List />
+                    </Button>
+                  </div>
+                </ToolTip>
               </div>
             </div>
             <TabContentComponent value="Owned" className="" />

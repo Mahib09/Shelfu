@@ -8,6 +8,7 @@ import axios from "axios";
 import { useAuth } from "@/context/authContext";
 import AddMangaModel from "@/components/app-addMangaModel";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 const Search = () => {
   const router = useRouter();
@@ -36,6 +37,7 @@ const Search = () => {
     if (!searchQuery.trim()) return;
     setIsSearching(true);
     await searchManga();
+    console.log(searchResult);
   };
 
   const handlePrevious = () => {
@@ -68,14 +70,17 @@ const Search = () => {
   };
 
   return (
-    <div className="min-h-[calc(100% - 2rem)] px-20">
+    <div className="min-h-[calc(100% - 2rem)] px-20 ">
       <div
         className={`flex flex-col  transition-all duration-300 ${
           isSearching ? "pt-4 max-h-fit" : "pt-[40vh] min-h-[calc(100% - 2rem)]"
         }`}
       >
         <div className="flex w-full max-w-md mb-4">
-          <button onClick={handlePrevious} className="hover:text-gray-700">
+          <button
+            onClick={handlePrevious}
+            className="hover:text-muted-foreground"
+          >
             <ArrowLeft />
           </button>
           <h2 className="ml-2 text-lg font-semibold">Search Volumes</h2>
@@ -83,17 +88,17 @@ const Search = () => {
 
         <div className={`w-full  mx-auto `}>
           <form
-            className="flex items-center border border-gray-300 rounded-lg p-2 shadow-md"
+            className="flex items-center border rounded-lg shadow-md gap-2"
             onSubmit={handleSearch}
           >
-            <input
+            <Input
               type="text"
               placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-grow p-2 outline-none"
+              className=" p-2 outline-none border-none h-12 text-lg"
             />
-            <button type="submit">
+            <button type="submit" className="ml-auto mr-2">
               <SearchIcon />
             </button>
           </form>
@@ -102,7 +107,7 @@ const Search = () => {
 
       {/* Search Results */}
       {isSearching && (
-        <div className="mt-[70px] w-[100%] flex flex-wrap gap-5 p-4 justify-center">
+        <div className="mt-[70px] w-[100%] flex flex-wrap gap-7 p-4 justify-center">
           {loading ? (
             <p>Loading...</p>
           ) : error ? (

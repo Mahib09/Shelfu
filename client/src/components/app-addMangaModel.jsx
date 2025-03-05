@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { useManga } from "@/context/mangaContext";
 import { toast } from "sonner";
+import { useSidebar } from "./ui/sidebar";
 
 const AddMangaModal = ({ volumeInfo, userId, onClose }) => {
   const [note, setNote] = useState("");
@@ -10,6 +11,7 @@ const AddMangaModal = ({ volumeInfo, userId, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { addMangaToCollection } = useManga();
+  const { open, isMobile } = useSidebar();
 
   // Close modal function
   const closeModal = () => {
@@ -40,10 +42,14 @@ const AddMangaModal = ({ volumeInfo, userId, onClose }) => {
 
   return (
     <div className="absolute flex items-center justify-center w-full top-0 left-0 h-screen">
-      <div className="fixed inset-0 flex items-center justify-center  bg-black bg-opacity-50">
-        <div className="border m-auto flex flex-col gap-3 p-5 w-[500px] bg-white rounded-lg">
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div
+          className={`border ${
+            open && !isMobile ? "ml-32" : ""
+          } flex flex-col gap-3 p-5 w-[350px] md:w-[500px] bg-secondary rounded-lg absolute left-1/2 transform -translate-x-1/2`}
+        >
           <h2 className="font-medium text-lg">Add Manga to Your Collection</h2>
-          {error && <p className="text-red-500">{error}</p>}{" "}
+          {error && <p className="text-destructive">{error}</p>}{" "}
           {/* Display error */}
           <form
             onSubmit={handleModalSubmit}

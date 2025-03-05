@@ -20,7 +20,8 @@ import {
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
 import Image from "next/image";
-import logo from "../../public/shelfuLogo.png";
+import logoWhite from "../../public/logo-white.png";
+import logoBlack from "../../public/logo-black.png";
 import { usePathname } from "next/navigation";
 import {
   User2,
@@ -34,6 +35,7 @@ import {
   SquareUser,
 } from "lucide-react";
 import { useAuth } from "@/context/authContext";
+import { useTheme } from "next-themes";
 
 const AppSidebar = () => {
   const { logout, loading } = useAuth();
@@ -50,12 +52,19 @@ const AppSidebar = () => {
     e.preventDefault();
     logout();
   };
+  const { theme } = useTheme();
   return (
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center cursor-pointer">
           <a href="/" className="flex items-center">
-            <Image src={logo} height={40} width={40} alt="Logo" />
+            <Image
+              src={theme === "light" ? logoBlack : logoWhite}
+              height={40}
+              width={40}
+              alt="Logo"
+              className="transition-opacity delay-100 ease-in-out"
+            />
             <h2 className={`text-xl font-bold`}>Shelfu</h2>
           </a>
           <SidebarTrigger className="ml-auto" />

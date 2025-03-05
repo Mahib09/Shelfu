@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Logo from "../../../../public/shelfuLogo.png";
+import Logo from "../../../../public/logo-black.png";
 import { useAuth } from "@/context/authContext";
 
 const schema = Yup.object().shape({
@@ -43,14 +43,16 @@ const Login = () => {
       <div className="formHolder">
         <div className="flex flex-col gap-1">
           <h2 className="font-semibold text-3xl">Sign In</h2>
-          <p className="text-sm text-gray-600">Welcome back to Shelfu</p>
+          <p className="text-sm text-secondary-foreground">
+            Welcome back to Shelfu
+          </p>
         </div>
 
         <form onSubmit={handleSubmit(handleLogin)} className="form">
           <button
             type="button"
             onClick={signInWithGoogle}
-            className=" rounded-md flex items-center justify-center gap-2 p-2 bg-gray-100 w-full"
+            className=" rounded-md flex items-center justify-center gap-2 p-2 bg-secondary w-full"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +70,7 @@ const Login = () => {
             </svg>
             Sign in with Google
           </button>
-          <p className="text-xs text-gray-500">or</p>
+          <p className="text-xs text-muted-foreground">or</p>
           <div className="w-full flex flex-col gap-2">
             <input
               type="email"

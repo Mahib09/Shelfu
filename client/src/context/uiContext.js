@@ -1,5 +1,6 @@
 "use client";
 import { useSidebar } from "@/components/ui/sidebar";
+
 import { useContext, createContext, useState, useEffect } from "react";
 
 const uiContext = createContext();
@@ -15,9 +16,8 @@ export const UiProvider = ({ children }) => {
     } else {
       setPageWidth("90vw");
     }
-    console.log(open);
-    console.log("Page Width: ", pagewidth);
   }, [open]);
+
   return (
     <uiContext.Provider value={{ pagewidth }}>{children}</uiContext.Provider>
   );
