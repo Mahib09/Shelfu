@@ -13,18 +13,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import Image from "next/image";
 import SheetComponent from "@/components/app-sideSheet";
+import { useUi } from "@/context/uiContext";
 const Collection = () => {
   const [layout, setLayout] = useState("Grid");
   const [sort, setSort] = useState("Asc");
@@ -32,8 +22,7 @@ const Collection = () => {
   const [filterActive, setFilterActive] = useState();
   const [searchFilter, setSearchFilter] = useState("");
   const { loading, error, collection } = useManga();
-  const [note, setNote] = useState("");
-  const [status, setStatus] = useState("Owned"); // Default status
+  const { pageWidth } = useUi();
   useEffect(() => {
     setFilterActive(filterQuery !== "");
   }, [filterQuery]);
@@ -124,7 +113,7 @@ const Collection = () => {
 
           <TabsContent
             value="owned"
-            className={`flex flex-wrap gap-2 items-center justify-around sm:justify-center ${
+            className={`flex flex-wrap gap-2 items-center justify-around sm:justify-center w-${pageWidth} ${
               layout === "List"
                 ? "flex-col justify-start items-start w-full"
                 : "flex-row"

@@ -11,10 +11,11 @@ export const UiProvider = ({ children }) => {
 
   useEffect(() => {
     if (open) {
-      setPageWidth(`calc(100vw - ${sidebarWidth})`);
+      setPageWidth(`calc(90vw - ${sidebarWidth})`);
     } else {
-      setPageWidth("100vw");
+      setPageWidth("90vw");
     }
+    console.log(open);
     console.log("Page Width: ", pagewidth);
   }, [open]);
   return (

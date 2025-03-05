@@ -51,20 +51,6 @@ export const addMangatoUserCollectionApi = async ({ bodyInfo }) => {
   });
 };
 
-export const getUserCollectionBySeriesApi = async ({ bodyInfo }) => {
-  return await axios.post(`http://localhost:3001/usercollection/byseries`, {
-    bodyInfo,
-    withCredentials: true,
-  });
-};
-
-export const getUserCollectionByStatusApi = async ({ bodyInfo }) => {
-  return await axios.post(`http://localhost:3001/usercollection/bystatus`, {
-    bodyInfo,
-    withCredentials: true,
-  });
-};
-
 export const updateCategoryorNotesApi = async (bodyInfo, userCollectionId) => {
   return await axios.patch(
     `http://localhost:3001/usercollection/${userCollectionId}`,
@@ -78,7 +64,7 @@ export const updateCategoryorNotesApi = async (bodyInfo, userCollectionId) => {
   );
 };
 
-export const deleteVolumeApi = async ({ userCollectionId }) => {
+export const deleteVolumeApi = async (userCollectionId) => {
   return await axios.delete(
     `http://localhost:3001/usercollection/${userCollectionId}`,
     {

@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./authContext";
 import {
   addMangatoUserCollectionApi,
+  deleteVolumeApi,
   getSearchResultsApi,
   getUserCollectionApi,
   updateCategoryorNotesApi,
@@ -82,6 +83,20 @@ export const MangaProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  const deleteMangaFromCollection = async (userCollectionId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await deleteVolumeApi(userCollectionId);
+      await fetchUserCollection();
+      return response;
+    } catch (error) {
+      setError("Failed to Delete", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <MangaContext.Provider
       value={{
@@ -99,6 +114,7 @@ export const MangaProvider = ({ children }) => {
         addMangaToCollection,
         updateMangaStatusOrNote,
         fetchUserCollection,
+        deleteMangaFromCollection,
       }}
     >
       {children}

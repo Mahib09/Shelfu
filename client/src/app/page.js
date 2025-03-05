@@ -1,7 +1,5 @@
 "use client";
-import Image from "next/image";
-import Logo from "../../public/logo.png";
-import { Send, Sun } from "lucide-react";
+
 import { useRouter } from "next/navigation";
 
 export default function Home() {

@@ -17,11 +17,10 @@ import { useManga } from "@/context/mangaContext";
 import { toast } from "sonner";
 
 const SheetComponent = ({ item, children }) => {
-  // Internal state for status and note
   const [status, setStatus] = useState(item.status || "Owned");
   const [note, setNote] = useState(item.notes || "");
   const [isOpen, setIsOpen] = useState(false);
-  const { updateMangaStatusOrNote } = useManga();
+  const { updateMangaStatusOrNote, deleteMangaFromCollection } = useManga();
 
   const handleSubmit = async () => {
     const bodyInfo = {
@@ -39,6 +38,17 @@ const SheetComponent = ({ item, children }) => {
       setIsOpen(false);
     } else {
       toast("Error Updating");
+    }
+  };
+  const handleDelete = async () => {
+    const response = await deleteMangaFromCollection(item.userCollectionId);
+    if (response.status === 200) {
+      toast("Deleted Succesfully");
+      setStatus(item.status);
+      setNote("");
+      setIsOpen(false);
+    } else {
+      toast("Error Deleting");
     }
   };
   return (
@@ -113,8 +123,14 @@ const SheetComponent = ({ item, children }) => {
         </form>
 
         <SheetFooter>
-          <AlertDai>
-            <button>Delete</button>
+          <AlertDai onCloseSheet={() => setIsOpen(false)}>
+            <Button
+              variant="destructive"
+              className="w-full mt-2"
+              onClick={handleDelete}
+            >
+              Delete Volume
+            </Button>
           </AlertDai>
         </SheetFooter>
       </SheetContent>
