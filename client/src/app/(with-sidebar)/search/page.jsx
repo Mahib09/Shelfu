@@ -70,7 +70,7 @@ const Search = () => {
   };
 
   return (
-    <div className="min-h-[calc(100% - 2rem)] px-20 ">
+    <div className="min-h-[calc(100% - 2rem)]  mx-12 border border-dashed border-y-0">
       <div
         className={`flex flex-col  transition-all duration-300 ${
           isSearching ? "pt-4 max-h-fit" : "pt-[40vh] min-h-[calc(100% - 2rem)]"
@@ -79,11 +79,11 @@ const Search = () => {
         <div className="flex w-full max-w-md mb-4">
           <button
             onClick={handlePrevious}
-            className="hover:text-muted-foreground"
+            className="hover:text-accent-foreground"
           >
             <ArrowLeft />
           </button>
-          <h2 className="ml-2 text-lg font-semibold">Search Volumes</h2>
+          <h2 className="ml-2 text-xl font-bold">Search Volumes</h2>
         </div>
 
         <div className={`w-full  mx-auto `}>
@@ -98,7 +98,10 @@ const Search = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className=" p-2 outline-none border-none h-12 text-lg"
             />
-            <button type="submit" className="ml-auto mr-2">
+            <button
+              type="submit"
+              className="ml-auto mr-2 hover:text-accent-foreground"
+            >
               <SearchIcon />
             </button>
           </form>
@@ -107,7 +110,7 @@ const Search = () => {
 
       {/* Search Results */}
       {isSearching && (
-        <div className="mt-[70px] w-[100%] flex flex-wrap gap-7 p-4 justify-center">
+        <div className="mt-[70px] w-[100%] flex flex-wrap gap-4 p-4 justify-center">
           {loading ? (
             <p>Loading...</p>
           ) : error ? (

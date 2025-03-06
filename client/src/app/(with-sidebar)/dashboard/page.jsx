@@ -1,6 +1,19 @@
 "use client";
 
 import CardComponent from "@/components/app-card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 import { useManga } from "@/context/mangaContext";
 import {
@@ -9,11 +22,15 @@ import {
   DollarSign,
   MonitorCheck,
   ShoppingCart,
+  TrendingUp,
 } from "lucide-react";
+import Image from "next/image";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const { collection } = useManga();
-  const getTotalOwnedVolumes = (collection) => {
+  const getTotalOwnedVolumes = () => {
     const totalOwned = collection.filter(
       (entry) => entry.status === "Owned"
     ).length;
@@ -41,7 +58,7 @@ export default function Dashboard() {
       change: volumeChange,
     };
   };
-  const getTotalMangaSeries = (collection) => {
+  const getTotalMangaSeries = () => {
     const totalSeries = [
       ...new Set(
         collection
@@ -85,7 +102,7 @@ export default function Dashboard() {
       change: seriesChange,
     };
   };
-  const getVolumesToBuy = (collection) => {
+  const getVolumesToBuy = () => {
     const totalToBuy = collection.filter(
       (entry) => entry.status === "Want_To_Buy"
     ).length;
@@ -113,7 +130,7 @@ export default function Dashboard() {
       change: toBuyChange,
     };
   };
-  const getVolumesForSale = (collection) => {
+  const getVolumesForSale = () => {
     const totalForSale = collection.filter(
       (entry) => entry.status === "For_Sale"
     ).length;
@@ -141,14 +158,126 @@ export default function Dashboard() {
       change: forSaleChange,
     };
   };
+  const getRecentAddition = () => {
+    const sortedCollection = collection.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
 
-  const totalOwned = getTotalOwnedVolumes(collection);
-  const totalSeries = getTotalMangaSeries(collection);
-  const volumesToBuy = getVolumesToBuy(collection);
-  const volumesForSale = getVolumesForSale(collection);
+    const top5Recent = sortedCollection.slice(0, 5);
 
+    // Map over the top 5 items to extract the date and month
+    const formattedRecentAdditions = top5Recent.map((item) => {
+      const createdAt = new Date(item.createdAt);
+      const date = createdAt.getDate();
+      const month = createdAt.toLocaleString("default", { month: "short" }); // Get the abbreviated month name
+      const year = createdAt.getFullYear(); // Get the year
+
+      return {
+        userCollectionId: item.userCollectionId,
+        title: item.volume.seriesName,
+        volumeNumber: item.volume.volumeNumber,
+        author: item.volume.author,
+        image: item.volume.coverImageUrl,
+        addedDate: `${month} ${date}, ${year}`, // Format: "Mar 6, 2025"
+      };
+    });
+    return formattedRecentAdditions;
+  };
+  const getLastSixMonths = () => {
+    const months = [];
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    // Get current month and previous 5 months
+    const currentMonth = new Date().getMonth(); // Current month index (0-11)
+    for (let i = 0; i < 6; i++) {
+      months.push(monthNames[(currentMonth - i + 12) % 12]);
+    }
+
+    return months.reverse(); // To ensure they are from 6 months ago to now
+  };
+  const prepareData = (year) => {
+    const lastSixMonths = getLastSixMonths();
+    const grouped = {};
+
+    collection.forEach((entry) => {
+      const createdAt = new Date(entry.createdAt);
+      const month = createdAt.toLocaleString("default", { month: "short" });
+      const entryYear = createdAt.getFullYear();
+
+      if (entryYear === year && entry.status === "Owned") {
+        if (grouped[month]) {
+          grouped[month]++;
+        } else {
+          grouped[month] = 1;
+        }
+      }
+    });
+
+    // Create data with 0 for months without data, but only for the last 6 months
+    const chartData = lastSixMonths.map((month) => ({
+      month,
+      volumesOwned: grouped[month] || 0,
+    }));
+
+    return chartData;
+  };
+
+  // Function to calculate the percentage increase in collection
+  const calculatePercentageIncrease = (data) => {
+    const ownedCollection = collection.filter(
+      (entry) => entry.status === "Owned"
+    );
+
+    // Get the total owned volumes added this month (from data)
+    const volumesAddedThisMonth = data[data.length - 1].volumesOwned; // Last month's volumes owned
+
+    // Get the total owned volumes in the collection before this month
+    const ownedCollectionBeforeThisMonth =
+      ownedCollection.length - volumesAddedThisMonth;
+
+    // If no volumes were added, return 0%
+    if (ownedCollectionBeforeThisMonth === 0) return 100;
+
+    // Calculate the percentage increase based on the owned volumes added this month
+    const percentageIncrease =
+      (volumesAddedThisMonth / ownedCollectionBeforeThisMonth) * 100;
+
+    return percentageIncrease;
+  };
+
+  const totalOwned = getTotalOwnedVolumes();
+  const totalSeries = getTotalMangaSeries();
+  const volumesToBuy = getVolumesToBuy();
+  const volumesForSale = getVolumesForSale();
+  const recentAddition = getRecentAddition();
+  const currentYear = new Date().getFullYear();
+  const chartData = prepareData(currentYear);
+
+  const overallPercentageIncrease = calculatePercentageIncrease(
+    chartData,
+    collection
+  );
+  const chartConfig = {
+    volumesOwned: {
+      label: "Volumes Added: ",
+      color: "hsl(var(--chart-neutral))",
+    },
+  };
   return (
-    <div className="p-4 pt-2 flex flex-col gap-5">
+    <div className="mx-12 pb-8 p-4 flex flex-col gap-5 border-dashed border border-t-0">
       <h2 className="font-bold text-2xl md:text-3xl">Dashboard</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         <CardComponent
@@ -159,7 +288,7 @@ export default function Dashboard() {
           data={totalOwned.total}
           comparisondata={`${totalOwned.change >= 0 ? "+" : ""}${
             totalOwned.change
-          } volumes added to collection this month`}
+          } volumes to collection this month`}
         />
         <CardComponent
           Icon={
@@ -173,7 +302,7 @@ export default function Dashboard() {
           data={totalSeries.total}
           comparisondata={`${totalSeries.change >= 0 ? "+" : ""}${
             totalSeries.change
-          } new series added this month`}
+          } new series this month`}
         />
         <CardComponent
           Icon={
@@ -187,7 +316,7 @@ export default function Dashboard() {
           data={volumesToBuy.total}
           comparisondata={`${volumesToBuy.change >= 0 ? "+" : ""}${
             volumesToBuy.change
-          } volumes added to buy this month`}
+          } volumes to buy this month`}
         />
         <CardComponent
           Icon={
@@ -203,6 +332,86 @@ export default function Dashboard() {
             volumesForSale.change
           } volumes added for sale this month`}
         />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Volumes Owned</CardTitle>
+            <CardDescription>January - March 2025</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {chartData.length > 0 ? (
+              <ChartContainer config={chartConfig}>
+                <BarChart accessibilityLayer data={chartData}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    tickFormatter={(value) => value.slice(0, 3)}
+                  />
+                  <YAxis />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Bar
+                    dataKey="volumesOwned"
+                    fill="var(--primary)"
+                    className="fill-primary"
+                    radius={8}
+                  />
+                </BarChart>
+              </ChartContainer>
+            ) : (
+              <div>No data available for the last 6 months.</div>
+            )}
+          </CardContent>
+          <CardFooter className="flex-col items-start gap-2 text-sm">
+            <div className="flex gap-2 font-medium leading-none">
+              Trending up by {overallPercentageIncrease}% this month
+              <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="leading-none text-muted-foreground">
+              Showing total volumes added over the last 6 months
+            </div>
+          </CardFooter>
+        </Card>
+
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Recent Addition</CardTitle>
+            <CardDescription>You added x Volumes this month</CardDescription>
+            <CardContent>
+              {recentAddition.map((item) => (
+                <div
+                  className=" flex gap-4 items-center p-2"
+                  key={item.userCollectionId}
+                >
+                  <Image
+                    src={item.image}
+                    width={40}
+                    height={50}
+                    alt="cover"
+                    className="rounded-md"
+                  />
+                  <div className="flex justify-center flex-col">
+                    <p className="text-md font-medium">
+                      {`${item.title} Volume ${item.volumeNumber}`}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {item.author}
+                    </p>
+                  </div>
+                  <p className="text-md font-medium ml-auto">
+                    {item.addedDate}
+                  </p>
+                </div>
+              ))}
+            </CardContent>
+          </CardHeader>
+        </Card>
       </div>
     </div>
   );

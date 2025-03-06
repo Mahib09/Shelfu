@@ -41,8 +41,10 @@ const Collection = () => {
     return (
       <TabsContent
         value={value}
-        className={`flex flex-wrap gap-9 items-center ${
-          layout === "Grid" ? "justify-around sm:justify-center" : ""
+        className={`flex flex-wrap gap-5 w-full items-center ${
+          layout === "Grid"
+            ? "justify-around sm:justify-center"
+            : "flex-col items-start"
         } ${className || ""}`}
       >
         {Array.isArray(collection) ? (
@@ -87,7 +89,7 @@ const Collection = () => {
     );
   };
   return (
-    <div className="flex flex-col justify-center">
+    <div className="mx-12 flex flex-col justify-center border border-y-0 border-dashed border-spacing-1">
       <div className="flex p-2 m-2 gap-1 items-center">
         <h2 className="font-bold text-2xl md:text-3xl">Your Collection</h2>
         <ToolTip message={`${sort} Sort`} className="ml-auto">
@@ -143,11 +145,11 @@ const Collection = () => {
 
       {/* content */}
       {loading ? (
-        <div className="p-2">Loading...</div>
+        <div className="p-2 h-screen">Loading...</div>
       ) : error ? (
-        <div className="p-2">{error}</div>
+        <div className="p-2 h-screen">{error}</div>
       ) : (
-        <div>
+        <div className="border border-x-0 border-dashed">
           <Tabs defaultValue="Owned" className="w-full p-2">
             <div className="flex">
               <TabsList className="flex w-max gap-3 justify-start items-center p-2">
@@ -162,7 +164,9 @@ const Collection = () => {
                       variant="outline"
                       size="icon"
                       onClick={handleGrid}
-                      className={`${layout === "Grid" ? "text-blue-500" : ""}`}
+                      className={`${
+                        layout === "Grid" ? "text-purple-600" : ""
+                      }`}
                     >
                       <Grid />
                     </Button>
@@ -174,7 +178,9 @@ const Collection = () => {
                       variant="outline"
                       size="icon"
                       onClick={handleList}
-                      className={`${layout === "List" ? "text-blue-500" : ""}`}
+                      className={`${
+                        layout === "List" ? "text-purple-600" : ""
+                      }`}
                     >
                       <List />
                     </Button>

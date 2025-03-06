@@ -21,6 +21,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -29,9 +31,13 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.user);
 
         setProfile(response.data.profile);
+        setUserName(response.data.user.displayName);
+        setUserEmail(response.data.user.email);
       } catch (error) {
         setUser(null);
         setProfile(null);
+        setUserName("");
+        setUserEmail("");
         router.push("/auth/login");
       } finally {
         setLoading(false);
@@ -150,6 +156,8 @@ export const AuthProvider = ({ children }) => {
         signInWithGoogle,
         profile,
         setProfile,
+        userName,
+        userEmail,
       }}
     >
       {children}
