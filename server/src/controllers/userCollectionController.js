@@ -18,7 +18,7 @@ const addMangatoUserCollection = async (req, res) => {
         data: {
           volumeNumber: volumeInfo.volumeNumber,
           seriesName: volumeInfo.title,
-          author: volumeInfo.author[0],
+          author: volumeInfo.author[0] || "unknown",
           booksApiId: volumeInfo.isbn,
           description: volumeInfo.description,
           publisher: volumeInfo.publisher,

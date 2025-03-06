@@ -41,14 +41,14 @@ model Volumes {
 model UserCollection {
   userCollectionId Int @id @default(autoincrement())
   userId           Int
-
-  volumeId Int
-  user     Users            @relation(fields: [userId], references: [userId], onDelete: Cascade)
-  volume   Volumes          @relation(fields: [volumeId], references: [volumeId], onDelete: Cascade)
-  status   CollectionStatus
-  notes    String
-
+  volumeId         Int
+  user            Users   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  volume          Volumes @relation(fields: [volumeId], references: [volumeId], onDelete: Cascade)
+  status          CollectionStatus
+  notes           String?
+  createdAt       DateTime @default(now())
 }
+
 
 enum CollectionStatus {
   Owned

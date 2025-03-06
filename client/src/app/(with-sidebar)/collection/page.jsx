@@ -41,7 +41,7 @@ const Collection = () => {
     return (
       <TabsContent
         value={value}
-        className={`flex flex-wrap gap-2 items-center ${
+        className={`flex flex-wrap gap-9 items-center ${
           layout === "Grid" ? "justify-around sm:justify-center" : ""
         } ${className || ""}`}
       >
@@ -89,9 +89,7 @@ const Collection = () => {
   return (
     <div className="flex flex-col justify-center">
       <div className="flex p-2 m-2 gap-1 items-center">
-        <h2 className="font-medium text-xl md:text-3xl text-primary">
-          Your Collection
-        </h2>
+        <h2 className="font-bold text-2xl md:text-3xl">Your Collection</h2>
         <ToolTip message={`${sort} Sort`} className="ml-auto">
           <div>
             <Toggle onClick={handleSortToggle}>
