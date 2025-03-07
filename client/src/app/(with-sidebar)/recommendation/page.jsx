@@ -1,19 +1,31 @@
 import React from "react";
+import Recommendation from "./Recommendation";
 
-const Recommendation = () => {
-  return (
-    <div className="flex h-[94vh]">
-      <div className="m-auto flex flex-col items-center">
-        <p>Coming Soon</p>
-        <a
-          className="text-secondary-foreground underline hover:text-accent-foreground"
-          href="/dashboard"
-        >
-          Go back
-        </a>
-      </div>
-    </div>
-  );
+export const metadata = {
+  title: "Recommendations | Shelfu",
+  description:
+    "Get personalized manga recommendations based on your collection and reading preferences powered by AI.",
+  keywords: [
+    "manga",
+    "recommendations",
+    "AI",
+    "personalized recommendations",
+    "manga collection",
+    "reading suggestions",
+  ],
+  og: {
+    title: "Manga Recommendations",
+    description:
+      "Get personalized manga recommendations based on your collection and reading preferences powered by AI.",
+    type: "website",
+    image: "/images/recommendation-preview.png",
+  },
+  robots: "index, follow",
+  viewport: "width=device-width, initial-scale=1",
 };
 
-export default Recommendation;
+const page = () => {
+  return <Recommendation />;
+};
+
+export default page;

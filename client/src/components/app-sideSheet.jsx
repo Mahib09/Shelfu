@@ -15,15 +15,17 @@ import Image from "next/image";
 import AlertDai from "./app-alertDialog";
 import { useManga } from "@/context/mangaContext";
 import { toast } from "sonner";
+import { useAuth } from "@/context/authContext";
 
 const SheetComponent = ({ item, children }) => {
   const [status, setStatus] = useState(item.status || "Owned");
   const [note, setNote] = useState(item.notes || "");
   const [isOpen, setIsOpen] = useState(false);
   const { updateMangaStatusOrNote, deleteMangaFromCollection } = useManga();
-
+  const { profile } = useAuth();
   const handleSubmit = async () => {
     const bodyInfo = {
+      userId: profile?.userId,
       status: status,
       notes: note,
     };
@@ -41,8 +43,14 @@ const SheetComponent = ({ item, children }) => {
     }
   };
   const handleDelete = async () => {
-    const response = await deleteMangaFromCollection(item.userCollectionId);
-    if (response.status === 200) {
+    const bodyInfo = {
+      userId: profile?.userId,
+    };
+    const response = await deleteMangaFromCollection(
+      bodyInfo,
+      item.userCollectionId
+    );
+    if (response) {
       toast("Deleted Succesfully");
       setStatus(item.status);
       setNote("");

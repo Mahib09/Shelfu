@@ -3,7 +3,7 @@ import React from "react";
 
 const MangaCard = ({ src, title, author, volumeNumber }) => {
   return (
-    <div className="relative h-[308px] group rounded-md p-1 w-[180px] border hover:scale-105 shadow-sm transition-all ease-in-out delay-100">
+    <div className="relative h-[308px] group rounded-md p-2 w-[180px] border hover:scale-105 shadow-sm transition-all ease-in-out delay-100">
       <Image
         height={270}
         width={180}

@@ -42,7 +42,6 @@ export const getUserCollectionApi = async (userId) => {
 };
 
 export const addMangatoUserCollectionApi = async ({ bodyInfo }) => {
-  console.log("form api.js", bodyInfo);
   return await axios.post(`http://localhost:3001/usercollection`, bodyInfo, {
     withCredentials: true,
     headers: {
@@ -64,11 +63,15 @@ export const updateCategoryorNotesApi = async (bodyInfo, userCollectionId) => {
   );
 };
 
-export const deleteVolumeApi = async (userCollectionId) => {
+export const deleteVolumeApi = async (bodyInfo, userCollectionId) => {
   return await axios.delete(
     `http://localhost:3001/usercollection/${userCollectionId}`,
     {
       withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: bodyInfo,
     }
   );
 };

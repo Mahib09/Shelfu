@@ -8,13 +8,13 @@ export default function SidebarLayout({ children }) {
   return (
     <SidebarProvider>
       <UiProvider>
-        <div className="flex w-full">
+        <div className="flex w-full min-h-screen ">
           <AppSidebar />
-          <main className="flex-1 ">
+          <div className="flex flex-col flex-1 ">
             <HeadBar />
-            {children}
+            <main className="">{children}</main>
             <Footer />
-          </main>
+          </div>
         </div>
       </UiProvider>
     </SidebarProvider>

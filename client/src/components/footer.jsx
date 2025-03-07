@@ -1,7 +1,11 @@
 import React from "react";
 
 const Footer = () => {
-  return <div className="border border-dashed h-14"></div>;
+  return (
+    <footer className="border border-dashed border-x-0 h-14 w-full">
+      <div className="container-wrapper h-full"></div>
+    </footer>
+  );
 };
 
 export default Footer;

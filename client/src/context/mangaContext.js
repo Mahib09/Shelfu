@@ -17,12 +17,12 @@ export const MangaProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
-  const { user, isLoggedIn } = useAuth();
+  const { profile, isLoggedIn } = useAuth();
 
   const fetchUserCollection = async () => {
     setLoading(true);
     try {
-      const userId = user?.uid; // Ensure user is defined before accessing userId
+      const userId = profile?.userId; // Ensure user is defined before accessing userId
       if (!userId) {
         throw new Error("User ID is missing");
       }
@@ -37,12 +37,12 @@ export const MangaProvider = ({ children }) => {
   };
   useEffect(() => {
     // Fetch user collection only if the user is logged in
-    if (user) {
+    if (profile) {
       fetchUserCollection();
     } else {
       setLoading(false);
     }
-  }, [user]);
+  }, [profile]);
 
   const searchManga = async () => {
     setLoading(true);
@@ -84,11 +84,11 @@ export const MangaProvider = ({ children }) => {
     }
   };
 
-  const deleteMangaFromCollection = async (userCollectionId) => {
+  const deleteMangaFromCollection = async (bodyInfo, userCollectionId) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await deleteVolumeApi(userCollectionId);
+      const response = await deleteVolumeApi(bodyInfo, userCollectionId);
       await fetchUserCollection();
       return response;
     } catch (error) {

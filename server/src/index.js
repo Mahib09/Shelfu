@@ -1,5 +1,6 @@
 const cors = require("cors");
 const createServer = require("./utils/server");
+const setupRedis = require("./utils/redis");
 
 const app = createServer();
 const corsOptions = {
@@ -12,7 +13,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors());
 
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on Http://localhost:${PORT}`);
+setupRedis().then((client) => {
+  app.locals.redis = client;
+  const PORT = 3001;
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
 });

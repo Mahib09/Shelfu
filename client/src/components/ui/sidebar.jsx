@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { ArrowLeftToLine, PanelLeft } from "lucide-react";
+import { ArrowLeftToLine, Menu, PanelLeft } from "lucide-react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -232,7 +232,7 @@ Sidebar.displayName = "Sidebar";
 
 const SidebarTrigger = React.forwardRef(
   ({ className, onClick, ...props }, ref) => {
-    const { toggleSidebar } = useSidebar();
+    const { toggleSidebar, isMobile } = useSidebar();
 
     return (
       <Button
@@ -247,7 +247,8 @@ const SidebarTrigger = React.forwardRef(
         }}
         {...props}
       >
-        <ArrowLeftToLine />
+        {isMobile ? <Menu /> : <ArrowLeftToLine />}
+
         <span className="sr-only">Toggle Sidebar</span>
       </Button>
     );

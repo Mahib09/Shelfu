@@ -33,6 +33,9 @@ html {
   .btnCta {
     @apply;
   }
+  .container-wrapper {
+    @apply md:mx-12 xl:mx-20 pb-8 p-4 border border-dashed border-y-0;
+  }
 }
 
 @layer base {
@@ -124,7 +127,4 @@ html {
 }
 .embla__slide {
   flex: 0 0 100%; /* Default slide covers 100% of the viewport */
-}
-.container {
-  padding: 3rem; /* This applies padding inside a container on all pages */
 }
