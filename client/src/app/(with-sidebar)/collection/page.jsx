@@ -16,6 +16,8 @@ import {
 import SheetComponent from "@/components/app-sideSheet";
 import { useUi } from "@/context/uiContext";
 import ToolTip from "@/components/app-tooltip";
+import { CollectionSkeleton } from "@/components/collectionSkeleton";
+import { MangaListCardSkeleton } from "@/components/collectionListSkeleton";
 const Collection = () => {
   const [layout, setLayout] = useState("Grid");
   const [sort, setSort] = useState("Asc");
@@ -89,9 +91,11 @@ const Collection = () => {
     );
   };
   return (
-    <div className="mx-12 flex flex-col justify-center border border-y-0 border-dashed border-spacing-1">
-      <div className="flex p-2 m-2 gap-1 items-center">
-        <h2 className="font-bold text-2xl md:text-3xl">Your Collection</h2>
+    <div className="md:mx-12 sm:mx-2 pb-8 sm:p-4 flex flex-col justify-center border border-y-0 border-dashed border-spacing-1">
+      <div className="flex sm:p-2 sm:m-2 sm:gap-1 items-center">
+        <h2 className="font-bold text-xl sm:text-2xl md:text-3xl">
+          Your Collection
+        </h2>
         <ToolTip message={`${sort} Sort`} className="ml-auto">
           <div>
             <Toggle onClick={handleSortToggle}>
@@ -144,13 +148,11 @@ const Collection = () => {
       </div>
 
       {/* content */}
-      {loading ? (
-        <div className="p-2 h-screen">Loading...</div>
-      ) : error ? (
+      {error ? (
         <div className="p-2 h-screen">{error}</div>
       ) : (
         <div className="border border-x-0 border-dashed">
-          <Tabs defaultValue="Owned" className="w-full p-2">
+          <Tabs defaultValue="Owned" className="w-full sm:p-2 pt-2">
             <div className="flex">
               <TabsList className="flex w-max gap-3 justify-start items-center p-2">
                 <TabsTrigger value="Owned">Owned</TabsTrigger>
@@ -188,9 +190,19 @@ const Collection = () => {
                 </ToolTip>
               </div>
             </div>
-            <TabContentComponent value="Owned" className="" />
-            <TabContentComponent value="Want_To_Buy" className="mt-0" />
-            <TabContentComponent value="For_Sale" className="mt-0" />
+            {loading ? (
+              layout === "Grid" ? (
+                <CollectionSkeleton layout={layout} />
+              ) : (
+                <MangaListCardSkeleton />
+              )
+            ) : (
+              <div className="mt-6">
+                <TabContentComponent value="Owned" className="" />
+                <TabContentComponent value="Want_To_Buy" className="mt-0" />
+                <TabContentComponent value="For_Sale" className="mt-0" />
+              </div>
+            )}
           </Tabs>
         </div>
       )}

@@ -43,19 +43,9 @@ export default function Dashboard() {
       );
     }).length;
 
-    const previousMonthOwned = collection.filter((entry) => {
-      const createdAt = new Date(entry.createdAt);
-      return (
-        createdAt.getMonth() === new Date().getMonth() - 1 &&
-        entry.status === "Owned"
-      );
-    }).length;
-
-    const volumeChange = currentMonthOwned - previousMonthOwned;
-
     return {
       total: totalOwned,
-      change: volumeChange,
+      change: currentMonthOwned,
     };
   };
   const getTotalMangaSeries = () => {
@@ -99,7 +89,7 @@ export default function Dashboard() {
 
     return {
       total: totalSeries,
-      change: seriesChange,
+      change: seriesChange > 0 ? seriesChange : 0,
     };
   };
   const getVolumesToBuy = () => {
@@ -163,7 +153,7 @@ export default function Dashboard() {
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
 
-    const top5Recent = sortedCollection.slice(0, 5);
+    const top5Recent = sortedCollection.slice(0, 6);
 
     // Map over the top 5 items to extract the date and month
     const formattedRecentAdditions = top5Recent.map((item) => {
@@ -234,8 +224,6 @@ export default function Dashboard() {
 
     return chartData;
   };
-
-  // Function to calculate the percentage increase in collection
   const calculatePercentageIncrease = (data) => {
     const ownedCollection = collection.filter(
       (entry) => entry.status === "Owned"
@@ -277,7 +265,7 @@ export default function Dashboard() {
     },
   };
   return (
-    <div className="mx-12 pb-8 p-4 flex flex-col gap-5 border-dashed border border-t-0">
+    <div className="md:mx-12 mx-2 pb-8 p-4 flex flex-col gap-5 border-dashed border border-t-0">
       <h2 className="font-bold text-2xl md:text-3xl">Dashboard</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         <CardComponent
@@ -346,21 +334,27 @@ export default function Dashboard() {
                   <CartesianGrid vertical={false} />
                   <XAxis
                     dataKey="month"
+                    stroke="#888888"
+                    fontSize={12}
                     tickLine={false}
-                    tickMargin={10}
                     axisLine={false}
-                    tickFormatter={(value) => value.slice(0, 3)}
                   />
-                  <YAxis />
+                  <YAxis
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `$${value}`}
+                  />
                   <ChartTooltip
                     cursor={false}
                     content={<ChartTooltipContent hideLabel />}
                   />
                   <Bar
                     dataKey="volumesOwned"
-                    fill="var(--primary)"
+                    fill="currentColor"
                     className="fill-primary"
-                    radius={8}
+                    radius={[4, 4, 0, 0]}
                   />
                 </BarChart>
               </ChartContainer>
@@ -379,14 +373,17 @@ export default function Dashboard() {
           </CardFooter>
         </Card>
 
-        <Card className="col-span-3">
+        <Card className="col-span-4 lg:col-span-3">
           <CardHeader>
             <CardTitle>Recent Addition</CardTitle>
-            <CardDescription>You added x Volumes this month</CardDescription>
-            <CardContent>
+            <CardDescription>
+              You added {totalOwned.change} Volumes to your collection this
+              month
+            </CardDescription>
+            <CardContent className="p-0">
               {recentAddition.map((item) => (
                 <div
-                  className=" flex gap-4 items-center p-2"
+                  className=" flex  gap-4 items-center p-2"
                   key={item.userCollectionId}
                 >
                   <Image

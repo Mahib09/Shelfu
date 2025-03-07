@@ -9,6 +9,7 @@ import { useAuth } from "@/context/authContext";
 import AddMangaModel from "@/components/app-addMangaModel";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import SearchSkeleton from "@/components/searchSkeleton";
 
 const Search = () => {
   const router = useRouter();
@@ -70,7 +71,7 @@ const Search = () => {
   };
 
   return (
-    <div className="min-h-[calc(100% - 2rem)]  mx-12 border border-dashed border-y-0">
+    <div className="min-h-[calc(100% - 2rem)]  md:mx-12 mx-2 pb-8 p-4 border border-dashed border-y-0">
       <div
         className={`flex flex-col  transition-all duration-300 ${
           isSearching ? "pt-4 max-h-fit" : "pt-[40vh] min-h-[calc(100% - 2rem)]"
@@ -110,9 +111,9 @@ const Search = () => {
 
       {/* Search Results */}
       {isSearching && (
-        <div className="mt-[70px] w-[100%] flex flex-wrap gap-4 p-4 justify-center">
+        <div className="mt-12 w-[100%] flex flex-wrap gap-4 p-4 justify-center">
           {loading ? (
-            <p>Loading...</p>
+            <SearchSkeleton />
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : searchResult.length > 0 ? (
