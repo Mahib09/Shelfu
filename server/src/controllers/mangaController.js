@@ -108,7 +108,20 @@ const getSearchResults = async (req, res) => {
     if (!searchQuery) {
       return res.status(400).json({ error: "Search query is required" });
     }
+    const redis = req.app.locals.redis;
+
+    // Check if the search results are cached in Redis
+    const cachedResults = await redis.get(`searchResults:${searchQuery}`);
+    if (cachedResults) {
+      return res.status(200).json(JSON.parse(cachedResults));
+    }
     const formattedBooksApiResults = await fetchFromApi(searchQuery);
+    await redis.set(
+      `searchResults:${searchQuery}`,
+      JSON.stringify(formattedBooksApiResults),
+      "EX",
+      86400
+    );
 
     return res.status(200).json(formattedBooksApiResults);
   } catch (error) {

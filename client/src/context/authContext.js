@@ -8,6 +8,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   updateProfile,
+  onAuthStateChanged,
 } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { getProfileApi, logoutApi, sendTokenToBackendApi } from "@/lib/api";
@@ -16,7 +17,9 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -24,28 +27,44 @@ export const AuthProvider = ({ children }) => {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await getProfileApi();
-        setUser(response.data.user);
+  const checkAuth = async () => {
+    try {
+      const response = await getProfileApi(); // Fetch user profile
+      setUser(response.data.user);
+      setProfile(response.data.profile);
+      setUserName(response.data.user.displayName);
+      setUserEmail(response.data.user.email);
+    } catch (error) {
+      setUser(null);
+      setProfile(null);
+      setUserName("");
+      setUserEmail("");
+      router.push("/auth/login"); // Redirect to login if fetching profile fails
+    }
+  };
 
-        setProfile(response.data.profile);
-        setUserName(response.data.user.displayName);
-        setUserEmail(response.data.user.email);
-      } catch (error) {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setLoading(true); // Start loading while checking auth state
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        setIsLoggedIn(true); // Set user as logged in
+        try {
+          await checkAuth(); // Fetch the profile if authenticated
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+        }
+      } else {
         setUser(null);
         setProfile(null);
-        setUserName("");
-        setUserEmail("");
-        router.push("/auth/login");
-      } finally {
-        setLoading(false);
+        setIsLoggedIn(false); // Set user as logged out
       }
-    };
-    checkAuth();
-  }, [router]);
+      setLoading(false); // Stop loading after auth state is determined
+    });
 
+    return () => unsubscribe(); // Cleanup the subscription
+  }, [router]);
+  console.log(user, profile);
   const sendTokenToBackend = async (idToken, endpoint) => {
     try {
       const response = await sendTokenToBackendApi(idToken, endpoint);
@@ -65,6 +84,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
+
       const userCredentials = await signInWithEmailAndPassword(
         auth,
         email,
@@ -72,12 +92,16 @@ export const AuthProvider = ({ children }) => {
       );
       const firebaseUser = userCredentials.user;
       const idToken = await firebaseUser.getIdToken();
+      localStorage.setItem("isLoggedIn", "true");
+      setIsLoggedIn(true);
+      setUser(firebaseUser);
 
-      setUser(firebaseUser); // Set Firebase user directly into the state
       await sendTokenToBackend(idToken, "login");
+      await checkAuth();
+      return { status: 200, user: firebaseUser };
     } catch (error) {
-      console.error("Error during Login:", error);
-      setError("Login failed. Please check your credentials.");
+      handleAuthError(error);
+      return { status: 400, error: error.message };
     } finally {
       setLoading(false);
     }
@@ -86,14 +110,16 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       setLoading(true);
-      console.log("trying");
       await auth.signOut();
       await logoutApi();
       setUser(null);
       setProfile(null);
+      setUserName("");
+      setUserEmail("");
+      setError(null);
+      localStorage.setItem("isLoggedIn", "false");
       setIsLoggedIn(false);
       router.push("/auth/login");
-      console.log("done");
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {
@@ -105,6 +131,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
+
       const userCredentials = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -115,7 +142,8 @@ export const AuthProvider = ({ children }) => {
       await updateProfile(firebaseUser, { displayName: name });
       const idToken = await firebaseUser.getIdToken();
 
-      setUser(firebaseUser); // Set Firebase user directly into the state
+      setUser(firebaseUser);
+      localStorage.setItem("isLoggedIn", "true");
       await sendTokenToBackend(idToken, "signup");
     } catch (error) {
       console.error("Error during sign-up:", error);
@@ -129,17 +157,35 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
+
       const userCredentials = await signInWithPopup(auth, provider);
       const firebaseUser = userCredentials.user;
-      const idToken = await firebaseUser.getIdToken();
 
-      setUser(firebaseUser); // Set Firebase user directly into the state
-      await sendTokenToBackend(idToken, "signup"); // Reuse the same backend call for Google login
+      const idToken = await firebaseUser.getIdToken();
+      localStorage.setItem("isLoggedIn", "true");
+      await sendTokenToBackend(idToken, "login");
+      await checkAuth();
+
+      setUserName(firebaseUser.displayName || "No name");
+      setUserEmail(firebaseUser.email || "No email");
     } catch (error) {
       console.error("Error during Google sign-in:", error);
       setError(error.message || "An error occurred during Google sign-in");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAuthError = (error) => {
+    // Handling specific Firebase auth errors
+    if (error.code === "auth/invalid-email") {
+      setError("Invalid email format.");
+    } else if (error.code === "auth/wrong-password") {
+      setError("Incorrect password. Please try again.");
+    } else if (error.code === "auth/user-not-found") {
+      setError("No user found with this email.");
+    } else {
+      setError("Login failed. Please check your credentials.");
     }
   };
 

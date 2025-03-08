@@ -7,6 +7,9 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Logo from "../../../../public/logo-black.png";
 import { useAuth } from "@/context/authContext";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useManga } from "@/context/mangaContext";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -19,28 +22,39 @@ const schema = Yup.object().shape({
 
 const Login = () => {
   const router = useRouter();
-  const { user, login, errorMessage, loading, signInWithGoogle } = useAuth();
+  const { isLoggedIn, login, error, setError, loading, signInWithGoogle } =
+    useAuth();
+  const { fetchUserCollection } = useManga();
+
   useEffect(() => {
-    if (user) {
+    if (isLoggedIn) {
       router.push("/dashboard");
     }
-  }, [user, router]);
+  }, [isLoggedIn, router]);
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const handleLogin = (data) => {
-    login(data);
+  const handleLogin = async (data) => {
+    try {
+      await login(data);
+      reset({ password: "" });
+      router.push("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="authContainer">
       <Image src={Logo} height={100} width={100} alt="logo" />
-      <div className="formHolder">
+      <div className="formHolder flex">
         <div className="flex flex-col gap-1">
           <h2 className="font-semibold text-3xl">Sign In</h2>
           <p className="text-sm text-secondary-foreground">
@@ -51,7 +65,9 @@ const Login = () => {
         <form onSubmit={handleSubmit(handleLogin)} className="form">
           <button
             type="button"
-            onClick={signInWithGoogle}
+            onClick={() => {
+              signInWithGoogle();
+            }}
             className=" rounded-md flex items-center justify-center gap-2 p-2 bg-secondary w-full"
           >
             <svg
@@ -72,24 +88,25 @@ const Login = () => {
           </button>
           <p className="text-xs text-muted-foreground">or</p>
           <div className="w-full flex flex-col gap-2">
-            <input
+            <Input
               type="email"
               id="email"
               placeholder={`${errors.email?.message || "Email"}`}
               {...register("email", { required: "Email is Required" })}
               className={`inputField ${
-                errors.email
+                errors.email || error
                   ? "border-red-500 focus:outline-red-500"
                   : "border-gray-300"
               }`}
             />
-            <input
+
+            <Input
               type="password"
               id="password"
               placeholder={`${errors.password?.message || "Password"}`}
               {...register("password", { required: "Password is Required" })}
               className={`inputField ${
-                errors.password
+                errors.password || error
                   ? "border-red-500 focus:outline-red-500"
                   : "border-gray-300"
               }`}
@@ -110,7 +127,7 @@ const Login = () => {
             </button>
           </div>
         </form>
-        {errorMessage && <p>{errorMessage}</p>}
+        {error && <p className="text-destructive m-auto ">{error}</p>}
       </div>
       <p className="text-sm text-gray-500">
         No account?{" "}

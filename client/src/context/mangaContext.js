@@ -28,6 +28,7 @@ export const MangaProvider = ({ children }) => {
       }
 
       const response = await getUserCollectionApi(userId);
+      console.log(response);
       setCollection(response.data);
     } catch (error) {
       console.log(error);
@@ -37,12 +38,13 @@ export const MangaProvider = ({ children }) => {
   };
   useEffect(() => {
     // Fetch user collection only if the user is logged in
-    if (profile) {
+    if (profile && isLoggedIn) {
+      setLoading(true);
       fetchUserCollection();
     } else {
       setLoading(false);
     }
-  }, [profile]);
+  }, [profile, isLoggedIn]);
 
   const searchManga = async () => {
     setLoading(true);

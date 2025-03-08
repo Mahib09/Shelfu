@@ -17,11 +17,13 @@ import {
   DropdownMenuGroup,
 } from "./ui/dropdown-menu";
 import { useAuth } from "@/context/authContext";
+import { useManga } from "@/context/mangaContext";
 
 const HeadBar = () => {
   const { open, isMobile } = useSidebar();
   const { theme, setTheme } = useTheme();
   const { logout, loading, userName, userEmail } = useAuth();
+  const { setCollection } = useManga();
   const router = useRouter();
 
   const toggleTheme = () => {
@@ -29,6 +31,7 @@ const HeadBar = () => {
   };
   const handleLogout = async (e) => {
     e.preventDefault();
+    setCollection([]);
     logout();
   };
   return (

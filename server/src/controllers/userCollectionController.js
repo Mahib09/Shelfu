@@ -81,9 +81,7 @@ const getUserCollection = async (req, res) => {
     });
 
     if (userCollectionData.length === 0) {
-      return res
-        .status(200)
-        .json({ message: "No collection data found.", data: [] });
+      return res.status(200).json([]);
     }
 
     await redis.set(

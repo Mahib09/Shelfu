@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { useAuth } from "@/context/authContext"; // Importing the context hook
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Logo from "../../../../public/shelfuLogo.png";
+import Logo from "../../../../public/logo-black.png";
 import { useEffect } from "react";
 // Validation schema for form
 const schema = Yup.object().shape({

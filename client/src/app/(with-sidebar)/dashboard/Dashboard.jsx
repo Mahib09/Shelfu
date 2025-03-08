@@ -29,8 +29,16 @@ import { Head } from "next/head";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const Dashboard = () => {
-  const { collection } = useManga();
+  const { collection, fetchUserCollection } = useManga();
+
   const getTotalOwnedVolumes = () => {
+    console.log(collection);
+    if (collection.length === 0) {
+      return {
+        total: 0,
+        change: 0,
+      };
+    }
     const totalOwned = collection.filter(
       (entry) => entry.status === "Owned"
     ).length;
@@ -49,6 +57,12 @@ const Dashboard = () => {
     };
   };
   const getTotalMangaSeries = () => {
+    if (collection.length === 0) {
+      return {
+        total: 0,
+        change: 0,
+      };
+    }
     const totalSeries = [
       ...new Set(
         collection
@@ -93,6 +107,12 @@ const Dashboard = () => {
     };
   };
   const getVolumesToBuy = () => {
+    if (collection.length === 0) {
+      return {
+        total: 0,
+        change: 0,
+      };
+    }
     const totalToBuy = collection.filter(
       (entry) => entry.status === "Want_To_Buy"
     ).length;
@@ -121,6 +141,12 @@ const Dashboard = () => {
     };
   };
   const getVolumesForSale = () => {
+    if (collection.length === 0) {
+      return {
+        total: 0,
+        change: 0,
+      };
+    }
     const totalForSale = collection.filter(
       (entry) => entry.status === "For_Sale"
     ).length;
@@ -149,6 +175,9 @@ const Dashboard = () => {
     };
   };
   const getRecentAddition = () => {
+    if (collection.length === 0) {
+      return []; // or you can return a default value like an empty object or message
+    }
     // Sort the collection based on the createdAt date
     const sortedCollection = collection.sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -205,6 +234,12 @@ const Dashboard = () => {
   const prepareData = (year) => {
     const lastSixMonths = getLastSixMonths();
     const grouped = {};
+    if (collection.length === 0) {
+      return lastSixMonths.map((month) => ({
+        month,
+        volumesOwned: 0,
+      }));
+    }
 
     collection.forEach((entry) => {
       const createdAt = new Date(entry.createdAt);
@@ -229,6 +264,10 @@ const Dashboard = () => {
     return chartData;
   };
   const calculatePercentageIncrease = (data) => {
+    if (collection.length === 0) {
+      return 0;
+    }
+
     const ownedCollection = collection.filter(
       (entry) => entry.status === "Owned"
     );

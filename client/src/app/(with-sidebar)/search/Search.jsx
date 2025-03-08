@@ -38,7 +38,6 @@ const Search = () => {
     if (!searchQuery.trim()) return;
     setIsSearching(true);
     await searchManga();
-    console.log(searchResult);
   };
 
   const handlePrevious = () => {
