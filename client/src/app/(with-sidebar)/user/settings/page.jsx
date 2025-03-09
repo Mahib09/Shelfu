@@ -4,12 +4,12 @@ import SettingsForm from "./ProfileForm";
 
 const Settings = () => {
   return (
-    <section
+    <main
       className="container-wrapper
     "
     >
       <SettingsForm />
-    </section>
+    </main>
   );
 };
 
