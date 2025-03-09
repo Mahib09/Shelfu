@@ -20,6 +20,11 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useTheme } from "next-themes";
+import { useAuth } from "@/context/authContext";
+import { updateProfile } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { toast } from "sonner";
 
 const languages = [
   { label: "English", value: "en" },
@@ -34,12 +39,29 @@ const languages = [
 ];
 
 const ProfileForm = () => {
+  const [name, setName] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const selectedLabel = languages.find(
     (lang) => lang.value === selectedLanguage
   )?.label;
-  const [theme, setTheme] = useState("light");
+  const [active, setActive] = useState("light");
+  const { setTheme } = useTheme();
 
+  const handleAccountUpdate = async () => {
+    if (name === "") {
+      toast("Name cannot be empty");
+      return;
+    }
+    try {
+      await updateProfile(auth.currentUser, { displayName: name });
+      toast("Your name has been successfully updated!");
+    } catch (error) {
+      toast("Update failed!");
+    }
+  };
+  const handlePreferenceUpdate = () => {
+    setTheme(active);
+  };
   return (
     <>
       <section className="p-4">
@@ -49,7 +71,7 @@ const ProfileForm = () => {
         </p>
       </section>
       <Separator />
-      <section className="py-2 px-4 max-w-[800px]">
+      <section className="py-2 pb-6 px-4 max-w-[800px]">
         <div className="py-2">
           <h3 className="text-lg font-medium">Account</h3>
           <p className="text-sm text-muted-foreground">
@@ -61,7 +83,14 @@ const ProfileForm = () => {
         <div className="pt-4 pb-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="name">Name</Label>
-            <Input placeholder="Your name" id="name" />
+            <Input
+              placeholder="Your name"
+              id="name"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+            />
             <p className="text-xs text-muted-foreground">
               This is the name that will be displayed on your profile and in
               emails.
@@ -112,8 +141,9 @@ const ProfileForm = () => {
             </p>
           </div>
         </div>
-        <Button>Update Account</Button>
+        <Button onClick={handleAccountUpdate}>Update Account</Button>
       </section>
+      <Separator />
       <section className=" py-2 px-4 max-w-[800px]">
         <div className="py-2">
           <h3 className="text-lg font-medium">Appearance</h3>
@@ -132,19 +162,19 @@ const ProfileForm = () => {
           </div>
 
           <RadioGroup
-            value={theme}
-            onValueChange={setTheme}
-            className="flex gap-6"
+            value={active}
+            onValueChange={setActive}
+            className="flex flex-wrap gap-2 sm:gap-4 md:gap-6"
           >
             {/* Light Theme */}
             <div className="flex flex-col items-center">
               <label
                 className={`cursor-pointer rounded-md border-2 p-1 ${
-                  theme === "light"
+                  active === "light"
                     ? "border-primary"
                     : "border-muted hover:border-accent"
                 }`}
-                onClick={() => setTheme("light")}
+                onClick={() => setActive("light")}
               >
                 <div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
                   <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
@@ -163,7 +193,7 @@ const ProfileForm = () => {
               </label>
               <span
                 className="mt-2 cursor-pointer p-2 text-center font-normal"
-                onClick={() => setTheme("light")}
+                onClick={() => setActive("light")}
               >
                 Light
               </span>
@@ -173,11 +203,11 @@ const ProfileForm = () => {
             <div className="flex flex-col items-center">
               <label
                 className={`cursor-pointer rounded-md border-2 p-1 ${
-                  theme === "dark"
+                  active === "dark"
                     ? "border-primary"
                     : "border-muted hover:border-accent"
                 }`}
-                onClick={() => setTheme("dark")}
+                onClick={() => setActive("dark")}
               >
                 <div className="space-y-2 rounded-sm bg-slate-950 p-2">
                   <div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
@@ -196,14 +226,14 @@ const ProfileForm = () => {
               </label>
               <span
                 className="mt-2 cursor-pointer p-2 text-center font-normal"
-                onClick={() => setTheme("dark")}
+                onClick={() => setActive("dark")}
               >
                 Dark
               </span>
             </div>
           </RadioGroup>
         </div>
-        <Button>Update preferences</Button>
+        <Button onClick={handlePreferenceUpdate}>Update preferences</Button>
       </section>
     </>
   );
