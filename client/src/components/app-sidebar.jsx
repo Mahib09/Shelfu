@@ -38,7 +38,7 @@ import { useAuth } from "@/context/authContext";
 import { useTheme } from "next-themes";
 
 const AppSidebar = () => {
-  const { logout, loading } = useAuth();
+  const { logout, loading, userName } = useAuth();
   const pathname = usePathname();
   const SidebarData = [
     { title: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -102,7 +102,7 @@ const AppSidebar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> Username
+                  <User2 /> {userName}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -111,14 +111,13 @@ const AppSidebar = () => {
                 className="w-[--radix-popper-anchor-width]"
               >
                 <DropdownMenuItem>
-                  <button className="flex gap-2">
-                    <SquareUser size={20} /> <span>Account</span>
-                  </button>
+                  <a href="/user/settings" className="w-full">
+                    Settings
+                  </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSignOut}>
                   <button disabled={loading} className="flex gap-2">
-                    <LogOut size={20} />{" "}
-                    <span>{loading ? "Logging Out..." : "Sign Out"}</span>
+                    <span>{loading ? "Logging Out..." : "Log out"}</span>
                   </button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
