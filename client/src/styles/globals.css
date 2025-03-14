@@ -36,6 +36,9 @@ html {
   .container-wrapper {
     @apply md:mx-12 xl:mx-20 pb-8 p-4 border border-dashed border-y-0;
   }
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary via-primary/80  to-secondary bg-clip-text text-transparent;
+  }
 }
 
 @layer base {

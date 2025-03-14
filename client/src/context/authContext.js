@@ -27,6 +27,11 @@ export const AuthProvider = ({ children }) => {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
+    }
+  }, []);
   const checkAuth = async () => {
     try {
       const response = await getProfileApi(); // Fetch user profile
