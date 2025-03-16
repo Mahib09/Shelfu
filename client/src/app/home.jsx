@@ -25,7 +25,7 @@ const HomePage = () => {
               </span>
             </p>
             <div className="flex flex-col gap-3">
-              <h1 className="text-5xl font-bold">
+              <h1 className="text-5xl md:text-6xl font-medium">
                 Your Personal Manga Collection, Organized Effortlessly!
               </h1>
               <h3 className="text-lg text-muted-foreground font-semibold">
@@ -89,9 +89,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <section className="border border-dashed p-0  m-0 border-x-0">
+      <section className="border border-dashed p-0  m-0 border-b-0 border-x-0">
         <div className="container-wrapper flex  items-center">
-          <div className="flex flex-col gap-2 py-10 ">
+          <div className="flex flex-col gap-2 py-10 w-full ">
             <h1 className="text-4xl font-semibold gradient-text">
               Optimized for a Seamless Experience
             </h1>
@@ -99,7 +99,7 @@ const HomePage = () => {
               Our beautifully designed UI ensures that managing your collection
               is both fast and intuitive.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-5">
               {[
                 {
                   title: "No Setup Required",
@@ -136,6 +136,31 @@ const HomePage = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="border border-dashed p-0  m-0 border-x-0">
+        <div className="container-wrapper">
+          <div className="flex flex-col gap-5 sm:flex-row justify-center sm:items-center">
+            <div className="py-2">
+              <h2 className="text-5xl md:text-6xl font-medium gradient-text py-2">
+                Ready to take control of <br></br> your manga collection?
+              </h2>
+            </div>
+            <div className="md:ml-auto flex flex-col sm:items-center justify-center">
+              <button
+                className="px-5 flex gap-2 items-center justify-center py-2 bg-accent-foreground text-white rounded-3xl hover:bg-purple-600 transition-colors ease-in-out "
+                onClick={() => router.push("/auth/signup")}
+              >
+                Get Started now
+                <span>
+                  <ArrowRight strokeWidth={1} />
+                </span>
+              </button>
+              <p className="text-xs text-muted-foreground">
+                Start organizing today—no setup required!
+              </p>
             </div>
           </div>
         </div>
