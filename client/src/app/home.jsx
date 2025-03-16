@@ -140,26 +140,6 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <style jsx>{`
-        .group:hover .bg-accent {
-          animation: spotEffect 1s ease-out infinite;
-        }
-
-        @keyframes spotEffect {
-          0% {
-            transform: scale(1) translate(0, 0);
-            opacity: 1;
-          }
-          50% {
-            transform: scale(1.5) translate(10px, -10px);
-            opacity: 0.7;
-          }
-          100% {
-            transform: scale(1) translate(0, 0);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </main>
   );
 };
