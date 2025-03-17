@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 const FeatureCard = () => {
   const [active, setActive] = useState("Dashboard");
@@ -38,9 +39,14 @@ const FeatureCard = () => {
   return (
     <div className="flex flex-col md:flex-row p-4 mt-5 gap-10 w-full mx-auto max-w-8xl">
       {/* Left Side - Feature List */}
-      <div className="flex flex-col gap-4 w-full md:w-1/2">
+      <motion.div
+        className="flex flex-col gap-4 w-full md:w-1/2"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {data.map((item) => (
-          <div
+          <motion.div
             key={item.key}
             role="button"
             aria-selected={active === item.key}
@@ -48,24 +54,35 @@ const FeatureCard = () => {
               ${
                 active === item.key ? "bg-accent border-accent-foreground" : ""
               }`}
-            onClick={() => setActive(item.key)}
+            onClick={() => setActive(active === item.key ? null : item.key)}
+            layout
           >
             <h4 className="text-lg font-semibold">{item.title}</h4>
-            {active === item.key && (
-              <div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {item.description}
-                </p>
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="mt-4 rounded-lg w-full object-cover h-48 md:hidden"
-                />
-              </div>
-            )}
-          </div>
+
+            <AnimatePresence>
+              {active === item.key && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                  layout
+                >
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {item.description}
+                  </p>
+                  <img
+                    src={item.imageUrl}
+                    alt={item.title}
+                    className="mt-4 rounded-lg w-full object-cover h-48 md:hidden"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Right Side - Active Feature Display (only for larger devices) */}
       <div className="hidden md:flex flex-1 items-center justify-center border rounded-lg shadow-md p-4 bg-secondary mt-4 md:mt-0">
