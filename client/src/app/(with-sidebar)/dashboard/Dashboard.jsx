@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { Head } from "next/head";
+import { motion } from "motion/react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const Dashboard = () => {
@@ -307,8 +307,16 @@ const Dashboard = () => {
       color: "hsl(var(--chart-neutral))",
     },
   };
+  const listVariants = {
+    hidden: { opacity: 0, x: -10 },
+    visible: (i) => ({
+      opacity: 1,
+      x: 0,
+      transition: { delay: i * 0.1, duration: 0.3, ease: "easeOut" },
+    }),
+  };
   return (
-    <div className="container-wrapper flex flex-col gap-5 b border-t-0">
+    <div className="content-container flex flex-col gap-5 b border-t-0">
       <h2 className="font-bold text-2xl md:text-3xl">Dashboard</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         <CardComponent
@@ -425,10 +433,14 @@ const Dashboard = () => {
             </CardDescription>
             <CardContent className="p-0">
               <ScrollArea className="h-96 lg:h-[27rem]">
-                {recentAddition.map((item) => (
-                  <div
+                {recentAddition.map((item, index) => (
+                  <motion.div
                     className=" flex  gap-4 items-center p-2"
                     key={item.userCollectionId}
+                    variants={listVariants}
+                    initial="hidden"
+                    animate="visible"
+                    custom={index}
                   >
                     <Image
                       src={item.image}
@@ -448,7 +460,7 @@ const Dashboard = () => {
                     <p className="text-sm font-medium ml-auto line-clamp-1">
                       {item.addedDate}
                     </p>
-                  </div>
+                  </motion.div>
                 ))}
               </ScrollArea>
             </CardContent>

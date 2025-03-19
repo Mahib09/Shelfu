@@ -2,7 +2,7 @@ import React from "react";
 
 const Recommendation = () => {
   return (
-    <div className="flex h-[94vh] container-wrapper">
+    <div className="flex h-[94vh] content-container">
       <div className="m-auto flex flex-col items-center">
         <p>Coming Soon</p>
         <a

@@ -70,7 +70,7 @@ const Search = () => {
   };
 
   return (
-    <div className="min-h-[calc(100% - 2rem)]  container-wrapper">
+    <div className="min-h-[calc(100% - 2rem)]  content-container">
       <div
         className={`flex flex-col  transition-all duration-300 ${
           isSearching ? "pt-4 max-h-fit" : "pt-[40vh] min-h-[calc(100% - 2rem)]"

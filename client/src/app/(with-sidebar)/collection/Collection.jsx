@@ -18,6 +18,7 @@ import { useUi } from "@/context/uiContext";
 import ToolTip from "@/components/app-tooltip";
 import { CollectionSkeleton } from "@/components/collectionSkeleton";
 import { MangaListCardSkeleton } from "@/components/collectionListSkeleton";
+import { motion } from "motion/react";
 const Collection = () => {
   const [layout, setLayout] = useState("Grid");
   const [sort, setSort] = useState("Asc");
@@ -39,6 +40,7 @@ const Collection = () => {
   const handleSortToggle = () => {
     sort === "Asc" ? setSort("Desc") : setSort("Asc");
   };
+
   const TabContentComponent = ({ value, className }) => {
     return (
       <TabsContent
@@ -91,7 +93,7 @@ const Collection = () => {
     );
   };
   return (
-    <div className=" flex flex-col justify-center container-wrapper ">
+    <div className=" flex flex-col justify-center content-container ">
       <div className="flex items-center">
         <h2 className="font-bold text-xl sm:text-2xl md:text-3xl">
           Your Collection
