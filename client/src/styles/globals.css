@@ -34,7 +34,7 @@ html {
     @apply;
   }
   .container-wrapper {
-    @apply md:mx-12 lg:mx-20 xl:mx-48  pb-8 p-4 border border-dashed border-y-0;
+    @apply md:mx-12 lg:mx-20 xl:mx-48  p-16 sm:py-20 border border-dashed border-y-0;
   }
   .gradient-text {
     @apply text-neutral-900 dark:text-neutral-100  md:-tracking-[0.075rem]  -tracking-[0.05rem] bg-clip-text !text-transparent bg-gradient-to-r from-[#18181B] to-[#808080] dark:from-[#F4F4F5] dark:to-[#B9B9B9];

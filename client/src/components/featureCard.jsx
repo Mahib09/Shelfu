@@ -100,10 +100,10 @@ const FeatureCard = () => {
 
       {active && (
         <motion.div
-          className="hidden md:flex flex-1 items-center justify-center border rounded-lg shadow-md p-4 bg-secondary mt-4 md:mt-0"
+          className="hidden md:flex flex-1 items-center justify-center border rounded-lg shadow-md p-4  mt-4 md:mt-0"
           key={active.key}
         >
-          <div className="bg-secondary rounded-lg overflow-hidden">
+          <div className="bg-[#1d1d1d] rounded-lg overflow-hidden">
             <motion.div
               className="rounded-lg"
               initial={{ scale: 1.2, opacity: 0 }} // Start larger and invisible for new image

@@ -47,7 +47,12 @@ after:bg-accent-foreground after:dark:bg-neutral-500"
         >
           <div className="flex items-center justify-center rounded-md">
             <span className="text-3xl">
-              {<feature.icon className="p-5 text-gray-500" size={100} />}
+              {
+                <feature.icon
+                  className="p-5 text-muted-foreground"
+                  size={100}
+                />
+              }
             </span>
           </div>
           <div>

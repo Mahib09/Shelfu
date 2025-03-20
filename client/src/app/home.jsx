@@ -1,11 +1,12 @@
 import LandingPageHeader from "@/components/LandingPageHeader";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, LucideLinkedin } from "lucide-react";
 import React from "react";
 import { useRouter } from "next/navigation";
 import FeatureCard from "@/components/featureCard";
 import { AnimatePresence, motion } from "motion/react";
 import OtherFeaturesCard from "@/components/home/OtherFeaturesCard";
+import Image from "next/image";
 const HomePage = () => {
   const router = useRouter();
 
@@ -45,7 +46,7 @@ const HomePage = () => {
                 Your Personal Manga Collection, Organized Effortlessly!
               </motion.h1>
               <motion.h3
-                className="text-lg text-muted-foreground font-semibold"
+                className="text-lg text-muted-foreground font-semibold  mt-6"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1, ease: "easeOut", delay: 0.6 }} // Staggered fade-in
@@ -111,20 +112,219 @@ const HomePage = () => {
       >
         <div className="container-wrapper">
           <div className="py-10">
-            <h1 className="text-4xl font-semibold gradient-text py-2">
+            <h1 className="text-4xl font-semibold gradient-text">
               Everything You Need, All in One Place
             </h1>
+            <p className="text-base lg:text-lg text-muted-foreground font-semibold max-w-[600px] mt-6">
+              We've designed ShelfU to help you manage and organize your manga
+              collection effortlessly. Spend more time enjoying your collection
+              and less time searching for it.
+            </p>
             <FeatureCard />
           </div>
         </div>
       </motion.section>
+      <section className="border border-dashed p-0  m-0 border-b-0 border-x-0">
+        <div className="container-wrapper flex flex-col items-center justify-center">
+          <h2 className="text-4xl font-semibold gradient-text p-1 mb-6">
+            Why ShelfU Was Made?
+          </h2>
+          <div className=" p-1 mt-8">
+            <div className="relative border rounded-md  ">
+              {/* Top Dashed Border */}
+              <svg
+                className="absolute -top-1 left-1/2 -translate-x-1/2"
+                fill="none"
+                height="2"
+                viewBox="0 0 728 2"
+                width="728"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M728 1L0 1"
+                  stroke="url(#paint0_linear_1027_20046)"
+                  strokeDasharray="4 4" // Increased dash length for better visibility
+                ></path>
+                <defs>
+                  <linearGradient
+                    gradientUnits="userSpaceOnUse"
+                    id="paint0_linear_1027_20046"
+                    x1="0.000153202"
+                    x2="718.586"
+                    y1="1"
+                    y2="0.99997"
+                  >
+                    <stop stopColor="currentColor" stopOpacity="0.3"></stop>
+                    <stop offset="0.50131" stopColor="currentColor"></stop>
+                    <stop
+                      offset="1"
+                      stopColor="currentColor"
+                      stopOpacity="0.3"
+                    ></stop>
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              {/* Bottom Dashed Border */}
+              <svg
+                className="absolute -bottom-1 left-1/2 -translate-x-1/2"
+                fill="none"
+                height="2"
+                viewBox="0 0 728 2"
+                width="728"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M728 1L0 1"
+                  stroke="url(#paint0_linear_1027_20047)"
+                  strokeDasharray="4 4" // Same dash length for consistency
+                ></path>
+                <defs>
+                  <linearGradient
+                    gradientUnits="userSpaceOnUse"
+                    id="paint0_linear_1027_20047"
+                    x1="0.000153202"
+                    x2="718.586"
+                    y1="1"
+                    y2="0.99997"
+                  >
+                    <stop stopColor="currentColor" stopOpacity="0.3"></stop>
+                    <stop offset="0.50131" stopColor="currentColor"></stop>
+                    <stop
+                      offset="1"
+                      stopColor="currentColor"
+                      stopOpacity="0.3"
+                    ></stop>
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              {/* Left Dashed Border */}
+              <svg
+                className="absolute -left-1 top-1/2 -translate-y-2/3 sm:-translate-y-1/2"
+                fill="none"
+                viewBox="0 0 1 750"
+                width="1"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  stroke="url(#paint0_linear_1027_20045)"
+                  strokeDasharray="4 4" // Added consistent dash pattern
+                  x1="0.5"
+                  x2="0.499987"
+                  y1="2.16407e-08"
+                  y2="750"
+                ></line>
+                <defs>
+                  <linearGradient
+                    gradientUnits="userSpaceOnUse"
+                    id="paint0_linear_1027_20045"
+                    x1="-0.5"
+                    x2="-0.500012"
+                    y1="-2.16407e-08"
+                    y2="750"
+                  >
+                    <stop stopColor="currentColor"></stop>
+                    <stop
+                      offset="1"
+                      stopColor="currentColor"
+                      stopOpacity="0.2"
+                    ></stop>
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              {/* Right Dashed Border */}
+              <svg
+                className="absolute -right-1 top-1/2 -translate-y-2/3 sm:-translate-y-1/2"
+                fill="none"
+                viewBox="0 0 1 750"
+                width="1"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  stroke="url(#paint0_linear_1027_20045)"
+                  strokeDasharray="4 4" // Added consistent dash pattern
+                  x1="0.5"
+                  x2="0.499987"
+                  y1="2.16407e-08"
+                  y2="750"
+                ></line>
+                <defs>
+                  <linearGradient
+                    gradientUnits="userSpaceOnUse"
+                    id="paint0_linear_1027_20045"
+                    x1="-0.5"
+                    x2="-0.500012"
+                    y1="-2.16407e-08"
+                    y2="750"
+                  >
+                    <stop stopColor="currentColor"></stop>
+                    <stop
+                      offset="1"
+                      stopColor="currentColor"
+                      stopOpacity="0.2"
+                    ></stop>
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <p className="max-w-[500px] text-base lg:text-lg  font-semibold  p-8 pb-0 flex flex-col gap-4">
+                <span>
+                  As a passionate manga collector myself, I often found myself
+                  in a frustrating situation whenever I visited a manga store. I
+                  would need to check which volumes I already owned, and it
+                  meant scrolling through photos or digging through an
+                  unorganized Excel sheet.
+                </span>
+                <span>
+                  It was time-consuming, messy, and not very efficient. That's
+                  when I realized—there had to be a better way. I wanted an
+                  easy-to-use, organized system to manage my collection and make
+                  sure I wasn't buying duplicates.
+                </span>
+                <span>
+                  That's why I created ShelfU—a tool specifically designed for
+                  manga collectors like me. Now, with ShelfU, I can quickly
+                  track all my manga, search for new volumes, and keep my
+                  collection organized in just a few clicks. No more clutter, no
+                  more stress—just a smooth, simple way to manage your manga
+                  collection.
+                </span>
+              </p>
+              <div className="p-8 flex justify-center">
+                <div>
+                  <a
+                    href=""
+                    className="flex font-bold text-lg gap-2 items-center hover:underline"
+                  >
+                    Mahib Rana Magar <LucideLinkedin size={20} />
+                  </a>
+                  <p className="text-xs text-muted-foreground">
+                    Avid Manga Collector
+                  </p>
+                </div>
+                <div className="ml-auto">
+                  <Image
+                    src="/Mahib.jpg"
+                    height={50}
+                    width={50}
+                    alt="Mahib Rana Magar"
+                    className="rounded-full object-cover w-12 h-12 sm:w-16 sm:h-16"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="border border-dashed border-b-0 border-x-0">
         <div className=" container-wrapper ">
           <div className="py-10">
             <h1 className="text-4xl font-semibold gradient-text py-2">
               Your Collection, Your Way
             </h1>
-            <p>
+            <p className="text-base lg:text-lg text-muted-foreground font-semibold max-w-[600px]  mt-6">
               Manga collecting is personal, and ShelfU adapts to your reading
               habits. Whether you're tracking a few series or building an
               extensive library, we provide the tools you need to stay
@@ -139,7 +339,7 @@ const HomePage = () => {
             <h1 className="text-4xl font-semibold gradient-text">
               Optimized for a Seamless Experience
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-base lg:text-lg text-muted-foreground font-semibold max-w-[600px]  mt-6">
               Our beautifully designed UI ensures that managing your collection
               is both fast and intuitive.
             </p>
@@ -147,6 +347,7 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
       <section className="border border-dashed p-0  m-0 border-x-0">
         <div className="container-wrapper">
           <div className="flex flex-col gap-5 sm:flex-row justify-center sm:items-center">
