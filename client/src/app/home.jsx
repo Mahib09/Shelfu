@@ -5,6 +5,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import FeatureCard from "@/components/featureCard";
 import { AnimatePresence, motion } from "motion/react";
+import OtherFeaturesCard from "@/components/home/OtherFeaturesCard";
 const HomePage = () => {
   const router = useRouter();
 
@@ -142,44 +143,7 @@ const HomePage = () => {
               Our beautifully designed UI ensures that managing your collection
               is both fast and intuitive.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-5">
-              {[
-                {
-                  title: "No Setup Required",
-                  description: "Start adding manga instantly.",
-                  icon: "📖", // Replace this with an <img> if needed
-                },
-                {
-                  title: "Dark Mode Available",
-                  description: "Read and browse comfortably at night.",
-                  icon: "🌙",
-                },
-                {
-                  title: "Optimized for All Devices",
-                  description:
-                    "Works seamlessly on desktop, tablet, and mobile.",
-                  icon: "📱",
-                },
-              ].map((feature, index) => (
-                <div
-                  key={index}
-                  className="border p-6  rounded-md flex flex-col items-center text-center h-full"
-                >
-                  <div className=" h-24 w-24 flex items-center justify-center rounded-md">
-                    <span className="text-3xl">{feature.icon}</span>{" "}
-                    {/* Replace with <img> if needed */}
-                  </div>
-                  <div className="">
-                    <p className="mt-3 text-lg font-semibold">
-                      {feature.title}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-auto">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <OtherFeaturesCard />
           </div>
         </div>
       </section>
