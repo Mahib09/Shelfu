@@ -112,7 +112,7 @@ const HomePage = () => {
       >
         <div className="container-wrapper">
           <div className="py-10">
-            <h1 className="text-4xl font-semibold gradient-text">
+            <h1 className="text-4xl font-semibold gradient-text py-1">
               Everything You Need, All in One Place
             </h1>
             <p className="text-base lg:text-lg text-muted-foreground font-semibold max-w-[600px] mt-6">
@@ -131,144 +131,6 @@ const HomePage = () => {
           </h2>
           <div className=" p-1 mt-8">
             <div className="relative border rounded-md  ">
-              {/* Top Dashed Border */}
-              <svg
-                className="absolute -top-1 left-1/2 -translate-x-1/2"
-                fill="none"
-                height="2"
-                viewBox="0 0 728 2"
-                width="728"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M728 1L0 1"
-                  stroke="url(#paint0_linear_1027_20046)"
-                  strokeDasharray="4 4" // Increased dash length for better visibility
-                ></path>
-                <defs>
-                  <linearGradient
-                    gradientUnits="userSpaceOnUse"
-                    id="paint0_linear_1027_20046"
-                    x1="0.000153202"
-                    x2="718.586"
-                    y1="1"
-                    y2="0.99997"
-                  >
-                    <stop stopColor="currentColor" stopOpacity="0.3"></stop>
-                    <stop offset="0.50131" stopColor="currentColor"></stop>
-                    <stop
-                      offset="1"
-                      stopColor="currentColor"
-                      stopOpacity="0.3"
-                    ></stop>
-                  </linearGradient>
-                </defs>
-              </svg>
-
-              {/* Bottom Dashed Border */}
-              <svg
-                className="absolute -bottom-1 left-1/2 -translate-x-1/2"
-                fill="none"
-                height="2"
-                viewBox="0 0 728 2"
-                width="728"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M728 1L0 1"
-                  stroke="url(#paint0_linear_1027_20047)"
-                  strokeDasharray="4 4" // Same dash length for consistency
-                ></path>
-                <defs>
-                  <linearGradient
-                    gradientUnits="userSpaceOnUse"
-                    id="paint0_linear_1027_20047"
-                    x1="0.000153202"
-                    x2="718.586"
-                    y1="1"
-                    y2="0.99997"
-                  >
-                    <stop stopColor="currentColor" stopOpacity="0.3"></stop>
-                    <stop offset="0.50131" stopColor="currentColor"></stop>
-                    <stop
-                      offset="1"
-                      stopColor="currentColor"
-                      stopOpacity="0.3"
-                    ></stop>
-                  </linearGradient>
-                </defs>
-              </svg>
-
-              {/* Left Dashed Border */}
-              <svg
-                className="absolute -left-1 top-1/2 -translate-y-2/3 sm:-translate-y-1/2"
-                fill="none"
-                viewBox="0 0 1 750"
-                width="1"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line
-                  stroke="url(#paint0_linear_1027_20045)"
-                  strokeDasharray="4 4" // Added consistent dash pattern
-                  x1="0.5"
-                  x2="0.499987"
-                  y1="2.16407e-08"
-                  y2="750"
-                ></line>
-                <defs>
-                  <linearGradient
-                    gradientUnits="userSpaceOnUse"
-                    id="paint0_linear_1027_20045"
-                    x1="-0.5"
-                    x2="-0.500012"
-                    y1="-2.16407e-08"
-                    y2="750"
-                  >
-                    <stop stopColor="currentColor"></stop>
-                    <stop
-                      offset="1"
-                      stopColor="currentColor"
-                      stopOpacity="0.2"
-                    ></stop>
-                  </linearGradient>
-                </defs>
-              </svg>
-
-              {/* Right Dashed Border */}
-              <svg
-                className="absolute -right-1 top-1/2 -translate-y-2/3 sm:-translate-y-1/2"
-                fill="none"
-                viewBox="0 0 1 750"
-                width="1"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line
-                  stroke="url(#paint0_linear_1027_20045)"
-                  strokeDasharray="4 4" // Added consistent dash pattern
-                  x1="0.5"
-                  x2="0.499987"
-                  y1="2.16407e-08"
-                  y2="750"
-                ></line>
-                <defs>
-                  <linearGradient
-                    gradientUnits="userSpaceOnUse"
-                    id="paint0_linear_1027_20045"
-                    x1="-0.5"
-                    x2="-0.500012"
-                    y1="-2.16407e-08"
-                    y2="750"
-                  >
-                    <stop stopColor="currentColor"></stop>
-                    <stop
-                      offset="1"
-                      stopColor="currentColor"
-                      stopOpacity="0.2"
-                    ></stop>
-                  </linearGradient>
-                </defs>
-              </svg>
-
               <p className="max-w-[500px] text-base lg:text-lg  font-semibold  p-8 pb-0 flex flex-col gap-4">
                 <span>
                   As a passionate manga collector myself, I often found myself
@@ -350,7 +212,7 @@ const HomePage = () => {
 
       <section className="border border-dashed p-0  m-0 border-x-0">
         <div className="container-wrapper">
-          <div className="flex flex-col gap-5 sm:flex-row justify-center sm:items-center">
+          <div className="flex flex-col  sm:flex-row justify-center sm:items-center">
             <div className="py-2">
               <h2 className="text-5xl md:text-6xl font-medium gradient-text py-2">
                 Ready to take control of <br></br> your manga collection?

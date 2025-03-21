@@ -27,49 +27,48 @@ export const AuthProvider = ({ children }) => {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
-    }
-  }, []);
   const checkAuth = async () => {
     try {
-      const response = await getProfileApi(); // Fetch user profile
+      const response = await getProfileApi();
       setUser(response.data.user);
       setProfile(response.data.profile);
       setUserName(response.data.user.displayName);
       setUserEmail(response.data.user.email);
     } catch (error) {
+      console.error("Error fetching profile:", error);
+      setError("Error fetching profile");
       setUser(null);
       setProfile(null);
-      setUserName("");
-      setUserEmail("");
-      router.push("/auth/login"); // Redirect to login if fetching profile fails
     }
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setLoading(true); // Start loading while checking auth state
       if (firebaseUser) {
         setUser(firebaseUser);
-        setIsLoggedIn(true); // Set user as logged in
-        try {
-          await checkAuth(); // Fetch the profile if authenticated
-        } catch (error) {
-          console.error("Error fetching profile:", error);
-        }
+        setIsLoggedIn(true);
+        await checkAuth(); // Fetch the profile if authenticated
       } else {
         setUser(null);
         setProfile(null);
         setIsLoggedIn(false); // Set user as logged out
+        setLoading(false);
       }
-      setLoading(false); // Stop loading after auth state is determined
     });
 
     return () => unsubscribe(); // Cleanup the subscription
   }, [router]);
-  console.log(user, profile);
+
+  useEffect(() => {
+    // If user is not logged in, redirect to the login page
+    if (!loading && !isLoggedIn) {
+      router.push("/auth/login");
+    }
+  }, [isLoggedIn, loading, router]);
+
+  if (loading) {
+    return <div>Loading...</div>; // You can replace this with a spinner or some other loading indicator
+  }
   const sendTokenToBackend = async (idToken, endpoint) => {
     try {
       const response = await sendTokenToBackendApi(idToken, endpoint);
