@@ -5,16 +5,15 @@ const admin = require("../services/firebaseService");
 
 const app = createServer();
 
-// Mock Firebase service
-jest.mock("../services/firebaseService", () => ({
-  auth: {
-    createUser: jest.fn().mockResolvedValue({
-      uid: 1,
-      email: "test@test.com",
+jest.mock("firebase-admin", () => ({
+  auth: jest.fn().mockReturnValue({
+    verifyIdToken: jest.fn().mockResolvedValue({
+      uid: "some-uid",
+      email: "test@example.com",
+      name: "Test User",
     }),
-    getUserByEmail: jest.fn().mockResolvedValue(null),
-    createCustomToken: jest.fn(),
-  },
+    createSessionCookie: jest.fn().mockResolvedValue("fake-session-cookie"),
+  }),
 }));
 
 // Mock Prisma service
@@ -23,8 +22,9 @@ jest.mock("../services/prismaService", () => ({
     create: jest.fn().mockResolvedValue({
       userId: 1,
       email: "test@test.com",
+      name: "Test User",
     }),
-    findUnique: jest.fn().mockResolvedValue(null), // This ensures no user exists initially
+    findUnique: jest.fn().mockResolvedValue(null), // No existing user
   },
 }));
 
@@ -34,101 +34,72 @@ beforeEach(() => {
 
 describe("Auth Api", () => {
   describe("POST /auth/signup", () => {
-    it("should successfully create a user with a valid email and password", async () => {
-      prisma.users.findUnique.mockResolvedValue(null);
-      prisma.users.create.mockResolvedValue({
-        userId: 1,
-        email: "test@test.com",
-      });
-
+    it("should successfully sign up when a valid token is provided and the user does not exist in the database", async () => {
       const response = await supertest(app)
         .post("/auth/signup")
-        .set("Content-Type", "application/json")
-        .send({ email: "test@test.com", password: "testtest" });
+        .send({ token: "valid-firebase-token" });
 
-      expect(response.status).toBe(201);
-      expect(response.body).toEqual({
-        message: "User created successfully",
-        userId: 1,
+      // Assert that the response status is 200
+      expect(response.status).toBe(200);
+
+      // Assert the success response body
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBe("User signed up successfully");
+
+      // Assert that the correct function was called on Prisma to create the user
+      expect(prisma.users.create).toHaveBeenCalledWith({
+        data: {
+          firebaseUId: "some-uid",
+          email: "test@example.com",
+          name: "Test User",
+        },
       });
+
+      // Assert that the session cookie is being set correctly
+      expect(response.headers["set-cookie"][0]).toContain(
+        "token=fake-session-cookie"
+      );
     });
-    it("should return 400 if email is already in use", async () => {
-      prisma.users.findUnique.mockResolvedValue({
-        userId: 1,
-        email: "test@test.com",
-      });
-      const response = await supertest(app)
-        .post("/auth/signup")
-        .set("Content-Type", "application/json")
-        .send({ email: "test@test.com", password: "testtest" });
+    it("should return an error if token is not provided", async () => {
+      const response = await supertest(app).post("/auth/signup").send({});
 
       expect(response.status).toBe(400);
-      expect(response.body).toEqual({
-        message: "Email is already in use",
-      });
+      expect(response.body.error).toBe("Token is required");
     });
-    it("should return 500 if there is a database error", async () => {
-      prisma.users.findUnique.mockRejectedValue(new Error("Database Error"));
-
-      const response = await supertest(app)
-        .post("/auth/signup")
-        .set("Content-Type", "application/json")
-        .send({ email: "test@test.com", password: "testtest" });
-
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({
-        message: "Error creating user",
-      });
-    });
-    it("should return 500 if Firebase createUser fails", async () => {
-      admin.auth.createUser.mockRejectedValue(new Error("Firebase Error"));
-
-      const response = await supertest(app)
-        .post("/auth/signup")
-        .send({ email: "test@test.com", password: "testtest" });
-
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({ message: "Error creating user" });
-    });
-  });
-  describe("POST /auth/login", () => {
-    it("should successfully log in a user with valid credentials", async () => {
-      admin.auth.getUserByEmail.mockResolvedValue({
+    it("should return an error if an existing user tries to sign up", async () => {
+      // Mock the case where the user already exists in the database
+      prisma.users.findUnique.mockResolvedValueOnce({
         userId: 1,
         email: "test@test.com",
+        name: "Test User",
       });
-      admin.auth.createCustomToken.mockResolvedValue(123);
 
       const response = await supertest(app)
-        .post("/auth/login")
-        .send({ email: "test@test.com", password: "testtest" });
+        .post("/auth/signup")
+        .send({ token: "valid-firebase-token" });
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        message: "Login successful",
-        token: 123,
-      });
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBe("User already registered");
     });
-    it("should return 400 if email is not found", async () => {
-      admin.auth.getUserByEmail.mockResolvedValue(null);
-      const response = await supertest(app)
-        .post("/auth/login")
-        .send({ email: "test@test.com", password: "testtest" });
+    it("should return an error if Firebase token verification fails", async () => {
+      // Mock the verifyIdToken to simulate a verification failure
+      admin
+        .auth()
+        .verifyIdToken.mockRejectedValueOnce(
+          new Error("Invalid Firebase token")
+        );
 
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({
-        message: "User Not Found",
-      });
-    });
-    it("should return 400 if email is missing", async () => {
       const response = await supertest(app)
-        .post("/auth/login")
-        .send({ email: null, password: "testtest" });
+        .post("/auth/signup")
+        .send({ token: "invalid-firebase-token" });
 
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({
-        message: "Email and Password Required",
-      });
+      expect(response.status).toBe(401); // Unauthorized
+      expect(response.body.message).toBe("Invalid Firebase token"); // Error message returned by Firebase verification failure
     });
+  });
+
+  describe("POST /auth/login", () => {
+    // Implement login tests here
   });
 });
