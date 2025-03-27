@@ -23,7 +23,7 @@
 Secure login and registration system powered by Firebase Authentication.
 
 <div align="center">
-  <img src="/images/Signup.png" alt="Authentication" width="80%" style="height: 300px; object-fit: cover">
+  <img src="/images/Signup.png" alt="Authentication"  style="height: 300px; width: auto; object-fit: cover">
 </div>
 _Signup Page_
 
@@ -32,7 +32,7 @@ _Signup Page_
 Add manga to your collection and view details. Organize your collection efficiently with ease.
 
 <div align="center">
-  <img src="/images/Collection.png" alt="Collection" width="80%" style="height: 300px; object-fit: cover">
+  <img src="/images/Collection.png" alt="Collection"  style="height: 300px; width: auto; object-fit: cover">
 </div> 
 _Collection Page_
 
@@ -41,7 +41,7 @@ _Collection Page_
 Track individual manga volumes, keeping track of what you have and what's still missing.
 
 <div align="center">
-  <img src="/images/Dashboard.png" alt="Dashboard" width="80%" style="height: 300px; object-fit: cover">
+  <img src="/images/Dashboard.png" alt="Dashboard"  style="height: 300px; width: auto; object-fit: cover">
 </div>
 _Dashboard Page_
 
@@ -50,7 +50,7 @@ _Dashboard Page_
 A modern, responsive design ensuring a seamless user experience across all devices.
 
 <div align="center">
-  <img src="/images/MobileCollection.png" alt="Mobile" width="80%" style="height: 300px; object-fit: cover">
+  <img src="/images/MobileCollection.png" alt="Mobile"  style="height: 300px; width: auto; object-fit: cover">
 </div>
 _RMobile View Collection Page_
 
@@ -59,7 +59,7 @@ _RMobile View Collection Page_
 Search for manga using external APIs (ISBN DB, Open Library API) and add them to your collection.
 
 <div align="center">
-  <img src="/images/Search.png" alt="Search" width="80%" style="height: 300px; object-fit: cover">
+  <img src="/images/Search.png" alt="Search"  style="height: 300px; width: auto; object-fit: cover">
 </div>
 _Search Page_
 
