@@ -22,36 +22,46 @@
 
 Secure login and registration system powered by Firebase Authentication.
 
-![Authentication](/images/Signup.png)  
-_Replace with your own screenshot_
+<div align="center">
+  <img src="/images/Signup.png" alt="Authentication" width="80%" style="height: 300px; object-fit: cover">
+</div>
+_Signup Page_
 
 ### **Manga Collection Management**
 
 Add manga to your collection and view details. Organize your collection efficiently with ease.
 
-![Collection Management](/images/Collection.png)  
-_Replace with your own screenshot_
+<div align="center">
+  <img src="/images/Collection.png" alt="Collection" width="80%" style="height: 300px; object-fit: cover">
+</div> 
+_Collection Page_
 
 ### **Volume Tracking**
 
 Track individual manga volumes, keeping track of what you have and what's still missing.
 
-![Volume Management](./images/Dashboard.png)  
-_Replace with your own screenshot_
+<div align="center">
+  <img src="/images/Dashboard.png" alt="Dashboard" width="80%" style="height: 300px; object-fit: cover">
+</div>
+_Dashboard Page_
 
 ### **Responsive Design**
 
 A modern, responsive design ensuring a seamless user experience across all devices.
 
-![Responsive Design](/images/MobileCollection.png)  
-_Replace with your own screenshot_
+<div align="center">
+  <img src="/images/MobileCollection.png" alt="Mobile" width="80%" style="height: 300px; object-fit: cover">
+</div>
+_RMobile View Collection Page_
 
 ### **Manga Search**
 
 Search for manga using external APIs (ISBN DB, Open Library API) and add them to your collection.
 
-![Search Functionality](/images/Search.png)  
-_Replace with your own screenshot_
+<div align="center">
+  <img src="/images/Search.png" alt="Search" width="80%" style="height: 300px; object-fit: cover">
+</div>
+_Search Page_
 
 ---
 
