@@ -7,7 +7,7 @@
 <div>
 <p align="center">
   <a href="https://your-deployment-link.com">
-    <img src="./path-to-your-app-banner.png" alt="ShelfU Manga Collection Manager" width="100%">
+    <img src="/images/Banner.png" alt="ShelfU Manga Collection Manager" width="100%">
   </a>
 </p>
 </div>
@@ -22,35 +22,35 @@
 
 Secure login and registration system powered by Firebase Authentication.
 
-![Authentication](./path/to/authentication-screenshot.png)  
+![Authentication](/images/Signup.png)  
 _Replace with your own screenshot_
 
 ### **Manga Collection Management**
 
 Add manga to your collection and view details. Organize your collection efficiently with ease.
 
-![Collection Management](./path/to/collection-management-screenshot.png)  
+![Collection Management](/images/Collection.png)  
 _Replace with your own screenshot_
 
 ### **Volume Tracking**
 
 Track individual manga volumes, keeping track of what you have and what's still missing.
 
-![Volume Management](./path/to/volume-management-screenshot.png)  
+![Volume Management](./images/Dashboard.png)  
 _Replace with your own screenshot_
 
 ### **Responsive Design**
 
 A modern, responsive design ensuring a seamless user experience across all devices.
 
-![Responsive Design](./path/to/responsive-design-screenshot.png)  
+![Responsive Design](/images/MobileCollection.png)  
 _Replace with your own screenshot_
 
 ### **Manga Search**
 
 Search for manga using external APIs (ISBN DB, Open Library API) and add them to your collection.
 
-![Search Functionality](./path/to/search-functionality-screenshot.png)  
+![Search Functionality](/images/Search.png)  
 _Replace with your own screenshot_
 
 ---
