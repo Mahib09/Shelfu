@@ -11,7 +11,7 @@ const WithProtectedRoute = ({ children }) => {
     if (!isLoggedIn && !loading) {
       router.push("/auth/login"); // Redirect to login if not logged in
     }
-  }, [isLoggedIn, loading, router]);
+  }, [isLoggedIn]);
 
   // Show loading spinner if authentication is still in progress
   if (loading) {

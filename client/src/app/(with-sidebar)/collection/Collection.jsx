@@ -73,7 +73,11 @@ const Collection = () => {
                 layout === "Grid" ? MangaCard : MangaListCard;
 
               return (
-                <SheetComponent key={item.userCollectionId} item={item}>
+                <SheetComponent
+                  key={item.userCollectionId}
+                  item={item}
+                  className="w-full"
+                >
                   <CardComponent
                     src={item.volume.coverImageUrl}
                     title={item.volume.seriesName}

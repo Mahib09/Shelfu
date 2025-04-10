@@ -5,7 +5,7 @@ import SettingsForm from "./ProfileForm";
 const Settings = () => {
   return (
     <main
-      className="container-wrapper
+      className="content-container
     "
     >
       <SettingsForm />

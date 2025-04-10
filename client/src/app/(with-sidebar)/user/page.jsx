@@ -4,7 +4,7 @@ import ProfileContent from "./Profile";
 
 const Profile = () => {
   return (
-    <section className="container-wrapper">
+    <section className="content-container">
       <ProfileContent />
     </section>
   );

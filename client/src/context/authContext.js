@@ -59,16 +59,16 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe(); // Cleanup the subscription
   }, [router]);
 
-  useEffect(() => {
-    // If user is not logged in, redirect to the login page
-    if (!loading && !isLoggedIn) {
-      router.push("/auth/login");
-    }
-  }, [isLoggedIn, loading, router]);
+  // useEffect(() => {
+  //   // If user is not logged in, redirect to the login page
+  //   if (!loading && !isLoggedIn) {
+  //     router.push("/auth/login");
+  //   }
+  // }, [isLoggedIn, loading, router]);
 
-  if (loading) {
-    return <div>Loading...</div>; // You can replace this with a spinner or some other loading indicator
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>; // You can replace this with a spinner or some other loading indicator
+  // }
   const sendTokenToBackend = async (idToken, endpoint) => {
     try {
       const response = await sendTokenToBackendApi(idToken, endpoint);

@@ -2,9 +2,9 @@
 import { useManga } from "@/context/mangaContext";
 import { ArrowLeft, SearchIcon } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import MangaCard from "@/components/app-mangaCard";
+
 import SearchCard from "@/components/app-searchMangaCard";
-import axios from "axios";
+
 import { useAuth } from "@/context/authContext";
 import AddMangaModel from "@/components/app-addMangaModel";
 import { useRouter } from "next/navigation";
@@ -38,6 +38,10 @@ const Search = () => {
     if (!searchQuery.trim()) return;
     setIsSearching(true);
     await searchManga();
+  };
+  const handleScan = (isbn) => {
+    setSearchQuery(isbn);
+    console.log("Scanned ISBN:", isbn);
   };
 
   const handlePrevious = () => {
@@ -98,6 +102,7 @@ const Search = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className=" p-2 outline-none border-none h-12 text-lg"
             />
+
             <button
               type="submit"
               className="ml-auto mr-2 hover:text-accent-foreground"
