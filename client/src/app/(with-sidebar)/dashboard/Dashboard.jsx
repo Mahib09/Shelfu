@@ -133,8 +133,10 @@ const Dashboard = () => {
       );
     }).length;
 
-    const toBuyChange = currentMonthToBuy - previousMonthToBuy;
-
+    let toBuyChange = currentMonthToBuy - previousMonthToBuy;
+    if (toBuyChange < 0) {
+      toBuyChange = 0;
+    }
     return {
       total: totalToBuy,
       change: toBuyChange,
@@ -167,8 +169,10 @@ const Dashboard = () => {
       );
     }).length;
 
-    const forSaleChange = currentMonthForSale - previousMonthForSale;
-
+    let forSaleChange = currentMonthForSale - previousMonthForSale;
+    if (forSaleChange < 0) {
+      forSaleChange = 0;
+    }
     return {
       total: totalForSale,
       change: forSaleChange,

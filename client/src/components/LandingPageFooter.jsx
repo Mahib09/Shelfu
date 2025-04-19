@@ -17,8 +17,8 @@ const LandingPageFooter = () => {
   ];
   const { theme } = useTheme();
   return (
-    <footer className="border border-dashed border-y-0 border-x-0 w-full">
-      <div className="container-wrapper">
+    <footer className="border-t">
+      <div className="px-20">
         <div className="flex gap-3 py-10 text-sm font-medium items-start justify-center ">
           <div>
             <a href="/" className="flex items-center">

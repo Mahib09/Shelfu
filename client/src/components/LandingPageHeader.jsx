@@ -16,8 +16,8 @@ const LandingHeadBar = () => {
   const dashOrStart = isLoggedIn ? "/dashboard" : "/auth/signup";
 
   return (
-    <header className="border border-dashed border-x-0  border-t-0 w-full">
-      <div className="md:mx-12 lg:mx-20 xl:mx-48 mx-0 border border-dashed border-y-0">
+    <header className="sticky top-0 bg-background border-b z-10">
+      <div className="px-20">
         <div className="flex gap-2 px-4 py-2 items-center">
           <a href="/" className="flex items-center font-extrabold text-lg">
             <Image src={logoSrc} height={40} width={40} alt={"logo"} />
