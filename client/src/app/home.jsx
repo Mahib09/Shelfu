@@ -110,7 +110,7 @@ const HomePage = () => {
           <div className="bg-secondary md:w-1/2 h-[500px] md:absolute top-0 -right-20 z-0 rounded-md"></div>
         </div>
       </section>
-      <section className=" bg-primary text-secondary px-20 py-5">
+      <section className=" bg-primary text-secondary px-8 md:px-20 py-5">
         <div className="w-full flex flex-col mt-12">
           <h3 className="text-8xl font-bold w-2/3">Stay in sync!!</h3>
           <p className="mt-6">
@@ -121,11 +121,11 @@ const HomePage = () => {
         </div>
         <div className="h-[80vh] bg-secondary rounded-md mt-12"></div>
       </section>
-      <section className="px-20 py-5">
-        <div className="flex gap-12">
-          <div className="bg-secondary rounded-md h-[80vh] w-1/2 sticky top-20 z-0"></div>
-          <div className="flex flex-col w-1/2">
-            <div className="my-80">
+      <section className="px-8 md:px-20 py-5">
+        <div className="flex flex-col ms:flex-row gap-12">
+          <div className="bg-secondary rounded-md h-[30vh] md:h-[80vh]  md:w-1/2 sticky top-10 md:top-20 z-0"></div>
+          <div className="flex flex-col md:w-1/2">
+            <div className="my-60 md:my-80">
               <h4>Stay in sync</h4>
               <p>
                 Never double-buy again. Keep track of your volumes, series, and
@@ -133,7 +133,7 @@ const HomePage = () => {
                 always with you.
               </p>
             </div>
-            <div className="my-80">
+            <div className="my-60 md:my-80">
               <h4>Stay in sync</h4>
               <p>
                 Never double-buy again. Keep track of your volumes, series, and
@@ -141,7 +141,7 @@ const HomePage = () => {
                 always with you.
               </p>
             </div>
-            <div className="my-80">
+            <div className="my-60 md:my-80">
               <h4>Stay in sync</h4>
               <p>
                 Never double-buy again. Keep track of your volumes, series, and
@@ -152,9 +152,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <section className="px-20 py-5 h-screen">
-        <div className="flex items-start justify-start mt-20">
-          <div className="w-2/3 flex flex-col gap-6 items-start">
+      <section className="px-8 md:px-20 py-5 h-screen">
+        <div className="flex flex-col md:flex-row items-center justify-center md:items-start md:justify-start mt-20">
+          <div className="md:w-2/3 flex flex-col gap-6 items-center md:items-start">
             <h3 className="text-6xl font-bold ">
               Ready to organize your shelf?
             </h3>
@@ -162,7 +162,7 @@ const HomePage = () => {
               Get Started
             </button>
           </div>
-          <div className="w-1/3">
+          <div className="md:w-1/3 flex md:block md:flex-wrap">
             <p className="p-6 border-b">
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum
               accusantium officia quaerat at repudiandae asperiores eum, eaque
