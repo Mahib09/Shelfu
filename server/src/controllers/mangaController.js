@@ -1,8 +1,7 @@
-const { Request, Response } = require("express");
 const prisma = require("../services/prismaService");
 const axios = require("axios");
 
-const fetchFromApi = async (query, res) => {
+const fetchFromApi = async (query) => {
   try {
     let headers = {
       "Content-Type": "application/json",
@@ -119,12 +118,12 @@ const getSearchResults = async (req, res) => {
     await redis.set(
       `searchResults:${searchQuery}`,
       JSON.stringify(formattedBooksApiResults),
-      "EX",
-      86400
+      { ex: 86400 }
     );
 
     return res.status(200).json(formattedBooksApiResults);
   } catch (error) {
+    console.log("hey", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

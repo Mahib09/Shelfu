@@ -13,10 +13,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors());
 
-setupRedis().then((client) => {
-  app.locals.redis = client;
-  const PORT = process.env.PORT || 3001;
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
+const client = setupRedis();
+app.locals.redis = client;
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });

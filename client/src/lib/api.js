@@ -1,15 +1,16 @@
 import axios from "axios";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 //auth api's
 export const getProfileApi = async () => {
-  return await axios.get("http://localhost:3001/auth/profile", {
+  return await axios.get(`${API_BASE_URL}/auth/profile`, {
     withCredentials: true,
   });
 };
 
 export const sendTokenToBackendApi = async (idToken, endpoint) => {
   return await axios.post(
-    `http://localhost:3001/auth/${endpoint}`,
+    `${API_BASE_URL}/auth/${endpoint}`,
     {
       token: idToken,
     },
@@ -19,7 +20,7 @@ export const sendTokenToBackendApi = async (idToken, endpoint) => {
 
 export const logoutApi = async () => {
   return await axios.post(
-    "http://localhost:3001/auth/logout",
+    `${API_BASE_URL}/auth/logout`,
     {},
     { withCredentials: true }
   );
@@ -27,22 +28,22 @@ export const logoutApi = async () => {
 
 //manga api's
 export const getSearchResultsApi = async (searchQuery) => {
-  return await axios.get(`http://localhost:3001/manga/search?q=${searchQuery}`);
+  return await axios.get(`${API_BASE_URL}/manga/search?q=${searchQuery}`);
 };
 
 export const getMangaDetailsApi = async (isbn) => {
-  return await axios.get(`http://localhost:3001/manga/${isbn}`);
+  return await axios.get(`${API_BASE_URL}/manga/${isbn}`);
 };
 
 //usercollection api's
 export const getUserCollectionApi = async (userId) => {
-  return await axios.get(`http://localhost:3001/usercollection/${userId}`, {
+  return await axios.get(`${API_BASE_URL}/usercollection/${userId}`, {
     withCredentials: true,
   });
 };
 
 export const addMangatoUserCollectionApi = async ({ bodyInfo }) => {
-  return await axios.post(`http://localhost:3001/usercollection`, bodyInfo, {
+  return await axios.post(`${API_BASE_URL}/usercollection`, bodyInfo, {
     withCredentials: true,
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +53,7 @@ export const addMangatoUserCollectionApi = async ({ bodyInfo }) => {
 
 export const updateCategoryorNotesApi = async (bodyInfo, userCollectionId) => {
   return await axios.patch(
-    `http://localhost:3001/usercollection/${userCollectionId}`,
+    `${API_BASE_URL}/usercollection/${userCollectionId}`,
     bodyInfo,
     {
       withCredentials: true,
@@ -65,7 +66,7 @@ export const updateCategoryorNotesApi = async (bodyInfo, userCollectionId) => {
 
 export const deleteVolumeApi = async (bodyInfo, userCollectionId) => {
   return await axios.delete(
-    `http://localhost:3001/usercollection/${userCollectionId}`,
+    `${API_BASE_URL}/usercollection/${userCollectionId}`,
     {
       withCredentials: true,
       headers: {
