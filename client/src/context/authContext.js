@@ -17,12 +17,10 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // default value
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("isLoggedIn") === "true";
+  });
 
-  useEffect(() => {
-    const storedLogin = localStorage.getItem("isLoggedIn");
-    setIsLoggedIn(storedLogin === "true");
-  }, []);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
