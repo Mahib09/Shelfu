@@ -8,16 +8,20 @@ const WithProtectedRoute = ({ children }) => {
   const { isLoggedIn, loading } = useAuth();
 
   useEffect(() => {
-    if (!isLoggedIn && !loading) {
+    if (isLoggedIn === false && !loading) {
       router.push("/auth/login");
     }
   }, [isLoggedIn, loading, router]);
 
-  if (loading || (!isLoggedIn && !loading)) {
-    return <div>Loading...</div>; // or a spinner
+  if (loading || isLoggedIn === null) {
+    return <div>Loading...</div>; // show spinner while checking
   }
 
-  return children;
+  if (isLoggedIn === false) {
+    return null; // don't render protected content while redirecting
+  }
+
+  return children; // user is logged in, show protected page
 };
 
 export default WithProtectedRoute;
