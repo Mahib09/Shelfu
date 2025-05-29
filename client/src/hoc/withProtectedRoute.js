@@ -5,19 +5,18 @@ import { useAuth } from "@/context/authContext";
 
 const WithProtectedRoute = ({ children }) => {
   const router = useRouter();
-  const { isLoggedIn, loading } = useAuth(); // Access user state from context
+  const { isLoggedIn, loading } = useAuth();
 
   useEffect(() => {
     if (!isLoggedIn && !loading) {
-      router.push("/auth/login"); // Redirect to login if not logged in
+      router.push("/auth/login");
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, loading, router]);
 
-  // Show loading spinner if authentication is still in progress
-  if (loading) {
-    return <div>Loading...</div>; // Replace with a spinner or other loading component
+  if (loading || (!isLoggedIn && !loading)) {
+    return <div>Loading...</div>; // or a spinner
   }
-  // If the user is authenticated, render the children components (protected page)
+
   return children;
 };
 

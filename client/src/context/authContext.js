@@ -17,9 +17,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem("isLoggedIn") === "true";
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
@@ -28,36 +26,45 @@ export const AuthProvider = ({ children }) => {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
-  const checkAuth = async () => {
-    try {
-      const response = await getProfileApi();
-      setUser(response.data.user);
-      setProfile(response.data.profile);
-      setUserName(response.data.user.displayName);
-      setUserEmail(response.data.user.email);
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      setError("Error fetching profile");
-      setUser(null);
-      setProfile(null);
-    }
-  };
+  // const checkAuth = async () => {
+  //   try {
+  //     const response = await getProfileApi();
+  //     setUser(response.data.user);
+  //     setProfile(response.data.profile);
+  //     setUserName(response.data.user.displayName);
+  //     setUserEmail(response.data.user.email);
+  //   } catch (error) {
+  //     console.error("Error fetching profile:", error);
+  //     setError("Error fetching profile");
+  //     setUser(null);
+  //     setProfile(null);
+  //   }
+  // };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        setUser(firebaseUser);
         setIsLoggedIn(true);
-        await checkAuth(); // Fetch the profile if authenticated
+        setUser(firebaseUser);
+        setUserEmail(firebaseUser.email || "");
+        setUserName(firebaseUser.displayName || "");
+
+        try {
+          const response = await getProfileApi();
+          setProfile(response.data.profile);
+        } catch (err) {
+          console.error("Profile fetch failed:", err);
+          setError("Could not load profile");
+        }
       } else {
+        setIsLoggedIn(false);
         setUser(null);
         setProfile(null);
-        setIsLoggedIn(false); // Set user as logged out
-        setLoading(false);
       }
+      setLoading(false); // done loading regardless of auth state
     });
 
-    return () => unsubscribe(); // Cleanup the subscription
+    return () => unsubscribe();
   }, [router]);
 
   // useEffect(() => {
