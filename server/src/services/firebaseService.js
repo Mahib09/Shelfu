@@ -4,7 +4,7 @@ let firebaseKey;
 
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   // Load from Heroku env var (stringified JSON with escaped newlines)
-  firebaseKey = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  firebaseKey = JSON.parse(process.env.FIREBASE_SERVICE_KEY);
   firebaseKey.private_key = firebaseKey.private_key.replace(/\\n/g, "\n");
 } else {
   // Load locally from file (fallback)
