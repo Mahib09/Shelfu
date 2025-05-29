@@ -17,7 +17,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
