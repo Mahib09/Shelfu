@@ -56,9 +56,14 @@ const getUserCollection = async (req, res) => {
     const redis = req.app.locals.redis;
     const id = parseInt(userId);
 
-    const cachedCollection = await redis.get(`userCollection:${userId}`);
-    if (cachedCollection) {
-      return res.status(200).json(JSON.parse(cachedCollection));
+    let cachedCollection;
+    try {
+      cachedCollection = await redis.get(`userCollection:${userId}`);
+      if (cachedCollection) {
+        return res.status(200).json(JSON.parse(cachedCollection));
+      }
+    } catch (error) {
+      console.error("Redis cache error:", error);
     }
 
     const user = await prisma.users.findUnique({
@@ -87,8 +92,7 @@ const getUserCollection = async (req, res) => {
     await redis.set(
       `userCollection:${userId}`,
       JSON.stringify(userCollectionData),
-      "EX",
-      3600
+      { ex: 300 }
     );
 
     return res.status(200).json(userCollectionData);

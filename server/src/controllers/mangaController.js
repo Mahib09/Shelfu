@@ -112,7 +112,14 @@ const getSearchResults = async (req, res) => {
     // Check if the search results are cached in Redis
     const cachedResults = await redis.get(`searchResults:${searchQuery}`);
     if (cachedResults) {
-      return res.status(200).json(JSON.parse(cachedResults));
+      let results;
+      if (typeof cachedResults === "string") {
+        results = JSON.parse(cachedResults);
+      } else {
+        // If it's already parsed object, just use it
+        results = cachedResults;
+      }
+      return res.status(200).json(results);
     }
     const formattedBooksApiResults = await fetchFromApi(searchQuery);
     await redis.set(

@@ -39,8 +39,9 @@ const signUp = async (req, res) => {
 
     res.cookie("token", sessionToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Strict",
+      secure: true,
+      sameSite: "None", // Allows cross-site cookie
+      path: "/",
     });
 
     return res
@@ -77,8 +78,9 @@ const login = async (req, res) => {
 
     res.cookie("token", sessionToken, {
       httpOnly: true,
-      secure: false, // Set to true in production (HTTPS)
-      sameSite: "Strict",
+      secure: true, // Set to true in production (HTTPS)
+      sameSite: "None", // Allows cross-site cookie
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -111,8 +113,8 @@ const getProfile = async (req, res) => {
 const logout = (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
-    secure: false, // Change to `true` in production for HTTPS
-    sameSite: "Strict",
+    secure: true, // Change to `true` in production for HTTPS
+    sameSite: "None", // Allows cross-site cookie
     path: "/",
     maxAge: 0, // Expire immediately
   });
