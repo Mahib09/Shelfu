@@ -5,11 +5,12 @@ import * as Yup from "yup";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Logo from "../../../../public/logo-black.png";
+import { useTheme } from "next-themes";
 import { useAuth } from "@/context/authContext";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useManga } from "@/context/mangaContext";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -21,6 +22,7 @@ const schema = Yup.object().shape({
 });
 
 const Login = () => {
+  const { theme } = useTheme();
   const router = useRouter();
   const { isLoggedIn, login, error, setError, loading, signInWithGoogle } =
     useAuth();
@@ -53,7 +55,12 @@ const Login = () => {
 
   return (
     <div className="authContainer">
-      <Image src={Logo} height={100} width={100} alt="logo" />
+      <Image
+        src={theme === "light" ? "/logo-black.png" : "/logo-white.png"}
+        height={100}
+        width={100}
+        alt="logo"
+      />
       <div className="formHolder flex">
         <div className="flex flex-col gap-1">
           <h2 className="font-semibold text-3xl">Sign In</h2>
@@ -63,12 +70,13 @@ const Login = () => {
         </div>
 
         <form onSubmit={handleSubmit(handleLogin)} className="form">
-          <button
+          <Button
             type="button"
+            variant="secondary"
             onClick={() => {
               signInWithGoogle();
             }}
-            className=" rounded-md flex items-center justify-center gap-2 p-2 bg-secondary w-full"
+            className=" w-full"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -85,53 +93,73 @@ const Login = () => {
               <path d="M20.945 11a9 9 0 1 1 -3.284 -5.997l-2.655 2.392a5.5 5.5 0 1 0 2.119 6.605h-4.125v-3h7.945z"></path>
             </svg>
             Sign in with Google
-          </button>
-          <p className="text-xs text-muted-foreground">or</p>
-          <div className="w-full flex flex-col gap-2">
-            <Input
-              type="email"
-              id="email"
-              placeholder={`${errors.email?.message || "Email"}`}
-              {...register("email", { required: "Email is Required" })}
-              className={`inputField ${
-                errors.email || error
-                  ? "border-red-500 focus:outline-red-500"
-                  : "border-gray-300"
-              }`}
-            />
+          </Button>
+          <p className="mt-1 text-xs text-muted-foreground whitespace-nowrap">
+            or
+          </p>
+          <div className="w-full flex flex-col gap-4">
+            <div>
+              {" "}
+              <Label htmlFor="email">* Email</Label>
+              <Input
+                type="email"
+                id="email"
+                placeholder={`${errors.email?.message || ""}`}
+                {...register("email", { required: "Email is Required" })}
+                className={`inputField ${
+                  errors.email || error
+                    ? "border-red-500 focus:outline-red-500"
+                    : ""
+                }`}
+              />
+            </div>
+            <div>
+              <Label htmlFor="password">* Password</Label>
+              <Input
+                type="password"
+                id="password"
+                placeholder={`${errors.password?.message || ""}`}
+                {...register("password", { required: "Password is Required" })}
+                className={`inputField ${
+                  errors.password || error
+                    ? "border-red-500 focus:outline-red-500"
+                    : ""
+                }`}
+              />
+            </div>
 
-            <Input
-              type="password"
-              id="password"
-              placeholder={`${errors.password?.message || "Password"}`}
-              {...register("password", { required: "Password is Required" })}
-              className={`inputField ${
-                errors.password || error
-                  ? "border-red-500 focus:outline-red-500"
-                  : "border-gray-300"
-              }`}
-            />
+            <a
+              href="/auth/forgotPassword"
+              className="font-medium mb-3 text-sm text-accent cursor-pointer hover:underline transition-all ease-in-out"
+            >
+              Forgot your Password?
+            </a>
           </div>
           <div className="flex gap-5 w-full ">
-            <button
-              className="btnGoback"
+            <Button
+              variant="secondary"
               onClick={() => {
                 router.push("/");
               }}
               type="button"
             >
               Back to Home
-            </button>
-            <button type="submit" className="btnSubmit" disabled={loading}>
+            </Button>
+            <Button
+              className="ml-auto"
+              variant="accent"
+              type="submit"
+              disabled={loading}
+            >
               {loading ? "Signing In..." : "Sign In"}
-            </button>
+            </Button>
           </div>
         </form>
         {error && <p className="text-destructive m-auto ">{error}</p>}
       </div>
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-muted-foreground">
         No account?{" "}
-        <a href="/auth/signup" className="text-black">
+        <a href="/auth/signup" className="text-accent hover:underline">
           Sign Up
         </a>
       </p>

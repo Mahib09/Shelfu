@@ -93,7 +93,7 @@ const HomePage = () => {
 
       <section className="mt-12 bg-primary text-primary-foreground  px-8 md:px-20 py-5">
         <div className="w-full flex flex-col md:flex-row mt-12">
-          <h3 className="text-4xl md:text-8xl font-bold w-2/3">
+          <h3 className="text-4xl md:text-6xl font-bold w-2/3">
             Keep Track of your Collection Your way!!!
           </h3>
         </div>
@@ -133,7 +133,7 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <section className=" bg-primary text-secondary px-8 md:px-20 py-5">
+      <section className=" bg-primary text-secondary px-8 md:px-20 py-20">
         <div className="w-full flex flex-col mt-12">
           <h3 className="text-8xl font-bold w-2/3">Stay in sync!!</h3>
           <p className="mt-6">

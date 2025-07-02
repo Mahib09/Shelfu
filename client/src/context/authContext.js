@@ -9,6 +9,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   onAuthStateChanged,
+  sendPasswordResetEmail,
 } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { getProfileApi, logoutApi, sendTokenToBackendApi } from "@/lib/api";
@@ -201,6 +202,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const handleForgotPassword = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("Password Reset Email Sent");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -216,6 +226,7 @@ export const AuthProvider = ({ children }) => {
         setProfile,
         userName,
         userEmail,
+        handleForgotPassword,
       }}
     >
       {children}

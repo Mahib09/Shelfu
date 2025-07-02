@@ -15,7 +15,7 @@ export default function DevelopingPage({ onPasswordCorrect }) {
       localStorage.setItem("shelfuAuthorized", "true");
       onPasswordCorrect();
     } else {
-      alert("Incorrect password, please try again.");
+      alert("Incorrect password, Launch coming soon!!");
     }
   };
 

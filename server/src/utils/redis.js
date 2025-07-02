@@ -6,8 +6,6 @@ function setupRedis() {
     token: process.env.UPSTASH_REDIS_REST_TOKEN,
   });
 
-  // No need to connect manually — it uses HTTP requests.
-
   return redis;
 }
 
