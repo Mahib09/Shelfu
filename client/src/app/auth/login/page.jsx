@@ -28,11 +28,11 @@ const Login = () => {
     useAuth();
   const { fetchUserCollection } = useManga();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.push("/dashboard");
-    }
-  }, [isLoggedIn, router]);
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     router.push("/dashboard");
+  //   }
+  // }, [isLoggedIn, router]);
 
   const {
     register,
@@ -47,7 +47,11 @@ const Login = () => {
     try {
       await login(data);
       reset({ password: "" });
-      router.push("/dashboard");
+      if (isLoggedIn) {
+        router.push("/dashboard");
+      } else {
+        setError("Error Logging In");
+      }
     } catch (error) {
       console.log(error);
     }

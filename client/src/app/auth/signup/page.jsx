@@ -27,7 +27,8 @@ const schema = Yup.object().shape({
 const SignUp = () => {
   const { theme } = useTheme();
   const router = useRouter();
-  const { user, signUp, errorMessage, loading, signInWithGoogle } = useAuth(); // Accessing signUp, errorMessage, loading, and other data from context
+  const { isLoggedIn, signUp, errorMessage, loading, signInWithGoogle } =
+    useAuth(); // Accessing signUp, errorMessage, loading, and other data from context
   const {
     register,
     handleSubmit,
@@ -35,13 +36,13 @@ const SignUp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  useEffect(() => {
-    if (user) {
-      router.push("/dashboard");
-    }
-  }, [user, router]);
-  const handleSignUp = (data) => {
-    signUp(data);
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     router.push("/dashboard");
+  //   }
+  // }, [isLoggedIn, router]);
+  const handleSignUp = async (data) => {
+    await signUp(data);
   };
 
   return (

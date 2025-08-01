@@ -44,25 +44,39 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        setIsLoggedIn(true);
-        setUser(firebaseUser);
-        setUserEmail(firebaseUser.email || "");
-        setUserName(firebaseUser.displayName || "");
+      const storedToken = localStorage.getItem("token");
 
+      if (firebaseUser && storedToken) {
         try {
-          const response = await getProfileApi();
-          setProfile(response.data.profile);
-        } catch (err) {
-          console.error("Profile fetch failed:", err);
-          setError("Could not load profile");
+          // Attempt to fetch profile
+          await fetchUserProfile();
+
+          // If successful, set user states
+          setIsLoggedIn(true);
+          setUser(firebaseUser);
+          setUserEmail(firebaseUser.email || "");
+          setUserName(firebaseUser.displayName || "");
+        } catch (error) {
+          console.error("Profile fetch failed:", error);
+
+          // On profile fetch error (likely 401), clear states & logout
+          setIsLoggedIn(false);
+          setUser(null);
+          setProfile(null);
+          localStorage.removeItem("token");
+
+          // Optional: sign out Firebase user to fully clear auth state
+          await auth.signOut();
         }
       } else {
+        // No firebaseUser or token -> clear all states
         setIsLoggedIn(false);
         setUser(null);
         setProfile(null);
+        localStorage.removeItem("token");
       }
-      setLoading(false); // done loading regardless of auth state
+
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -82,6 +96,23 @@ export const AuthProvider = ({ children }) => {
       setError(error.message || `An error occurred during ${endpoint}`);
     }
   };
+  const fetchUserProfile = async () => {
+    try {
+      const response = await getProfileApi();
+      setProfile(response.data.profile);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        // Unauthorized — token expired or invalid
+        console.warn("Token expired or unauthorized, logging out...");
+        await logout(); // Your logout function clears everything and redirects
+      } else {
+        setError("Failed to fetch Profile");
+        console.log(error, error);
+        localStorage.removeItem("token");
+        localStorage.removeItem("isLoggedIn");
+      }
+    }
+  };
 
   const login = async ({ email, password }) => {
     try {
@@ -97,8 +128,10 @@ export const AuthProvider = ({ children }) => {
       const idToken = await firebaseUser.getIdToken();
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("token", idToken);
+      await fetchUserProfile();
       setIsLoggedIn(true);
       setUser(firebaseUser);
+
       return { status: 200, user: firebaseUser };
     } catch (error) {
       handleAuthError(error);
@@ -112,14 +145,16 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       await auth.signOut();
-      await logoutApi();
+      localStorage.removeItem("token");
+      localStorage.removeItem("isLoggedIn");
+
       setUser(null);
       setProfile(null);
       setUserName("");
       setUserEmail("");
-      setError(null);
-      localStorage.setItem("isLoggedIn", "false");
       setIsLoggedIn(false);
+      setError(null);
+
       router.push("/auth/login");
     } catch (error) {
       console.error("Logout failed:", error);
@@ -139,14 +174,12 @@ export const AuthProvider = ({ children }) => {
         password
       );
       const firebaseUser = userCredentials.user;
-
       await updateProfile(firebaseUser, { displayName: name });
       const idToken = await firebaseUser.getIdToken();
-
       setUser(firebaseUser);
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("token", idToken);
-      await sendTokenToBackend(idToken, signUp);
+      await sendTokenToBackend(idToken, "signup");
     } catch (error) {
       console.error("Error during sign-up:", error);
       setError(error.message || "An error occurred during sign-up");
@@ -164,12 +197,14 @@ export const AuthProvider = ({ children }) => {
       const firebaseUser = userCredentials.user;
 
       const idToken = await firebaseUser.getIdToken();
-      localStorage.setItem("isLoggedIn", "true");
-      await sendTokenToBackend(idToken, "login");
-      await checkAuth();
+      localStorage.setItem("token", idToken);
 
+      await fetchUserProfile();
+      localStorage.setItem("isLoggedIn", "true");
+      setUser(firebaseUser);
       setUserName(firebaseUser.displayName || "No name");
       setUserEmail(firebaseUser.email || "No email");
+      setIsLoggedIn(true);
     } catch (error) {
       console.error("Error during Google sign-in:", error);
       setError(error.message || "An error occurred during Google sign-in");
