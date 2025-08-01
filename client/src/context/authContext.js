@@ -177,9 +177,9 @@ export const AuthProvider = ({ children }) => {
       await updateProfile(firebaseUser, { displayName: name });
       const idToken = await firebaseUser.getIdToken();
       setUser(firebaseUser);
+      await sendTokenToBackend(idToken, "signup");
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("token", idToken);
-      await sendTokenToBackend(idToken, "signup");
     } catch (error) {
       console.error("Error during sign-up:", error);
       setError(error.message || "An error occurred during sign-up");
