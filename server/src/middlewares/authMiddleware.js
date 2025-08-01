@@ -3,16 +3,15 @@ const admin = require("../services/firebaseService"); // Firebase Admin setup
 // Firebase Authentication Middleware
 const verifyToken = async (req, res, next) => {
   try {
-    // Get the token from the Authorization header (e.g., "Bearer <token>")
-    const token = req.cookies.token || "";
+    const authHeader = req.headers.authorization;
 
-    // If no token is found, return 401 Unauthorized
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({ message: "No token provided" });
     }
 
+    const idToken = authHeader.split(" ")[1];
     // Verify the token using Firebase Admin SDK
-    const decodedToken = await admin.auth().verifySessionCookie(token, true);
+    const decodedToken = await admin.auth().verifySessionCookie(idToken, true);
 
     // Attach user information to the request object for further use
     const user = await admin.auth().getUser(decodedToken.uid);

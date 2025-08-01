@@ -68,16 +68,6 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, [router]);
 
-  // useEffect(() => {
-  //   // If user is not logged in, redirect to the login page
-  //   if (!loading && !isLoggedIn) {
-  //     router.push("/auth/login");
-  //   }
-  // }, [isLoggedIn, loading, router]);
-
-  // if (loading) {
-  //   return <div>Loading...</div>; // You can replace this with a spinner or some other loading indicator
-  // }
   const sendTokenToBackend = async (idToken, endpoint) => {
     try {
       const response = await sendTokenToBackendApi(idToken, endpoint);
@@ -106,11 +96,9 @@ export const AuthProvider = ({ children }) => {
       const firebaseUser = userCredentials.user;
       const idToken = await firebaseUser.getIdToken();
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("token", idToken);
       setIsLoggedIn(true);
       setUser(firebaseUser);
-
-      await sendTokenToBackend(idToken, "login");
-      await checkAuth();
       return { status: 200, user: firebaseUser };
     } catch (error) {
       handleAuthError(error);
@@ -157,7 +145,8 @@ export const AuthProvider = ({ children }) => {
 
       setUser(firebaseUser);
       localStorage.setItem("isLoggedIn", "true");
-      await sendTokenToBackend(idToken, "signup");
+      localStorage.setItem("token", idToken);
+      await sendTokenToBackend(idToken, signUp);
     } catch (error) {
       console.error("Error during sign-up:", error);
       setError(error.message || "An error occurred during sign-up");

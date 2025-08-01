@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 //auth api's
 export const getProfileApi = async () => {
   return await axios.get(`${API_BASE_URL}/auth/profile`, {
-    withCredentials: true,
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   });
 };
 
@@ -14,7 +14,7 @@ export const sendTokenToBackendApi = async (idToken, endpoint) => {
     {
       token: idToken,
     },
-    { withCredentials: true }
+    { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
   );
 };
 
@@ -22,7 +22,7 @@ export const logoutApi = async () => {
   return await axios.post(
     `${API_BASE_URL}/auth/logout`,
     {},
-    { withCredentials: true }
+    { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
   );
 };
 
@@ -38,14 +38,14 @@ export const getMangaDetailsApi = async (isbn) => {
 //usercollection api's
 export const getUserCollectionApi = async (userId) => {
   return await axios.get(`${API_BASE_URL}/usercollection/${userId}`, {
-    withCredentials: true,
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   });
 };
 
 export const addMangatoUserCollectionApi = async ({ bodyInfo }) => {
   return await axios.post(`${API_BASE_URL}/usercollection`, bodyInfo, {
-    withCredentials: true,
     headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
     },
   });
@@ -56,8 +56,8 @@ export const updateCategoryorNotesApi = async (bodyInfo, userCollectionId) => {
     `${API_BASE_URL}/usercollection/${userCollectionId}`,
     bodyInfo,
     {
-      withCredentials: true,
       headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
     }
@@ -68,11 +68,11 @@ export const deleteVolumeApi = async (bodyInfo, userCollectionId) => {
   return await axios.delete(
     `${API_BASE_URL}/usercollection/${userCollectionId}`,
     {
-      withCredentials: true,
       headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
+        data: bodyInfo,
       },
-      data: bodyInfo,
     }
   );
 };

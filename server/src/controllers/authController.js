@@ -10,11 +10,13 @@ const signUp = async (req, res) => {
       return res.status(400).json({ error: "Token is required" });
     }
 
+    // Verify Firebase ID token
     const decodedToken = await admin.auth().verifyIdToken(token);
     const firebaseId = decodedToken.uid;
     const email = decodedToken.email;
     const name = decodedToken.name || "";
 
+    // Check if user already exists in your DB
     let user = await prisma.users.findUnique({
       where: { firebaseUId: firebaseId },
     });
@@ -25,23 +27,13 @@ const signUp = async (req, res) => {
         .json({ success: true, message: "User already registered", user });
     }
 
+    // Create new user in DB
     user = await prisma.users.create({
       data: {
         firebaseUId: firebaseId,
         email: email,
         name: name,
       },
-    });
-
-    const sessionToken = await admin.auth().createSessionCookie(token, {
-      expiresIn: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    res.cookie("token", sessionToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None", // Allows cross-site cookie
-      path: "/",
     });
 
     return res
@@ -64,35 +56,6 @@ const signUp = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
-  try {
-    const { token } = req.body;
-
-    if (!token) {
-      return res.status(400).json({ error: "Token is required" });
-    }
-
-    const sessionToken = await admin.auth().createSessionCookie(token, {
-      expiresIn: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    res.cookie("token", sessionToken, {
-      httpOnly: true,
-      secure: true, // Set to true in production (HTTPS)
-      sameSite: "None", // Allows cross-site cookie
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "User Logged In successfully",
-    });
-  } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: "Error logging in" });
-  }
-};
 const getProfile = async (req, res) => {
   try {
     const user = req.user;
@@ -110,16 +73,5 @@ const getProfile = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-const logout = (req, res) => {
-  res.cookie("token", "", {
-    httpOnly: true,
-    secure: true, // Change to `true` in production for HTTPS
-    sameSite: "None", // Allows cross-site cookie
-    path: "/",
-    maxAge: 0, // Expire immediately
-  });
 
-  res.status(200).json({ message: "Logged out" });
-};
-
-module.exports = { signUp, login, getProfile, logout };
+module.exports = { signUp, getProfile };
