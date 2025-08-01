@@ -202,6 +202,7 @@ export const AuthProvider = ({ children }) => {
       await fetchUserProfile();
       localStorage.setItem("isLoggedIn", "true");
       setUser(firebaseUser);
+      await sendTokenToBackend(idToken, "signup");
       setUserName(firebaseUser.displayName || "No name");
       setUserEmail(firebaseUser.email || "No email");
       setIsLoggedIn(true);
