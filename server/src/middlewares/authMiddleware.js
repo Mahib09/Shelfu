@@ -11,7 +11,7 @@ const verifyToken = async (req, res, next) => {
 
     const idToken = authHeader.split(" ")[1];
     // Verify the token using Firebase Admin SDK
-    const decodedToken = await admin.auth().verifySessionCookie(idToken, true);
+    const decodedToken = await admin.auth().verifyIdToken(idToken, true);
 
     // Attach user information to the request object for further use
     const user = await admin.auth().getUser(decodedToken.uid);
