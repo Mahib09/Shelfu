@@ -36,11 +36,11 @@ const SignUp = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     router.push("/dashboard");
-  //   }
-  // }, [isLoggedIn, router]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/dashboard");
+    }
+  }, [isLoggedIn, router]);
   const handleSignUp = async (data) => {
     await signUp(data);
   };

@@ -28,11 +28,11 @@ const Login = () => {
     useAuth();
   const { fetchUserCollection } = useManga();
 
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     router.push("/dashboard");
-  //   }
-  // }, [isLoggedIn, router]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/dashboard");
+    }
+  }, [isLoggedIn, router]);
 
   const {
     register,
