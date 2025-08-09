@@ -41,12 +41,12 @@ const AddMangaModal = ({ volumeInfo, userId, onClose }) => {
   };
 
   return (
-    <div className="absolute flex items-center justify-center w-full top-0 left-0 h-screen">
+    <div className="absolute flex items-center justify-center w-full top-0 left-0 h-screen z-50">
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div
           className={`border ${
             open && !isMobile ? "ml-32" : ""
-          } flex flex-col gap-3 p-5 w-[350px] md:w-[500px] bg-muted rounded-lg absolute left-1/2 transform -translate-x-1/2`}
+          } flex flex-col gap-3 p-5 w-[350px] md:w-[500px] bg-muted rounded-lg absolute m-auto`}
         >
           <h2 className="font-medium text-lg">Add Manga to Your Collection</h2>
           {error && <p className="text-destructive">{error}</p>}{" "}
