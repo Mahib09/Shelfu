@@ -131,7 +131,11 @@ const SignUp = () => {
             </div>
           </div>
           <div className="flex gap-5 w-full">
-            <Button variant="secondary" onClick={() => router.push("/")}>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => router.push("/")}
+            >
               Back to Home
             </Button>
             <Button

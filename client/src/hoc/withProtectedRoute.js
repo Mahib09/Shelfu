@@ -14,7 +14,11 @@ const WithProtectedRoute = ({ children }) => {
   }, [isLoggedIn, loading, router]);
 
   if (loading || isLoggedIn === null) {
-    return <div>Loading...</div>; // show spinner while checking
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#f8f4ef] to-[#eae2d6]">
+        <p className="mt-4 text-lg text-[#5a4631]">Loading...</p>
+      </div>
+    ); // show spinner while checking
   }
 
   if (isLoggedIn === false) {

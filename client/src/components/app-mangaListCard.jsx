@@ -16,9 +16,9 @@ const MangaListCard = ({ title, author, description, src, volumeNumber }) => {
         width={80}
         alt="cover art"
         src={src}
-        className="rounded-sm w-[60px] md:w-[80px]"
+        className="rounded-sm w-[40px] md:w-[80px]"
       />
-      <div className="flex flex-col">
+      <div className="flex flex-col text-sm md:text-base">
         <p>
           {title} Vol {volumeNumber}
         </p>

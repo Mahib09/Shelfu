@@ -45,7 +45,7 @@ const Collection = () => {
     return (
       <TabsContent
         value={value}
-        className={`flex flex-wrap gap-5 items-center ${
+        className={`flex flex-wrap gap-3 md:gap-5 items-center ${
           layout === "Grid"
             ? "justify-around sm:justify-center"
             : "flex-col items-start"
@@ -166,7 +166,7 @@ const Collection = () => {
                   className="flex gap-1 items-center text-xs sm:text-sm"
                 >
                   Owned
-                  <span className="text-accent-foreground">
+                  <span className="text-accent">
                     {
                       collection.filter((item) => item.status === "Owned")
                         .length
@@ -178,7 +178,7 @@ const Collection = () => {
                   className="flex gap-1 items-center text-xs sm:text-sm"
                 >
                   Want To Buy
-                  <span className="text-accent-foreground">
+                  <span className="text-accent">
                     {
                       collection.filter((item) => item.status === "Want_To_Buy")
                         .length
@@ -190,7 +190,7 @@ const Collection = () => {
                   className="flex gap-1 items-center text-xs sm:text-sm"
                 >
                   For Sale
-                  <span className=" text-accent-foreground">
+                  <span className=" text-accent">
                     {
                       collection.filter((item) => item.status === "For_Sale")
                         .length
