@@ -10,24 +10,6 @@ import DevelopingPage from "@/components/home/Developing";
 import OneScreenHero from "@/components/home/OneScreenHero";
 
 export default function Home() {
-  const [authorized, setAuthorized] = useState(false);
-  const [checkedAuth, setCheckedAuth] = useState(false);
-
-  useEffect(() => {
-    // Check if authorized in localStorage
-    const auth = localStorage.getItem("shelfuAuthorized");
-    if (auth === "true") {
-      setAuthorized(true);
-    }
-    setCheckedAuth(true);
-  }, []);
-
-  if (!checkedAuth) return null; // or spinner
-
-  if (!authorized) {
-    // Show password input page first
-    return <DevelopingPage onPasswordCorrect={() => setAuthorized(true)} />;
-  }
   return (
     <div className="" suppressHydrationWarning={true}>
       <OneScreenHero />
