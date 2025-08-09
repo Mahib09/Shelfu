@@ -19,7 +19,7 @@ const LandingPageFooter = () => {
   return (
     <footer className="border-t">
       <div className="px-20">
-        <div className="flex gap-3 py-10 text-sm font-medium items-start justify-center ">
+        <div className="flex flex-col md:flex-row gap-20 py-10 text-sm font-medium items-center md:items-start ">
           <div>
             <a href="/" className="flex items-center">
               <Image
@@ -35,7 +35,7 @@ const LandingPageFooter = () => {
               © 2025 Shelfu, Toronto, ON
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row ml-auto gap-2 sm:gap-20">
+          <div className="flex md:ml-auto gap-20 ">
             <div className="">
               <ul className="flex flex-col gap-4">
                 {firstRowData.map((item) => (

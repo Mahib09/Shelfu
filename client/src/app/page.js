@@ -7,6 +7,7 @@ import LandingPageFooter from "@/components/LandingPageFooter";
 import LandingHeadBar from "@/components/LandingPageHeader";
 import { useEffect, useState } from "react";
 import DevelopingPage from "@/components/home/Developing";
+import OneScreenHero from "@/components/home/OneScreenHero";
 
 export default function Home() {
   const [authorized, setAuthorized] = useState(false);
@@ -29,8 +30,7 @@ export default function Home() {
   }
   return (
     <div className="" suppressHydrationWarning={true}>
-      <LandingHeadBar />
-      <HomePage />
+      <OneScreenHero />
       <LandingPageFooter />
     </div>
   );
