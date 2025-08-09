@@ -83,10 +83,12 @@ const SheetComponent = ({ item, children }) => {
                 <span>
                   {item.volume.seriesName} Vol {item.volume.volumeNumber}
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-muted-foreground">
                   {item.volume.author}
                 </span>
-                <span className="text-sm text-gray-700">Status: {status}</span>
+                <span className="text-sm text-muted-foreground">
+                  Status: {status}
+                </span>
                 <span className="text-sm">Note: {note}</span>
               </div>
             </div>
@@ -100,7 +102,7 @@ const SheetComponent = ({ item, children }) => {
           onSubmit={handleSubmit}
           className="flex flex-col gap-3 mt-5 justify-center"
         >
-          <div className="flex gap-5 items-center justify-center">
+          <div className="flex gap-5 items-center justify-center ">
             <label htmlFor="status">Status</label>
             <select
               id="status"

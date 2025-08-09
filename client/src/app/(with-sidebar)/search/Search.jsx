@@ -81,10 +81,7 @@ const Search = () => {
         }`}
       >
         <div className="flex w-full max-w-md mb-4">
-          <button
-            onClick={handlePrevious}
-            className="hover:text-accent-foreground"
-          >
+          <button onClick={handlePrevious} className="hover:text-accent">
             <ArrowLeft />
           </button>
           <h2 className="ml-2 text-xl font-bold">Search Volumes</h2>
@@ -103,10 +100,7 @@ const Search = () => {
               className=" p-2 outline-none border-none h-12 text-lg"
             />
 
-            <button
-              type="submit"
-              className="ml-auto mr-2 hover:text-accent-foreground"
-            >
+            <button type="submit" className="ml-auto mr-2 hover:text-accent">
               <SearchIcon />
             </button>
           </form>

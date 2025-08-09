@@ -46,7 +46,7 @@ const AddMangaModal = ({ volumeInfo, userId, onClose }) => {
         <div
           className={`border ${
             open && !isMobile ? "ml-32" : ""
-          } flex flex-col gap-3 p-5 w-[350px] md:w-[500px] bg-secondary rounded-lg absolute left-1/2 transform -translate-x-1/2`}
+          } flex flex-col gap-3 p-5 w-[350px] md:w-[500px] bg-muted rounded-lg absolute left-1/2 transform -translate-x-1/2`}
         >
           <h2 className="font-medium text-lg">Add Manga to Your Collection</h2>
           {error && <p className="text-destructive">{error}</p>}{" "}
