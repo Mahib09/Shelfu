@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { useManga } from "@/context/mangaContext";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import GoogleOriginal from "devicons-react/icons/GoogleOriginal";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -82,25 +83,16 @@ const Login = () => {
             }}
             className=" w-full"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="tabler-icon tabler-icon-brand-google "
-            >
-              <path d="M20.945 11a9 9 0 1 1 -3.284 -5.997l-2.655 2.392a5.5 5.5 0 1 0 2.119 6.605h-4.125v-3h7.945z"></path>
-            </svg>
-            Sign in with Google
+            <GoogleOriginal />
+            Continue with Google
           </Button>
-          <p className="mt-1 text-xs text-muted-foreground whitespace-nowrap">
-            or
-          </p>
+          <div className="flex items-center my-4 w-full">
+            <div className="flex-grow border-t border-muted-foreground"></div>
+            <p className="mx-4 text-xs text-muted-foreground">
+              or create a new account
+            </p>
+            <div className="flex-grow border-t border-muted-foreground"></div>
+          </div>
           <div className="w-full flex flex-col gap-4">
             <div>
               {" "}
