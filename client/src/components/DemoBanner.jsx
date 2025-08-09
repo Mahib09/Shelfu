@@ -3,7 +3,7 @@ import { Clipboard, Copy } from "lucide-react";
 const DemoBanner = () => {
   return (
     <>
-      <div className="w-full border p-2 bg-accent text-white text-center flex flex-wrap items-center justify-center gap-4 -mt-20 shadow-sm">
+      <div className="w-full -top-1 border p-2 bg-accent text-white text-center flex flex-wrap items-center justify-center gap-4 absolute  shadow-sm">
         <strong>Demo Login:</strong>
 
         <div className="flex items-center gap-1">
