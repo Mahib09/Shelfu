@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import GoogleOriginal from "devicons-react/icons/GoogleOriginal";
 
+import DemoBanner from "@/components/DemoBanner";
+
 const schema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email address")
@@ -60,6 +62,7 @@ const Login = () => {
 
   return (
     <div className="authContainer">
+      <DemoBanner />
       <Image
         src={theme === "light" ? "/logo-black.png" : "/logo-white.png"}
         height={100}

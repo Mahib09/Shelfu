@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GoogleOriginal } from "devicons-react";
+import DemoBanner from "@/components/DemoBanner";
 // Validation schema for form
 const schema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
