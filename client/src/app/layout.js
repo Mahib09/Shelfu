@@ -4,7 +4,7 @@ import { AuthProvider } from "@/context/authContext"; // Adjust the path as need
 
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
-
+import { Analytics } from "@vercel/analytics/next";
 export const metadata = {
   title: "Shelfu | Your Manga Collection Manager",
   description:
@@ -32,6 +32,7 @@ export default function RootLayout({ children }) {
               disableTransitionOnChange
             >
               {children}
+              <Analytics />
             </ThemeProvider>
 
             <Toaster />
