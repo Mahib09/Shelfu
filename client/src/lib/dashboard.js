@@ -1,5 +1,4 @@
 export const getTotalOwnedVolumes = ({ collection }) => {
-  console.log(collection);
   if (collection.length === 0) {
     return {
       total: 0,
