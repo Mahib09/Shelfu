@@ -28,7 +28,6 @@ export const MangaProvider = ({ children }) => {
       }
 
       const response = await getUserCollectionApi(userId);
-      console.log(response);
       setCollection(response.data);
     } catch (error) {
       console.log(error);
