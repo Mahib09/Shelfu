@@ -28,6 +28,7 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { motion } from "motion/react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
+  calculatePercentageIncrease,
   getRecentAddition,
   getTotalMangaSeries,
   getTotalOwnedVolumes,
@@ -39,18 +40,18 @@ import {
 const Dashboard = () => {
   const { collection, fetchUserCollection } = useManga();
 
-  const totalOwned = getTotalOwnedVolumes();
-  const totalSeries = getTotalMangaSeries();
-  const volumesToBuy = getVolumesToBuy();
-  const volumesForSale = getVolumesForSale();
-  const recentAddition = getRecentAddition();
+  const totalOwned = getTotalOwnedVolumes({ collection });
+  const totalSeries = getTotalMangaSeries({ collection });
+  const volumesToBuy = getVolumesToBuy({ collection });
+  const volumesForSale = getVolumesForSale({ collection });
+  const recentAddition = getRecentAddition({ collection });
   const currentYear = new Date().getFullYear();
-  const chartData = prepareData(currentYear);
+  const chartData = prepareData({ year: currentYear, collection });
 
-  const overallPercentageIncrease = calculatePercentageIncrease(
-    chartData,
-    collection
-  );
+  const overallPercentageIncrease = calculatePercentageIncrease({
+    data: chartData,
+    collection,
+  });
   const chartConfig = {
     volumesOwned: {
       label: "Volumes Added: ",

@@ -1,8 +1,4 @@
-import { useManga } from "@/context/mangaContext";
-
-const { collection } = useManga();
-
-export const getTotalOwnedVolumes = () => {
+export const getTotalOwnedVolumes = ({ collection }) => {
   console.log(collection);
   if (collection.length === 0) {
     return {
@@ -26,7 +22,7 @@ export const getTotalOwnedVolumes = () => {
     change: currentMonthOwned,
   };
 };
-export const getTotalMangaSeries = () => {
+export const getTotalMangaSeries = ({ collection }) => {
   if (collection.length === 0) {
     return {
       total: 0,
@@ -76,7 +72,7 @@ export const getTotalMangaSeries = () => {
     change: seriesChange > 0 ? seriesChange : 0,
   };
 };
-export const getVolumesToBuy = () => {
+export const getVolumesToBuy = ({ collection }) => {
   if (collection.length === 0) {
     return {
       total: 0,
@@ -112,7 +108,7 @@ export const getVolumesToBuy = () => {
     change: toBuyChange,
   };
 };
-export const getVolumesForSale = () => {
+export const getVolumesForSale = ({ collection }) => {
   if (collection.length === 0) {
     return {
       total: 0,
@@ -148,7 +144,7 @@ export const getVolumesForSale = () => {
     change: forSaleChange,
   };
 };
-export const getRecentAddition = () => {
+export const getRecentAddition = ({ collection }) => {
   if (collection.length === 0) {
     return []; // or you can return a default value like an empty object or message
   }
@@ -205,7 +201,7 @@ const getLastSixMonths = () => {
 
   return months.reverse(); // To ensure they are from 6 months ago to now
 };
-export const prepareData = (year) => {
+export const prepareData = ({ year, collection }) => {
   const lastSixMonths = getLastSixMonths();
   const grouped = {};
   if (collection.length === 0) {
@@ -237,7 +233,7 @@ export const prepareData = (year) => {
 
   return chartData;
 };
-export const calculatePercentageIncrease = (data) => {
+export const calculatePercentageIncrease = ({ data, collection }) => {
   if (collection.length === 0) {
     return 0;
   }
