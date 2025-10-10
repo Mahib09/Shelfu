@@ -1,18 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import HomePage from "./home";
-import Footer from "@/components/footer";
-import LandingPageFooter from "@/components/LandingPageFooter";
-import LandingHeadBar from "@/components/LandingPageHeader";
-import { useEffect, useState } from "react";
-import DevelopingPage from "@/components/home/Developing";
-import OneScreenHero from "@/components/home/OneScreenHero";
+import LandingPage from "@/components/home/LandingPage";
+import LandingPageFooter from "@/components/home/LandingPageFooter";
+import LandingHeadBar from "@/components/home/LandingPageHeader";
 
 export default function Home() {
   return (
-    <div className="" suppressHydrationWarning={true}>
-      <OneScreenHero />
+    <div className="bg-[#08090A]" suppressHydrationWarning={true}>
+      <LandingHeadBar />
+      <LandingPage />
       <LandingPageFooter />
     </div>
   );

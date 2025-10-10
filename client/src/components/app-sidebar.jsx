@@ -59,7 +59,7 @@ const AppSidebar = () => {
         <div className="flex items-center cursor-pointer">
           <a href="/" className="flex items-center">
             <Image
-              src={theme === "light" ? logoBlack : logoWhite}
+              src={theme === "light" ? "/brandassets" : logoWhite}
               height={40}
               width={40}
               alt="Logo"

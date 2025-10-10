@@ -11,7 +11,19 @@ html {
   transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for background and text color */
 }
 
+@font-face {
+  font-family: "Forma DJR Text";
+  src: url("/fonts/FormaDJRText-Regular-Testing.woff2") format("woff2"),
+    url("/fonts/FormaDJRText-Regular-Testing.woff") format("woff");
+  font-style: normal;
+  font-weight: 400; /* use numeric value instead of 'normal' */
+  font-display: swap; /* optional: better performance, prevents invisible text */
+}
+
 @layer utilities {
+  .landingContainer {
+    @apply mx-auto max-w-[1152px] px-5 md:px-8;
+  }
   .authContainer {
     @apply flex flex-col h-screen w-screen justify-center content-center items-center;
   }
