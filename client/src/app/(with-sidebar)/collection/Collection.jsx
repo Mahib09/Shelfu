@@ -166,7 +166,7 @@ const Collection = () => {
                   className="flex gap-1 items-center text-xs sm:text-sm"
                 >
                   Owned
-                  <span className="text-accent">
+                  <span className="text-blue-500">
                     {
                       collection.filter((item) => item.status === "Owned")
                         .length
@@ -178,7 +178,7 @@ const Collection = () => {
                   className="flex gap-1 items-center text-xs sm:text-sm"
                 >
                   Want To Buy
-                  <span className="text-accent">
+                  <span className="text-yellow-500">
                     {
                       collection.filter((item) => item.status === "Want_To_Buy")
                         .length
@@ -190,7 +190,7 @@ const Collection = () => {
                   className="flex gap-1 items-center text-xs sm:text-sm"
                 >
                   For Sale
-                  <span className=" text-accent">
+                  <span className=" text-red-500">
                     {
                       collection.filter((item) => item.status === "For_Sale")
                         .length

@@ -59,13 +59,16 @@ const AppSidebar = () => {
         <div className="flex items-center cursor-pointer">
           <a href="/" className="flex items-center">
             <Image
-              src={theme === "light" ? logoBlack : logoWhite}
-              height={40}
-              width={40}
+              src={
+                theme === "light"
+                  ? "/brandassets/wordmark-dark.svg"
+                  : "/brandassets/wordmark-light.svg"
+              }
+              height={50}
+              width={100}
               alt="Logo"
               className="transition-opacity delay-100 ease-in-out"
             />
-            <h2 className={`text-xl font-bold`}>Shelfu</h2>
           </a>
           <SidebarTrigger className="ml-auto" />
         </div>
