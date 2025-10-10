@@ -56,7 +56,7 @@ const AppSidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center cursor-pointer">
+        <div className="flex items-center cursor-pointer px-3 pt-2">
           <a href="/" className="flex items-center">
             <Image
               src={
