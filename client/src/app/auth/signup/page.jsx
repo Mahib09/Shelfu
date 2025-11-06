@@ -50,7 +50,11 @@ const SignUp = () => {
   return (
     <div className="authContainer">
       <Image
-        src={theme == "light" ? "/logo-black.png" : "/logo-white.png"}
+        src={
+          theme === "light"
+            ? "/brandassets/logo-dark.svg"
+            : "/brandassets/logo-light.svg"
+        }
         height={100}
         width={100}
         alt="logo"

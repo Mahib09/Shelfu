@@ -21,7 +21,11 @@ const ForgotPassword = () => {
       className="max-w-[600px]  p-4 items-center justify-center h-screen m-auto mt-auto flex gap-5 flex-col"
     >
       <Image
-        src={theme === "light" ? "/logo-black.png" : "/logo-white.png"}
+        src={
+          theme === "light"
+            ? "/brandassets/logo-dark.svg"
+            : "/brandassets/logo-light.svg"
+        }
         height={40}
         width={40}
         alt="Logo"

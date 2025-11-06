@@ -33,35 +33,78 @@ const LandingPage = () => {
 
 export default LandingPage;
 
+const container = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.4,
+    },
+  },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1, ease: "easeOut", staggerChildren: 0.3 },
+  },
+};
 const Hero = () => {
   return (
     <section className="landingContainer md:mt-28 mt-11 relative z-10">
-      <div className="sm:flex sm:flex-col  z-20 hidden gap-5">
-        <h1 className="mt-2 text-[#F7F8F8] md:text-[4rem] text-5xl  sm:tracking-tighter font-semibold md:mt-1">
+      <motion.div
+        className="sm:flex sm:flex-col  z-20 hidden gap-5"
+        initial="hidden"
+        animate="visible"
+        variants={container}
+      >
+        <motion.h1
+          className="mt-2 text-[#F7F8F8] md:text-[4rem] text-5xl  sm:tracking-tighter font-semibold md:mt-1"
+          variants={fadeInUp}
+        >
           Shelfu is a purpose-built tool for tracking and showcasing your manga
           collection
-        </h1>
-        <h3 className="text-md tracking-tight text-muted-foreground  text-[#8a8f98] md:max-w-[500px] text-lg font-[400]">
+        </motion.h1>
+        <motion.h3
+          className="text-md tracking-tight text-muted-foreground  text-[#8a8f98] md:max-w-[500px] text-lg font-[400]"
+          variants={fadeInUp}
+        >
           Meet the ultimate manga collection organizer app designed to organize,
           track, and keep track of your precious collection.
-        </h3>
-        <CtaBtn to="/auth/login">Get Started</CtaBtn>
-      </div>
+        </motion.h3>
+        <motion.div variants={fadeInUp} className="w-max">
+          <CtaBtn to="/auth/login">Get Started</CtaBtn>
+        </motion.div>
+      </motion.div>
 
-      <div className="relative sm:hidden items-center flex flex-col w-full text-center gap-6">
-        <h1 className=" text-[#F7F8F8] max-w-[450px] text-[2.5rem] tracking-tighter leading-tight font-semibold text-balance">
+      <motion.div
+        className="relative sm:hidden items-center flex flex-col w-full text-center gap-6"
+        initial="hidden"
+        animate="visible"
+        variants={container}
+      >
+        <motion.h1
+          variants={fadeInUp}
+          className=" text-[#F7F8F8] max-w-[450px] text-[2.5rem] tracking-tighter leading-tight font-semibold text-balance"
+        >
           Track your manga collection
-        </h1>
+        </motion.h1>
 
-        <h3 className="text-md tracking-tight leading-tight text-muted-foreground  text-[#8a8f98] text-lg">
+        <motion.h3
+          variants={fadeInUp}
+          className="text-md tracking-tight leading-tight text-muted-foreground  text-[#8a8f98] text-lg"
+        >
           Shelfu is a purpose-built tool for tracking and showcasing your manga
           collection.{" "}
           <span className="block xs:inline">
             Simplify tracking, organizing, and enjoying manga.
           </span>
-        </h3>
-        <CtaBtn to="/auth/login">Get Started</CtaBtn>
-      </div>
+        </motion.h3>
+        <motion.div variants={fadeInUp} className="w-max">
+          <CtaBtn to="/auth/login">Get Started</CtaBtn>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
@@ -71,14 +114,19 @@ const HeadTab = () => {
       <div className="landingContainer mt-10 md:mt-20 hidden md:block">
         <div className="relative">
           <div className=" rounded-2xl border-[#262626] border border-b-0 rounded-b-none p-2 overflow-hidden">
-            <Image
-              src="/Landingpage/collection.png"
-              width={3000}
-              height={500}
-              className="rounded-2xl "
-              alt="collection preview"
-            />
-            {/* Bottom fade */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 1.5 }}
+            >
+              <Image
+                src="/Landingpage/collection.png"
+                width={3000}
+                height={500}
+                className="rounded-2xl "
+                alt="collection preview"
+              />
+            </motion.div>
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#08090A] to-transparent" />
         </div>
@@ -86,13 +134,19 @@ const HeadTab = () => {
       <div className="relative">
         <div className="ml-20 mt-9 overflow-hidden md:hidden">
           <div className="border-[#262626] border border-b-0 rounded-b-none rounded-r-none p-2 rounded-md">
-            <Image
-              src="/Landingpage/collection.png"
-              width={3000}
-              height={500}
-              className="rounded-md w-[290%] max-w-none "
-              alt="collection preview"
-            />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 1.5 }}
+            >
+              <Image
+                src="/Landingpage/collection.png"
+                width={3000}
+                height={500}
+                className="rounded-md w-[290%] max-w-none "
+                alt="collection preview"
+              />
+            </motion.div>
           </div>
           {/* Bottom fade */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#08090A] to-transparent" />
@@ -128,7 +182,7 @@ const Solve = () => {
           viewBox="0 0 2320 156"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute w-[75%] max-w-[1100px] px-4 mt-3 md:w-auto "
+          className="absolute w-[85%] max-w-[1100px] px-4 mt-3 md:mt-0 md:w-auto "
           initial="hidden"
           animate="visible"
         >
@@ -156,7 +210,10 @@ const Solve = () => {
 
 const DashboardGrid = () => {
   return (
-    <section className=" md:mt-44 mt-10 bg-[linear-gradient(to_bottom,#141516_0%,#08090A_25%,#08090A_100%)]">
+    <section
+      id="features"
+      className=" md:mt-44 mt-10 bg-[linear-gradient(to_bottom,#141516_0%,#08090A_25%,#08090A_100%)]"
+    >
       <div className="landingContainer">
         <div className="md:pt-24 pt-10">
           <h2 className="md:text-5xl  text-[2rem] font-semibold">
@@ -173,6 +230,7 @@ const DashboardGrid = () => {
                 width={3000}
                 height={1000}
                 className=" rounded-md"
+                alt="Search screenshot"
               />
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-[#08090A] to-transparent" />
@@ -197,7 +255,7 @@ const DashboardGrid = () => {
                     src="/Landingpage/add.png"
                     width={600}
                     height={200}
-                    alt="collection preview"
+                    alt="Adding a Volume Screenshot"
                     className="rounded-2xl rounded-r-none"
                   />
                 </div>
@@ -223,7 +281,7 @@ const DashboardGrid = () => {
                     src="/Landingpage/Edit.png"
                     width={600}
                     height={200}
-                    alt="collection preview"
+                    alt="coEditing a Volume Screenshot"
                     className="rounded-2xl rounded-r-none"
                   />
                 </div>
@@ -247,6 +305,7 @@ const DashboardGrid = () => {
                   src="/Landingpage/Dashboard/full.png"
                   width={2000}
                   height={400}
+                  alt="Dashboard Screenshot"
                   className=" rounded-md"
                 />
               </div>
@@ -363,10 +422,16 @@ const ByeCTA = () => {
           <h2 className="text-4xl md:text-5xl font-semibold">
             Organize Today. Relive Tomorrow.
           </h2>
-          <a className="md:ml-auto w-full md:w-max text-center h-max bg-[#28282c] text-white rounded-lg px-5 py-2  cursor-pointer font-medium border border-[#3e3e44]   shadow hover:brightness-125 transition-all delay-75">
+          <a
+            href="/contactus"
+            className="md:ml-auto w-full md:w-max text-center h-max bg-[#28282c] text-white rounded-lg px-5 py-2  cursor-pointer font-medium border border-[#3e3e44]   shadow hover:brightness-125 transition-all delay-75"
+          >
             Contact
           </a>
-          <a className="bg-[#E6E6E6] text-center w-full md:w-max h-max text-black rounded-lg px-5 py-2  cursor-pointer font-medium     shadow hover:brightness-125 transition-all delay-75">
+          <a
+            href="/signup"
+            className="bg-[#E6E6E6] whitespace-nowrap text-center w-full md:w-max h-max text-black rounded-lg px-5 py-2  cursor-pointer font-medium     shadow hover:brightness-125 transition-all delay-75"
+          >
             Get Started
           </a>
         </div>

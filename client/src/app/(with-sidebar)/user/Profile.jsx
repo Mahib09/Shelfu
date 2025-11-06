@@ -6,7 +6,6 @@ import {
   LibraryBig,
   LibrarySquare,
   Mail,
-  User,
   UserCircle,
 } from "lucide-react";
 import React from "react";
@@ -14,10 +13,11 @@ import React from "react";
 const ProfileContent = () => {
   const { userName, userEmail, user } = useAuth();
   const { collection } = useManga();
+
   const totalVolume = collection.filter(
-    (item) => item.status === "Owned" || "For_Sale"
+    (item) => item.status === "Owned" || item.status === "For_Sale"
   ).length;
-  console.log(user);
+
   const formatDate = (dateString) => {
     if (!dateString) return "Unknown Date";
     return new Intl.DateTimeFormat("en-US", {
@@ -28,42 +28,58 @@ const ProfileContent = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="">
-        <h2 className="text-2xl font-bold">Account Information</h2>
-        <p className="text-sm text-muted-foreground">Info about your account</p>
+    <div className="flex flex-col gap-8 px-6 py-10">
+      {/* Header */}
+      <div>
+        <h2 className="text-3xl font-semibold text-foreground">
+          Account Overview
+        </h2>
+        <p className="text-muted-foreground mt-1">
+          Manage your account details and collection info.
+        </p>
       </div>
-      <div className="flex gap-5  items-center">
-        <UserCircle className="h-52 w-52 text-gray-300" />
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-2">
-            <h3 className="text-lg font-semibold">{userName}</h3>
+
+      {/* Profile Info */}
+      <div className="flex flex-col md:flex-row gap-8 md:gap-12 border border-border bg-card rounded-2xl p-6 shadow-sm">
+        {/* Avatar Section */}
+        <div className="flex items-center justify-center">
+          <div className="relative">
+            <UserCircle className="h-40 w-40 text-muted-foreground" />
+            <div className="absolute bottom-2 right-2 h-4 w-4 bg-green-500 rounded-full border-2 border-card"></div>
           </div>
-          <div className="flex gap-2">
-            <h3>
-              <Mail className="text-muted-foreground" />
-            </h3>
-            <h3>{userEmail}</h3>
+        </div>
+
+        {/* Details Section */}
+        <div className="flex flex-col justify-center gap-5 w-full">
+          <div className="flex items-center gap-2 text-lg font-semibold text-foreground">
+            <UserCircle className="h-5 w-5 text-muted-foreground" />
+            {userName || "User"}
           </div>
-          <div className="flex gap-2">
-            <h3>
-              <LibrarySquare className="text-muted-foreground" />
-            </h3>
-            <h3>{totalVolume} Volumes Owned</h3>
+
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Mail className="h-5 w-5" />
+            <span className="text-foreground">
+              {userEmail || "No email set"}
+            </span>
           </div>
-          <div className="flex gap-2">
-            <h3>
-              <Calendar className="text-muted-foreground" />
-            </h3>
-            <h3>Joined on {formatDate(user?.metadata?.creationTime)}</h3>
+
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <LibrarySquare className="h-5 w-5" />
+            <span className="text-foreground">{totalVolume} Volumes Owned</span>
           </div>
+
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Calendar className="h-5 w-5" />
+            <span className="text-foreground">
+              Joined on {formatDate(user?.metadata?.creationTime)}
+            </span>
+          </div>
+
           <a
             href="/collection"
-            className=" flex justify-center bg-accent-foreground text-secondary p-2 rounded-3xl"
+            className="mt-4 flex items-center justify-center gap-2 w-max bg-accent text-accent-foreground px-5 py-2.5 rounded-xl font-medium hover:bg-accent-hover transition-all shadow-sm"
           >
-            <span className="">
-              <LibraryBig />
-            </span>{" "}
+            <LibraryBig className="h-5 w-5" />
             View Collection
           </a>
         </div>

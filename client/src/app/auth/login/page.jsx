@@ -64,7 +64,11 @@ const Login = () => {
     <div className="authContainer">
       <DemoBanner />
       <Image
-        src={theme === "light" ? "/logo-black.png" : "/logo-white.png"}
+        src={
+          theme === "light"
+            ? "/brandassets/logo-dark.svg"
+            : "/brandassets/logo-light.svg"
+        }
         height={100}
         width={100}
         alt="logo"
