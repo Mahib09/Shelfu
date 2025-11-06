@@ -175,7 +175,7 @@ const Dashboard = () => {
           </CardFooter>
         </Card>
 
-        <Card className="col-span-4 xl:col-span-3">
+        <Card className="col-span-4 lg:col-span-3">
           <CardHeader>
             <CardTitle>Recent Addition</CardTitle>
             <CardDescription>
@@ -183,7 +183,7 @@ const Dashboard = () => {
               month
             </CardDescription>
             <CardContent className="p-0">
-              <ScrollArea className="h-96 lg:h-[27rem]">
+              <ScrollArea className="h-96 lg:h-[28rem] xl:h-[33rem]">
                 {recentAddition.map((item, index) => (
                   <motion.div
                     className=" flex  gap-4 items-center p-2"

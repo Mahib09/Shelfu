@@ -22,7 +22,7 @@ html {
 
 @layer utilities {
   .landingContainer {
-    @apply mx-auto max-w-[1152px] px-5 md:px-8;
+    @apply mx-auto max-w-[1152px] px-5 md:px-8 text-white;
   }
   .authContainer {
     @apply flex flex-col h-screen w-screen justify-center content-center items-center;
