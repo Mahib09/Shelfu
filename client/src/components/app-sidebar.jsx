@@ -59,6 +59,7 @@ const AppSidebar = () => {
         <div className="flex items-center cursor-pointer px-3 pt-2">
           <a href="/" className="flex items-center">
             <Image
+<<<<<<< HEAD
               src={
                 theme === "light"
                   ? "/brandassets/wordmark-dark.svg"
@@ -66,6 +67,11 @@ const AppSidebar = () => {
               }
               height={50}
               width={100}
+=======
+              src={theme === "light" ? "/brandassets" : logoWhite}
+              height={40}
+              width={40}
+>>>>>>> dev
               alt="Logo"
               className="transition-opacity delay-100 ease-in-out"
             />

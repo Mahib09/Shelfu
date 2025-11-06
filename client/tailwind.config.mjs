@@ -66,6 +66,11 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        forma: ['"Forma DJR Text"', "sans-serif"],
+        inter: ["Inter", "sans-serif"],
+        bebas: ["Bebas Neue", "sans-serif"],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

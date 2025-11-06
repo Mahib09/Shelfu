@@ -1,13 +1,13 @@
 import { ArrowRight } from "lucide-react";
 import React from "react";
-import LandingHeadBar from "../LandingPageHeader";
+import LandingHeadBar from "./LandingPageHeader";
 import Link from "next/link";
 import { Button } from "../ui/button";
 
 const OneScreenHero = () => {
   return (
     <>
-      <div
+      {/* <div
         className="fixed inset-0 -z-10 filter blur-[70px]"
         style={{
           background: `
@@ -16,7 +16,7 @@ const OneScreenHero = () => {
           radial-gradient(circle at 50% 70%, rgba(220, 210, 200, 0.5), transparent 30%)
         `,
         }}
-      ></div>
+      ></div> */}
       <LandingHeadBar />
       <div className="h-screen flex items-center">
         <div className=" flex flex-col gap-4 text-center px-10 py-10 md:py-20 -mt-16">
