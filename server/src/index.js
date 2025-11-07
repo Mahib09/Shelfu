@@ -6,12 +6,12 @@ const app = createServer();
 const corsOptions = {
   origin: ["http://localhost:3000", "https://shelfu.vercel.app"], // Allow your frontend to make requests
   credentials: true, // Allow credentials (cookies, etc.)
-  methods: ["GET", "POST", "PATCH", "DELETE"], // Allow specific HTTP methods
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"], // Al""low specific HTTP methods
+  allowedHeaders: ["Content-Type", "Authorization", "data"],
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors());
+app.options("*", cors(corsOptions));
 
 const client = setupRedis();
 app.locals.redis = client;

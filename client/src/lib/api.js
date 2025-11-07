@@ -71,8 +71,8 @@ export const deleteVolumeApi = async (bodyInfo, userCollectionId) => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
-        data: bodyInfo,
       },
+      data: bodyInfo,
     }
   );
 };
