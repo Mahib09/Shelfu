@@ -12,8 +12,7 @@ import { useManga } from "@/context/mangaContext";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import GoogleOriginal from "devicons-react/icons/GoogleOriginal";
-
-import DemoBanner from "@/components/DemoBanner";
+import { signInWithEmailAndPassword, auth } from "firebase/auth";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -41,6 +40,7 @@ const Login = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -59,10 +59,19 @@ const Login = () => {
       console.log(error);
     }
   };
+  const handleDemoLogin = () => {
+    const demoEmail = "test@test.com";
+    const demoPassword = "testtest";
 
+    // Fill the RHF-controlled inputs
+    setValue("email", demoEmail, { shouldDirty: true, shouldValidate: true });
+    setValue("password", demoPassword, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
   return (
     <div className="authContainer">
-      <DemoBanner />
       <Image
         src={
           theme === "light"
@@ -138,24 +147,28 @@ const Login = () => {
               Forgot your Password?
             </a>
           </div>
-          <div className="flex gap-5 w-full ">
-            <Button
-              variant="secondary"
-              onClick={() => {
-                router.push("/");
-              }}
-              type="button"
-            >
-              Back to Home
-            </Button>
-            <Button
-              className="ml-auto"
-              variant="accent"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? "Signing In..." : "Sign In"}
-            </Button>
+          <div className=" w-full flex flex-col gap-5">
+            <div className="flex gap-5 w-full">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  router.push("/");
+                }}
+                type="button"
+              >
+                Back to Home
+              </Button>
+              <Button
+                className="ml-auto"
+                variant="accent"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Signing In..." : "Sign In"}
+              </Button>
+            </div>
+
+            <Button onClick={handleDemoLogin}>Try Demo</Button>
           </div>
         </form>
         {error && <p className="text-destructive m-auto ">{error}</p>}

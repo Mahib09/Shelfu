@@ -429,7 +429,7 @@ const ByeCTA = () => {
             Contact
           </a>
           <a
-            href="/signup"
+            href="/auth/login"
             className="bg-[#E6E6E6] whitespace-nowrap text-center w-full md:w-max h-max text-black rounded-lg px-5 py-2  cursor-pointer font-medium     shadow hover:brightness-125 transition-all delay-75"
           >
             Get Started
