@@ -159,7 +159,9 @@ const Solve = () => {
   return (
     <section className="md:mt-20 mt-16">
       <div className="md:text-xl font-medium text-center">
-        <h5>Powering the world's largest collections.</h5>
+        <h5 className="text-[#404041]">
+          Powering the world's largest collections.
+        </h5>
         <h5 className="text-[#8a8f98]">
           Say Bye to Your Notebooks, Google Sheets, Notion Notes and Pictures.
         </h5>
@@ -219,7 +221,7 @@ const DashboardGrid = () => {
           <h2 className="md:text-5xl  text-[2rem] font-semibold">
             Search Across All Manga
           </h2>
-          <p className="md:mt-8 mt-4 max-w-[500px] font-medium  md:text-lg text-[#8a8f98]">
+          <p className="md:mt-8 mt-4 max-w-[500px]  md:text-lg text-[#8a8f98]">
             Search the entire manga database to find any title, add it directly
             to your collection or assign it to a category in one click.
           </p>
@@ -243,8 +245,8 @@ const DashboardGrid = () => {
                 Add to Your Collection Category
               </h3>
               <p className="md:text-lg mt-2 text-[#8a8f98] leading-tight tracking-tighter">
-                No more messy imports — organize your manga right from the
-                search bar.
+                No more messy imports, organize your manga right from the search
+                bar.
               </p>
 
               {/* Wrapper around bordered box */}
@@ -261,7 +263,10 @@ const DashboardGrid = () => {
                 </div>
 
                 {/* Fade overlay covering border + image */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent_0%,#08090A_100%)] pointer-events-none" />
+                <div
+                  className="absolute inset-0 bg-[linear-gradient(to_right,transparent_0%,transparent_75%,#08090A_100%)]
+ pointer-events-none"
+                />
               </div>
             </div>
 
@@ -281,12 +286,12 @@ const DashboardGrid = () => {
                     src="/Landingpage/Edit.png"
                     width={600}
                     height={200}
-                    alt="coEditing a Volume Screenshot"
+                    alt="Editing a Volume Screenshot"
                     className="rounded-2xl rounded-r-none"
                   />
                 </div>
 
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent_0%,#08090A_100%)] pointer-events-none" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent_0%,transparent_75%,#08090A_100%)] pointer-events-none" />
               </div>
             </div>
           </div>
@@ -295,8 +300,8 @@ const DashboardGrid = () => {
             <h2 className="md:text-5xl  text-[2rem] font-semibold">
               Data driven Dashboard
             </h2>
-            <p className="md:mt-8 mt-4 max-w-[500px] font-medium  md:text-lg text-[#8a8f98]">
-              Visualize performance, track metrics, and uncover trends—all in
+            <p className="md:mt-8 mt-4 max-w-[500px]  md:text-lg text-[#8a8f98]">
+              Visualize performance, track metrics, and uncover trends, all in
               one intuitive dashboard designed for clarity and growth.
             </p>
             <div className="w-full relative rounded-xl mt-10">

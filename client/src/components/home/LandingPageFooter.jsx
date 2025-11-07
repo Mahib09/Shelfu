@@ -22,7 +22,7 @@ const LandingPageFooter = () => {
 
   const product = [
     { title: "Home", path: "/" },
-    { title: "Features", path: "/" },
+    { title: "Features", path: "/#features" },
     { title: "Pricing", path: "/pricing" },
     { title: "Updates ", path: "/updates" },
     { title: "Readme ", path: "/readme" },
