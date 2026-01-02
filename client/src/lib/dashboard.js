@@ -1,26 +1,29 @@
-export const getTotalOwnedVolumes = ({ collection }) => {
-  if (collection.length === 0) {
-    return {
-      total: 0,
-      change: 0,
-    };
-  }
-  const totalOwned = collection.filter(
-    (entry) => entry.status === "Owned"
-  ).length;
-
-  const currentMonthOwned = collection.filter((entry) => {
-    const createdAt = new Date(entry.createdAt);
-    return (
-      createdAt.getMonth() === new Date().getMonth() && entry.status === "Owned"
-    );
-  }).length;
-
-  return {
-    total: totalOwned,
-    change: currentMonthOwned,
-  };
+import { Label } from "recharts";
+const monthRef = (offset = 0) => {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth() + offset, 1);
 };
+
+const isSameMonth = (d, ref) =>
+  d.getFullYear() === ref.getFullYear() && d.getMonth() === ref.getMonth();
+
+const countByStatusInMonth = (collection, status, ref) =>
+  collection.reduce((acc, entry) => {
+    if (entry.status !== status) return acc;
+    const createdAt = new Date(entry.createdAt);
+    return acc + (isSameMonth(createdAt, ref) ? 1 : 0);
+  }, 0);
+
+const totalByStatus = (collection, status) =>
+  collection.reduce((acc, entry) => acc + (entry.status === status ? 1 : 0), 0);
+
+export const getTotalOwnedVolumes = ({ collection }) => {
+  const total = totalByStatus(collection, "Owned");
+  const change = countByStatusInMonth(collection, "Owned", monthRef(0)); // added this month
+
+  return { total, change };
+};
+
 export const getTotalMangaSeries = ({ collection }) => {
   if (collection.length === 0) {
     return {
@@ -72,95 +75,35 @@ export const getTotalMangaSeries = ({ collection }) => {
   };
 };
 export const getVolumesToBuy = ({ collection }) => {
-  if (collection.length === 0) {
-    return {
-      total: 0,
-      change: 0,
-    };
-  }
-  const totalToBuy = collection.filter(
-    (entry) => entry.status === "Want_To_Buy"
-  ).length;
+  const total = totalByStatus(collection, "Want_To_Buy");
 
-  const currentMonthToBuy = collection.filter((entry) => {
-    const createdAt = new Date(entry.createdAt);
-    return (
-      createdAt.getMonth() === new Date().getMonth() &&
-      entry.status === "Want_To_Buy"
-    );
-  }).length;
+  const current = countByStatusInMonth(collection, "Want_To_Buy", monthRef(0));
+  const prev = countByStatusInMonth(collection, "Want_To_Buy", monthRef(-1));
 
-  const previousMonthToBuy = collection.filter((entry) => {
-    const createdAt = new Date(entry.createdAt);
-    return (
-      createdAt.getMonth() === new Date().getMonth() - 1 &&
-      entry.status === "Want_To_Buy"
-    );
-  }).length;
-
-  let toBuyChange = currentMonthToBuy - previousMonthToBuy;
-  if (toBuyChange < 0) {
-    toBuyChange = 0;
-  }
-  return {
-    total: totalToBuy,
-    change: toBuyChange,
-  };
+  return { total, change: Math.max(0, current - prev) };
 };
+
 export const getVolumesForSale = ({ collection }) => {
-  if (collection.length === 0) {
-    return {
-      total: 0,
-      change: 0,
-    };
-  }
-  const totalForSale = collection.filter(
-    (entry) => entry.status === "For_Sale"
-  ).length;
+  const total = totalByStatus(collection, "For_Sale");
 
-  const currentMonthForSale = collection.filter((entry) => {
-    const createdAt = new Date(entry.createdAt);
-    return (
-      createdAt.getMonth() === new Date().getMonth() &&
-      entry.status === "For_Sale"
-    );
-  }).length;
+  const current = countByStatusInMonth(collection, "For_Sale", monthRef(0));
+  const prev = countByStatusInMonth(collection, "For_Sale", monthRef(-1));
 
-  const previousMonthForSale = collection.filter((entry) => {
-    const createdAt = new Date(entry.createdAt);
-    return (
-      createdAt.getMonth() === new Date().getMonth() - 1 &&
-      entry.status === "For_Sale"
-    );
-  }).length;
-
-  let forSaleChange = currentMonthForSale - previousMonthForSale;
-  if (forSaleChange < 0) {
-    forSaleChange = 0;
-  }
-  return {
-    total: totalForSale,
-    change: forSaleChange,
-  };
+  return { total, change: Math.max(0, current - prev) };
 };
+
 export const getRecentAddition = ({ collection }) => {
-  if (collection.length === 0) {
-    return []; // or you can return a default value like an empty object or message
-  }
-  // Sort the collection based on the createdAt date
-  const sortedCollection = collection.sort(
+  if (!collection.length) return [];
+
+  const sorted = [...collection].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
 
-  // Get the most recent 30 items
-  const recentAdditions = sortedCollection.slice(0, 10);
-
-  // Map over the items added this month to format them
-  const formattedRecentAdditions = recentAdditions.map((item) => {
+  return sorted.slice(0, 10).map((item) => {
     const createdAt = new Date(item.createdAt);
     const date = createdAt.getDate();
-    const month = createdAt.toLocaleString("default", { month: "short" }); // Get the abbreviated month name
-    const year = createdAt.getFullYear(); // Get the year
+    const month = createdAt.toLocaleString("en-US", { month: "short" });
+    const year = createdAt.getFullYear();
 
     return {
       userCollectionId: item.userCollectionId,
@@ -168,92 +111,61 @@ export const getRecentAddition = ({ collection }) => {
       volumeNumber: item.volume.volumeNumber,
       author: item.volume.author,
       image: item.volume.coverImageUrl,
-      addedDate: `${month} ${date}, ${year}`, // Format: "Mar 6, 2025"
+      addedDate: `${month} ${date}, ${year}`,
     };
   });
-
-  return formattedRecentAdditions;
 };
 
 const getLastSixMonths = () => {
   const months = [];
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  const now = new Date();
 
-  // Get current month and previous 5 months
-  const currentMonth = new Date().getMonth(); // Current month index (0-11)
-  for (let i = 0; i < 6; i++) {
-    months.push(monthNames[(currentMonth - i + 12) % 12]);
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({
+      year: d.getFullYear(),
+      monthIndex: d.getMonth(),
+      label: d.toLocaleString("en-US", { month: "short" }),
+    });
   }
 
-  return months.reverse(); // To ensure they are from 6 months ago to now
+  return months;
 };
-export const prepareData = ({ year, collection }) => {
+
+export const prepareData = ({ collection }) => {
   const lastSixMonths = getLastSixMonths();
   const grouped = {};
-  if (collection.length === 0) {
-    return lastSixMonths.map((month) => ({
-      month,
-      volumesOwned: 0,
-    }));
+
+  for (const entry of collection) {
+    if (entry.status !== "Owned") continue;
+    const d = new Date(entry.createdAt);
+    const key = `${d.getFullYear()}-${d.getMonth()}`;
+    grouped[key] = (grouped[key] || 0) + 1;
   }
 
-  collection.forEach((entry) => {
-    const createdAt = new Date(entry.createdAt);
-    const month = createdAt.toLocaleString("default", { month: "short" });
-    const entryYear = createdAt.getFullYear();
-
-    if (entryYear === year && entry.status === "Owned") {
-      if (grouped[month]) {
-        grouped[month]++;
-      } else {
-        grouped[month] = 1;
-      }
-    }
-  });
-
-  // Create data with 0 for months without data, but only for the last 6 months
-  const chartData = lastSixMonths.map((month) => ({
-    month,
-    volumesOwned: grouped[month] || 0,
+  const chartData = lastSixMonths.map(({ year, monthIndex, label }) => ({
+    month: label,
+    volumesOwned: grouped[`${year}-${monthIndex}`] || 0,
   }));
 
-  return chartData;
+  return { chartData, lastSixMonths };
 };
+
 export const calculatePercentageIncrease = ({ data, collection }) => {
-  if (collection.length === 0) {
-    return 0;
-  }
+  const ownedCount =
+    collection?.filter((e) => e.status === "Owned").length ?? 0;
+  if (ownedCount === 0) return "0.00";
+  if (!data?.length) return "0.00";
 
-  const ownedCollection = collection.filter(
-    (entry) => entry.status === "Owned"
-  );
+  const addedThisMonth = data[data.length - 1]?.volumesOwned ?? 0;
+  const beforeThisMonth = ownedCount - addedThisMonth;
 
-  // Get the total owned volumes added this month (from data)
-  const volumesAddedThisMonth = data[data.length - 1].volumesOwned; // Last month's volumes owned
+  // Nothing added this month
+  if (addedThisMonth === 0) return "0.00";
 
-  // Get the total owned volumes in the collection before this month
-  const ownedCollectionBeforeThisMonth =
-    ownedCollection.length - volumesAddedThisMonth;
+  // All owned volumes were added this month (no baseline)
+  // UX choice: show 100% instead of Infinity.
+  if (beforeThisMonth <= 0) return "100.00";
 
-  // If no volumes were added, return 0%
-  if (ownedCollectionBeforeThisMonth === 0) return 100;
-
-  // Calculate the percentage increase based on the owned volumes added this month
-  const percentageIncrease =
-    (volumesAddedThisMonth / ownedCollectionBeforeThisMonth) * 100;
-
-  return percentageIncrease.toFixed(2);
+  return ((addedThisMonth / beforeThisMonth) * 100).toFixed(2);
 };

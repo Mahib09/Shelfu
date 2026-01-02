@@ -46,12 +46,8 @@ const Dashboard = () => {
   const volumesForSale = getVolumesForSale({ collection });
   const recentAddition = getRecentAddition({ collection });
   const currentYear = new Date().getFullYear();
-  const chartData = prepareData({ year: currentYear, collection });
-
-  const overallPercentageIncrease = calculatePercentageIncrease({
-    data: chartData,
-    collection,
-  });
+  const { chartData, lastSixMonths } = prepareData({ collection });
+  console.log(chartData);
   const chartConfig = {
     volumesOwned: {
       label: "Volumes Added: ",
@@ -66,6 +62,15 @@ const Dashboard = () => {
       transition: { delay: i * 0.1, duration: 0.3, ease: "easeOut" },
     }),
   };
+  const rangeLabel = lastSixMonths.length
+    ? `${lastSixMonths[0].label} ${lastSixMonths[0].year} - ${lastSixMonths[5].label} ${lastSixMonths[5].year}`
+    : "Last 6 months";
+  const hasData = chartData.some((d) => d.volumesOwned > 0);
+  const overallPercentageIncrease = calculatePercentageIncrease({
+    data: chartData,
+    collection,
+  });
+
   return (
     <div className="content-container flex flex-col gap-5 b border-t-0">
       <h2 className="font-bold text-2xl md:text-3xl">Dashboard</h2>
@@ -127,10 +132,10 @@ const Dashboard = () => {
         <Card className="col-span-4">
           <CardHeader>
             <CardTitle>Volumes Owned</CardTitle>
-            <CardDescription>January - March 2025</CardDescription>
+            <CardDescription>{rangeLabel}</CardDescription>
           </CardHeader>
           <CardContent>
-            {chartData.length > 0 ? (
+            {hasData ? (
               <ChartContainer config={chartConfig}>
                 <BarChart accessibilityLayer data={chartData}>
                   <CartesianGrid vertical={false} />
@@ -146,7 +151,7 @@ const Dashboard = () => {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => `$${value}`}
+                    tickFormatter={(value) => `${value}`}
                   />
                   <ChartTooltip
                     cursor={false}
