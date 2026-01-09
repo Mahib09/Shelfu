@@ -1,76 +1,97 @@
-# ShelfU - Manga Collection Manager
+# ShelfU — Manga Collection Manager
 
-**Updated for 2025!** ShelfU is a manga collection management tool that allows users to easily manage and organize their manga collection. With features like manga search, collection management, and volume tracking, ShelfU helps keep your manga library neat and well-organized. Whether you're a casual reader or an avid collector, ShelfU is built to help you stay on top of your manga collection.
+ShelfU is a full-stack web application that helps users organize, track, and manage personal manga collections.  
+It solves a real-world organization problem while demonstrating production-ready frontend and backend engineering practices.
 
----
-
-<div>
-<p align="center">
-  <a href="https://your-deployment-link.com">
-    <img src="/images/Banner.png" alt="ShelfU Manga Collection Manager" width="100%">
-  </a>
-</p>
-</div>
-
-> 💡 Manage your manga collection effortlessly with ShelfU. Organize, track, and explore your manga library in style! [Try ShelfU →](https://your-deployment-link.com)
+**Live Demo:** https://shelfu.app  
+*(Replace with your actual deployment URL if needed)*
 
 ---
 
-## Key Features
+## Why ShelfU?
 
-### **User Authentication**
-
-Secure login and registration system powered by Firebase Authentication.
-
-<div align="center">
-  <img src="/images/Signup.png" alt="Authentication"  style="height: 300px; width: auto; object-fit: cover">
-</div>
-
-### **Manga Collection Management**
-
-Add manga to your collection and view details. Organize your collection efficiently with ease.
-
-<div align="center">
-  <img src="/images/Collection.png" alt="Collection"  style="height: 300px; width: auto; object-fit: cover">
-</div>
-
-### **Volume Tracking**
-
-Track individual manga volumes, keeping track of what you have and what's still missing.
-
-<div align="center">
-  <img src="/images/Dashboard.png" alt="Dashboard"  style="height: 300px; width: auto; object-fit: cover">
-</div>
-
-### **Responsive Design**
-
-A modern, responsive design ensuring a seamless user experience across all devices.
-
-<div align="center">
-  <img src="/images/MobileCollection.png" alt="Mobile"  style="height: 300px; width: auto; object-fit: cover">
-</div>
-
-### **Manga Search**
-
-Search for manga using external APIs (ISBN DB, Open Library API) and add them to your collection.
-
-<div align="center">
-  <img src="/images/Search.png" alt="Search"  style="height: 300px; width: auto; object-fit: cover">
-</div>
+Manga collectors often rely on spreadsheets, notes, or memory to track owned and missing volumes.  
+ShelfU centralizes this process into a clean, searchable, and scalable platform accessible across devices.
 
 ---
 
-## Technologies Used
+## Core Features
 
-- **Frontend**: React, Next.js
-- **Backend**: Node.js, Express
-- **Database**: PostgreSQL, Prisma
-- **Authentication**: Firebase Authentication
-- **UI**: ShadCN (React Components)
-- **State Management**: React Context API, React Query for data fetching
+### Authentication & User Accounts
+- Secure user registration and login using Firebase Authentication
+- Protected routes and user-specific data isolation
+
+### Manga Search & Import
+- Search manga using external book APIs (ISBN DB, Open Library)
+- Normalized and validated third-party API data before storage
+
+### Collection Management
+- Add, update, and remove manga from a personal collection
+- View detailed metadata per series
+- Track ownership at the volume level
+
+### Volume Tracking & Dashboard
+- Track owned vs missing volumes
+- Collection-level statistics for visibility
+- Optimized database queries for fast load times
+
+### Responsive UI
+- Fully responsive layout
+- Optimized for desktop, tablet, and mobile usage
 
 ---
 
-## License
+## Tech Stack
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### Frontend
+- React
+- Next.js
+- TypeScript
+- Tailwind CSS
+- ShadCN UI
+- React Query
+
+### Backend
+- Node.js
+- Express
+- REST APIs
+- Prisma ORM
+
+### Database
+- PostgreSQL
+- Normalized relational schema
+- Indexed queries for performance
+
+### Authentication
+- Firebase Authentication
+- JWT-based session handling
+
+---
+
+## Architecture Highlights
+
+- Clear separation of frontend and backend responsibilities
+- API-first design with scalable data models
+- Prisma used for type-safe schema management and migrations
+- Validation and error handling at API boundaries
+- Designed for future extensibility (sharing, analytics, wishlists)
+
+---
+
+## Getting Started (Local Development)
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/shelfu.git
+
+# Install dependencies
+npm install
+
+# Setup environment variables
+cp .env.example .env
+
+# Run database migrations
+npx prisma migrate dev
+
+# Start development server
+npm run dev
