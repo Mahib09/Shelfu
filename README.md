@@ -4,7 +4,6 @@ ShelfU is a full-stack web application that helps users organize, track, and man
 It solves a real-world organization problem while demonstrating production-ready frontend and backend engineering practices.
 
 **Live Demo:** https://shelfu.app  
-*(Replace with your actual deployment URL if needed)*
 
 ---
 
