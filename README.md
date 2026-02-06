@@ -3,7 +3,7 @@
 ShelfU is a full-stack web application that helps users organize, track, and manage personal manga collections.  
 It solves a real-world organization problem while demonstrating production-ready frontend and backend engineering practices.
 
-**Live Demo:** https://shelfu.app  
+**Live Demo:** https://shelfu.vercel.app  
 
 ---
 
