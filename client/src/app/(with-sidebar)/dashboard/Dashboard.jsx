@@ -152,6 +152,7 @@ const Dashboard = () => {
                     tickLine={false}
                     axisLine={false}
                     tickFormatter={(value) => `${value}`}
+                    allowDecimals={false}
                   />
                   <ChartTooltip
                     cursor={false}
