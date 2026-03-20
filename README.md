@@ -8,7 +8,7 @@ I built Shelfu because I was tracking my manga collection in a Google Sheet that
 
 ## What it looks like
 
-> Add a screenshot or screen recording here showing: search → add to collection → dashboard update
+<video src="images/Shelfu_square.mp4" autoplay loop muted playsinline></video>
 
 ---
 
