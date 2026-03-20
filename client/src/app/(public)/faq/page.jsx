@@ -5,34 +5,44 @@ import { useState } from "react";
 export default function FAQs() {
   const faqs = [
     {
-      question: "Is Shelfu really free?",
+      question: "How do I add a manga to my collection?",
       answer:
-        "Yes! Shelfu is completely free. All features, including collection tracking, insights, and search, are available to every user without any cost.",
+        "Search for the title using the search bar — include the volume number (e.g. \"Demon Slayer 1\"). Click the result you want, choose a status (Owned, Want to Buy, or For Sale), and click Add. It'll appear in your collection right away.",
     },
     {
-      question: "Do I need an account to use Shelfu?",
+      question: "What do Owned, Want to Buy, and For Sale mean?",
       answer:
-        "Yes, creating an account lets you save and manage your manga collection securely across devices.",
+        "These are the three ways to categorise a volume. Owned means you have it. Want to Buy is your wishlist — volumes you're planning to get. For Sale means you have it and you're looking to sell it. You can change a volume's status at any time from your collection.",
     },
     {
-      question: "Can I access Shelfu on mobile?",
+      question: "Why can't I find a manga in search?",
       answer:
-        "Absolutely! Shelfu is fully responsive and works on both desktop and mobile browsers.",
+        "A few reasons: you need to include a volume number (e.g. \"Naruto 1\" not just \"Naruto\"). Search only returns English-language editions — a French or German print of the same title won't appear. Art books, box sets, and certain collector editions are also filtered out automatically.",
     },
     {
-      question: "How do I track my manga collection?",
+      question: "Can I add notes to a volume?",
       answer:
-        "You can add manga to your collection using the global search or manual entry, organize them into categories, and view stats and insights on your dashboard.",
+        "Yes. Open any volume from your collection and you'll find a notes field you can type into. Useful for things like condition notes, where you bought it, or anything else you want to remember.",
     },
     {
-      question: "Is my data safe?",
+      question: "How do I remove a volume from my collection?",
       answer:
-        "We prioritize your privacy and security. Your login token is stored securely, and your collection data is protected according to our Privacy Policy and DPA.",
+        "Open the volume from your collection and click Delete. It'll be removed immediately.",
     },
     {
-      question: "Can I suggest new features?",
+      question: "Is my data saved if I log out?",
       answer:
-        "Yes! You can submit feedback via our Feedback page or email us at feedback@shelfu.app.",
+        "Yes. Your collection is stored in a database on our servers, not in your browser. Logging out doesn't touch your data — it'll all be there when you log back in.",
+    },
+    {
+      question: "Is Shelfu free?",
+      answer:
+        "Yes, completely free. All features — collection tracking, search, and the dashboard — are available to every user with no cost and no plans.",
+    },
+    {
+      question: "Can I use it on mobile?",
+      answer:
+        "Yes, Shelfu is fully responsive and works on desktop and mobile browsers.",
     },
   ];
 
@@ -59,10 +69,10 @@ export default function FAQs() {
               className="w-full text-left px-6 py-4 flex justify-between items-center text-white font-semibold focus:outline-none"
             >
               {faq.question}
-              <span className="ml-4">{openIndex === idx ? "-" : "+"}</span>
+              <span className="ml-4">{openIndex === idx ? "−" : "+"}</span>
             </button>
             {openIndex === idx && (
-              <div className="px-6 py-4 text-gray-400 border-t ">
+              <div className="px-6 py-4 text-gray-400 border-t">
                 {faq.answer}
               </div>
             )}
