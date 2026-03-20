@@ -161,7 +161,8 @@ export default function Docs() {
             collection across all statuses.
           </p>
           <p className="text-gray-400">
-            To change your theme, use the icon in the header for a quick
+            On your first visit, the theme defaults to your OS preference
+            automatically. To change it, use the icon in the header for a quick
             Light/Dark toggle. For more control — including a System option that
             follows your OS preference — go to Settings → Appearance.
           </p>
