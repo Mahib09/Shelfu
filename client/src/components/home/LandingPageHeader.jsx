@@ -40,7 +40,7 @@ const LandingHeadBar = () => {
         {/* Auth buttons */}
         <div className="flex  gap-3">
           <a
-            href={`${dashOrStart}`}
+            href={isLoggedIn ? "/docs" : "/auth/login"}
             className="text-[#848992] cursor-pointer rounded-lg px-3  h-auto py-1.5 font-medium text-sm  hover:bg-[#262626] hover:text-white transition-all"
           >
             {isLoggedIn ? "Docs" : "Log in"}
